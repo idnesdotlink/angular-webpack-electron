@@ -1,0 +1,21 @@
+<ng-svg-charts-chart
+  [view]="[width, height]"
+  [showLegend]="false"
+  [animations]="animations">
+  <svg:g [attr.transform]="transform" class="number-card chart" [class.clickable]="clickable">
+    <svg:g ng-svg-charts-card-series
+      [colors]="colors"
+      [cardColor]="cardColor"
+      [bandColor]="bandColor"
+      [textColor]="textColor"
+      [emptyColor]="emptyColor"
+      [data]="data"
+      [dims]="dims"
+      [innerPadding]="innerPadding"
+      [valueFormatting]="valueFormatting"
+      [labelFormatting]="labelFormatting"
+      [animations]="animations"
+      (select)="onClick($event)"
+    />
+  </svg:g>
+</ng-svg-charts-chart>

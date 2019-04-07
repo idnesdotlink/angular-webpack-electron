@@ -1,0 +1,14 @@
+<h3 class="title" *ngIf="title">
+    {{ title }}
+</h3>
+<mat-checkbox *ngIf="allText"
+  (change)="changeAll($event)"
+  [(ngModel)]="all">
+  {{ allText }}
+</mat-checkbox>
+<mat-checkbox
+  *ngFor="let item of items"
+  (change)="changeOne($event)"
+  [(ngModel)]="item.checked">
+  {{ item.name }}
+</mat-checkbox>

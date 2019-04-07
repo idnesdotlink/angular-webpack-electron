@@ -1,0 +1,43 @@
+<svg:g class="pan-zoom" [attr.transform]="getBgTransformT">
+  <!-- <svg:rect [attr.width]="mWidth" [attr.height]="mHeight" class="pan-zoom-bg"/> -->
+  <svg:g [ngClass]="nodesClassL">
+    <svg:g *ngFor="let node of tree" [ngClass]="node.classes">
+      <use *ngIf="node.data.parentId !== null && node.data.lvl >= node.parent.data.lvl" href="#clear" height="8" width="8" [attr.x]="node.x-4" [attr.y]="node.y-32" fill="red" class="blocked"/>
+      <svg:path
+        [attr.d]="node.pathElbowCombine.b"
+        class="elbow-combine"/>
+      <svg:path
+        [attr.d]="node.pathToRoot"
+        class="ptr"/>
+      <svg:g class="circle" (click)="clickCircle({e: $event, n: node})">
+        <svg:rect
+          [attr.x]="node.x-21"
+          [attr.y]="node.y-21"
+          width="42"
+          height="42" style="fill: none;"/>
+        <svg:rect
+          [attr.x]="node.x-15"
+          [attr.y]="node.y-15"
+          rx="15"
+          ry="15"
+          width="30"
+          height="30"
+          class="rectpsg"/>
+          <use href="#account_circle" height="30" width="30" [attr.x]="node.x-15" [attr.y]="node.y-15" fill="black"/>
+      </svg:g><!-- .circle -->
+      <use
+        style="visibility: hidden;"
+        href="#remove_circle"
+        *ngIf="node.children !== undefined"
+        height="12"
+        width="12"
+        [attr.x]="node.x-6"
+        [attr.y]="node.y+18"
+        fill="black"/>
+      <svg:g class="data">
+        <svg:text *ngIf="node.parent !== null" class="data-level" [attr.transform]="node.ttLvl">{{ node.data.lvlName }}</svg:text>
+        <svg:text *ngIf="node.parent !== null" class="data-id" [attr.transform]="node.ttId">{{ node.data.id }}</svg:text>
+      </svg:g>
+    </svg:g><!-- .node -->
+  </svg:g><!-- .nodes -->
+</svg:g><!-- .pan-zoom -->

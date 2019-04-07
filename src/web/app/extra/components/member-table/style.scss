@@ -1,0 +1,94 @@
+:host {
+  background-color: #424242;
+}
+:host .odd {
+  background-color: rgba(0,0,0,.1);
+}
+:host .even {
+  background-color: rgba(0,0,0,.05);
+}
+.pos-container {
+  height: 100%;
+}
+.pos-container-padding {
+  height: 100%;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+.main-column {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+.col-1,
+.col-2 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.pos-item-list {
+  flex: 1;
+}
+.table__container {
+  flex: 2;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.table__scrollbar {
+  flex: 1;
+  width: 100%;
+  overflow: auto;
+}
+.table__scrollbar table {
+  width: 100%;
+  min-width: 300px;
+}
+.table__scrollbar table tr:nth-child(even) {
+  background-color: rgba(0,0,0,.1);
+}
+.table__scrollbar table tr td:nth-child(1n) {
+  width: 300px;
+}
+.table__scrollbar table tr td:nth-child(2n) {
+  width: auto;
+  min-width: 100px;
+}
+.table__scrollbar table tr td:nth-child(3n) {
+  width: 50px;
+}
+
+.table__scrollbar table tr td:nth-child(5n) {
+  width: 40px;
+}
+
+.table__scrollbar .exp {
+  height: 100px;
+}
+
+.table__scrollbar table tr.mat-header-row {
+  height: 48px;
+}
+.table__scrollbar table tr.mat-row {
+  height: 32px;
+}
+
+.pos-item-list-container {
+  flex: 1;
+}
+.pos-item-list {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+.dropsite {
+  height: 100%;
+}
+.table__scrollbar table tr.example-detail-row {
+  height: 0;
+}
+.table__scrollbar table tr.example-element-row td {
+  border-bottom-width: 0;
+}

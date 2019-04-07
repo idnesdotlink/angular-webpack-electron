@@ -1,0 +1,14 @@
+<box-padding [padding]="padding" [background]="background" [boxBackground]="boxBackground" [ngClass]="classes">
+  <div class="box">
+    <div class="bar page-standard_boxbar">
+      <span *ngIf="title">{{ title }}</span>
+      <div class="fill-remaining"></div>
+      <button mat-button mat-icon-button (click)="close($event)">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="content">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</box-padding>

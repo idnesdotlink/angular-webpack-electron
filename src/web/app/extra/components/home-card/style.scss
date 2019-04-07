@@ -1,0 +1,15 @@
+:host {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+:host mat-card-content {
+  align-items: center;
+  justify-content: center;
+}
+:host .inside-box {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+}

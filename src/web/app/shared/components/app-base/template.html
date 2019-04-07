@@ -1,0 +1,11 @@
+<div>
+  <mat-sidenav-container style="flex: 1;" *ngIf="true" [hasBackdrop]="false">
+    <mat-sidenav
+      mode="over"
+      [opened]="sideNavShow" style="width:200px;">Sidenav content</mat-sidenav>
+    <mat-sidenav-content style="overflow: hidden;">
+      <ng-content></ng-content>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+<app-logo [@hidebg]="logoShow"></app-logo>

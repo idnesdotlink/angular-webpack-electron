@@ -1,0 +1,14 @@
+<box-padding [padding]="10">
+  <div class="inside-box">
+    <mat-card style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+      <mat-card-header>
+        <mat-card-title>
+          {{ title }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content style="flex: 1; display: flex; flex-direction: row; overflow: hidden;" class="b">
+        <ng-content></ng-content>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</box-padding>

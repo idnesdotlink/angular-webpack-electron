@@ -1,0 +1,48 @@
+<box-padding>
+  <div style="height: 100%; width: 100%; overflow-y: auto; display: block;">
+    <mat-grid-list [cols]="cols">
+      <mat-grid-tile>
+        <home-card title="Penjualan">
+          <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; flex: 1; height: 100%; width: 100%;">
+            <chart-bar mode="horizontal"></chart-bar>
+          </div>
+        </home-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <home-card title="Anggota">
+          <div (resized)="onResized($event)" class="home-card-content" style="flex: 1; height: 100%; width: 100%;">
+            <chart-bar mode="vertical"></chart-bar>
+          </div>
+        </home-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <home-card>
+          <div class="home-card-content" style="flex: 1; height: 100%; width: 100%;">
+            <member-donut-chart></member-donut-chart>
+          </div>
+        </home-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <home-card>
+          <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; flex: 1; height: 100%; width: 100%;">
+            <chart-bar-group></chart-bar-group>
+          </div>
+        </home-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <home-card>
+          <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; flex: 1; height: 100%; width: 100%;">
+            <chart-bar-group mode="vertical"></chart-bar-group>
+          </div>
+        </home-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <home-card>
+          <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; flex: 1; height: 100%; width: 100%;" id="destination" #destinationRef>
+            <chart-line></chart-line>
+          </div>
+        </home-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</box-padding>

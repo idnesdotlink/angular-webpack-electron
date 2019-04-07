@@ -1,0 +1,58 @@
+<ng-svg-charts-chart
+  [view]="[width, height]"
+  [showLegend]="legend"
+  [legendOptions]="legendOptions"
+  [activeEntries]="activeEntries"
+  [animations]="animations"
+  (legendLabelClick)="onClick($event)"
+  (legendLabelActivate)="onActivate($event)"
+  (legendLabelDeactivate)="onDeactivate($event)">
+  <svg:g [attr.transform]="transform" class="bar-chart chart">
+    <svg:g ng-svg-charts-x-axis
+      *ngIf="xAxis"
+      [xScale]="xScale"
+      [dims]="dims"
+      [showLabel]="showXAxisLabel"
+      [labelText]="xAxisLabel"
+      [trimTicks]="trimXAxisTicks"
+      [maxTickLength]="maxXAxisTickLength"
+      [tickFormatting]="xAxisTickFormatting"
+      [ticks]="xAxisTicks"
+      [xAxisOffset]="dataLabelMaxHeight.negative"
+      (dimensionsChanged)="updateXAxisHeight($event)">
+    </svg:g>
+    <svg:g ng-svg-charts-y-axis
+      *ngIf="yAxis"
+      [yScale]="yScale"
+      [dims]="dims"
+      [showGridLines]="showGridLines"
+      [showLabel]="showYAxisLabel"
+      [labelText]="yAxisLabel"
+      [trimTicks]="trimYAxisTicks"
+      [maxTickLength]="maxYAxisTickLength"
+      [tickFormatting]="yAxisTickFormatting"
+      [ticks]="yAxisTicks"
+      (dimensionsChanged)="updateYAxisWidth($event)">
+    </svg:g>
+    <svg:g ng-svg-charts-series-vertical
+      [xScale]="xScale"
+      [yScale]="yScale"
+      [colors]="colors"
+      [series]="results"
+      [dims]="dims"
+      [gradient]="gradient"
+      [tooltipDisabled]="tooltipDisabled"
+      [tooltipTemplate]="tooltipTemplate"
+      [showDataLabel]="showDataLabel"
+      [dataLabelFormatting]="dataLabelFormatting"
+      [activeEntries]="activeEntries"
+      [roundEdges]="roundEdges"
+      [animations]="animations"
+      (activate)="onActivate($event)"
+      (deactivate)="onDeactivate($event)"
+      (select)="onClick($event)"
+      (dataLabelHeightChanged)="onDataLabelMaxHeightChanged($event)"
+      >
+    </svg:g>
+  </svg:g>
+</ng-svg-charts-chart>

@@ -1,0 +1,12 @@
+// @import '~@angular/cdk/text-field/text-field';
+@import '~@angular/cdk/text-field'; 
+:host {
+
+}
+input.custom-autofill {
+  @include cdk-text-field-autofill-color(transparent, red);
+}
+.example-container {
+  display: flex;
+  flex-direction: column;
+}

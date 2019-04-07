@@ -1,0 +1,46 @@
+<!--headr - toolbar-->
+
+<mat-toolbar color="primary">
+  <div [ngSwitch]="view">
+    <span *ngSwitchCase="'yearly'">{{selectedDate.getFullYear()}}</span>
+    <span *ngSwitchDefault>{{selectedDate | date : 'LLLL'}}</span>
+  </div>
+
+  <!-- This fills the remaining space of the current row -->
+  <span class="full-width"></span>
+
+  <button mat-raised-button (click)="reset()">Today</button>
+  <button mat-raised-button [matMenuTriggerFor]="viewMenu">View</button>
+  <button mat-icon-button [matMenuTriggerFor]="settingsMenu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <!--menu-->
+  <mat-menu #viewMenu="matMenu">
+    <button mat-menu-item (click)="view = 'yearly'">Yearly</button>
+    <button mat-menu-item (click)="view = 'monthly'">Monthly</button>
+    <button mat-menu-item (click)="view = 'weekly'">Weekly</button>
+    <button mat-menu-item (click)="view = 'daily'">Daily</button>
+  </mat-menu>
+  <mat-menu #settingsMenu="matMenu">
+    <button mat-menu-item>Settings</button>
+    <button mat-menu-item>Help</button>
+  </mat-menu>
+</mat-toolbar>
+
+<!--calendar content-->
+<div #content [ngSwitch]="view">
+  <ng-container *ngSwitchCase="'yearly'">
+    <mat-calendar-yearly-view></mat-calendar-yearly-view>
+  </ng-container>
+  <ng-container *ngSwitchCase="'monthly'">
+    <mat-calendar-monthly-view></mat-calendar-monthly-view>
+  </ng-container>
+  <ng-container *ngSwitchCase="'weekly'">
+    <mat-calendar-weekly-view></mat-calendar-weekly-view>
+  </ng-container>
+  <ng-container *ngSwitchCase="'daily'">
+    <mat-calendar-daily-view></mat-calendar-daily-view>
+  </ng-container>
+  <div *ngSwitchDefault>{{currentDate | date : 'LLLL'}}</div>
+</div>

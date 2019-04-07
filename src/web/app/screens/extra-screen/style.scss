@@ -1,0 +1,27 @@
+:host {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+:host > *:last-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+:host > *:last-child > div {
+  flex: 1;
+  overflow: hidden;
+}
+.example-fill-remaining-space {
+  /* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+:host mat-toolbar {
+  height: 56px !important;
+  min-height: 56px !important;
+  max-height: 56px !important;
+}

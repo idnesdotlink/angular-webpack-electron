@@ -1,0 +1,38 @@
+:host {
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+.svg-tree-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.main {
+  flex: 1;
+  background-color: white;
+}
+.control .text-button {
+  color: white;
+  font-size: 10px;
+}
+.sd {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 100%;
+  width: 100%;
+}
+.sd.selected {
+  background-color: rgba(128,128,128,.5);
+}
+:host {
+  background-color: green;
+}
+
+:host mat-toolbar {
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
+}

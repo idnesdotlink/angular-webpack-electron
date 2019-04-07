@@ -1,0 +1,59 @@
+<ng-svg-charts-chart
+  [view]="[width, height]"
+  [showLegend]="legend"
+  [legendOptions]="legendOptions"
+  [activeEntries]="activeEntries"
+  [animations]="animations"
+  (legendLabelActivate)="onActivate($event)"
+  (legendLabelDeactivate)="onDeactivate($event)"
+  (legendLabelClick)="onClick($event)">
+  <svg:g [attr.transform]="transform" class="bar-chart chart">
+    <svg:g ng-svg-charts-x-axis
+      *ngIf="xAxis"
+      [xScale]="xScale"
+      [dims]="dims"
+      [showGridLines]="showGridLines"
+      [showLabel]="showXAxisLabel"
+      [labelText]="xAxisLabel"
+      [trimTicks]="trimXAxisTicks"
+      [maxTickLength]="maxXAxisTickLength"
+      [tickFormatting]="xAxisTickFormatting"
+      [ticks]="xAxisTicks"
+      (dimensionsChanged)="updateXAxisHeight($event)">
+    </svg:g>
+    <svg:g ng-svg-charts-y-axis
+      *ngIf="yAxis"
+      [yScale]="yScale"
+      [dims]="dims"
+      [showLabel]="showYAxisLabel"
+      [labelText]="yAxisLabel"
+      [trimTicks]="trimYAxisTicks"
+      [maxTickLength]="maxYAxisTickLength"
+      [tickFormatting]="yAxisTickFormatting"
+      [ticks]="yAxisTicks"
+      (dimensionsChanged)="updateYAxisWidth($event)">
+    </svg:g>
+    <svg:g
+      *ngFor="let group of results; trackBy:trackBy"
+      [@animationState]="'active'"
+      [attr.transform]="groupTransform(group)">
+      <svg:g ng-svg-charts-series-horizontal
+        type="normalized"
+        [xScale]="xScale"
+        [yScale]="yScale"
+        [activeEntries]="activeEntries"
+        [colors]="colors"
+        [series]="group.series"
+        [dims]="dims"
+        [gradient]="gradient"
+        [tooltipDisabled]="tooltipDisabled"
+        [tooltipTemplate]="tooltipTemplate"
+        [seriesName]="group.name"
+        [animations]="animations"
+        (select)="onClick($event, group)"
+        (activate)="onActivate($event, group)"
+        (deactivate)="onDeactivate($event, group)"
+      />
+    </svg:g>
+  </svg:g>
+</ng-svg-charts-chart>

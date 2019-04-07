@@ -1,0 +1,39 @@
+<ng-template [ngIf]="mode === 'vertical'">
+  <ng-svg-charts-bar-vertical
+  [view]="view"
+  [animations]="true"
+  [scheme]="colorScheme"
+  [results]="results"
+  [gradient]="false"
+  [xAxis]="true"
+  [yAxis]="true"
+  [legend]="false"
+  [showXAxisLabel]="true"
+  [showGridLines]="true"
+  [showYAxisLabel]="true"
+  [roundEdges]="false"
+  [showDataLabel]="true"
+  [barPadding]="20"
+  (select)="onSelect($event)">
+</ng-svg-charts-bar-vertical>
+</ng-template>
+
+<ng-template [ngIf]="mode === 'horizontal'">
+  <ng-svg-charts-bar-horizontal
+  [view]="view"
+  [animations]="true"
+  [scheme]="colorScheme"
+  [results]="results"
+  [gradient]="false"
+  [xAxis]="true"
+  [yAxis]="true"
+  [legend]="false"
+  [showXAxisLabel]="true"
+  [showGridLines]="true"
+  [showYAxisLabel]="true"
+  [roundEdges]="false"
+  [showDataLabel]="true"
+  [barPadding]="20"
+  (select)="onSelect($event)">
+</ng-svg-charts-bar-horizontal>
+</ng-template>

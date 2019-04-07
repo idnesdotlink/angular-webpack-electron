@@ -1,0 +1,13 @@
+<svg:defs *ngIf="gradient">
+  <svg:g ng-svg-charts-svg-linear-gradient
+    orientation="vertical"
+    [name]="gradientId"
+    [stops]="gradientStops"
+  />
+</svg:defs>
+<svg:path
+  class="area"
+  [attr.d]="areaPath"
+  [attr.fill]="gradient ? gradientFill : fill"
+  [style.opacity]="opacity"
+/>

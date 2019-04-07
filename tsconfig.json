@@ -1,0 +1,79 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es5",
+    "typeRoots": [
+      "./typings",
+      "./node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@lib/*": [
+        "./src/lib/*"
+      ],
+      "@lib": [
+        "./src/lib"
+      ],
+      "@core/*": [
+        "./src/web/app/core/*"
+      ],
+      "@core": [
+        "./src/web/app/core"
+      ],
+      "@shared/*": [
+        "./src/web/app/shared/*"
+      ],
+      "@shared": [
+        "./src/web/app/shared"
+      ],
+      "@extra/*": [
+        "./src/web/app/extra/*"
+      ],
+      "@extra": [
+        "./src/web/app/extra"
+      ],
+      "@screen/*": [
+        "./src/web/app/screen/*"
+      ],
+      "@screen": [
+        "./src/web/app/screen"
+      ],
+      "@animation/*": [
+        "./src/animation/*"
+      ],
+      "@animation": [
+        "./src/animation"
+      ],
+      "@worker/*": [
+        "./src/worker/*"
+      ],
+      "@worker": [
+        "./src/worker"
+      ],
+      "@lazy/*": [
+        "./src/lazy/*"
+      ],
+      "@lazy": [
+        "./src/lazy"
+      ]
+    }
+  },
+  "exclude": [
+    "./node_modules",
+    "./dist",
+    "./src/lib/scrollbar"
+  ]
+}

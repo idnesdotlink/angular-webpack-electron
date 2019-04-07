@@ -1,0 +1,102 @@
+.pos-container {
+  height: 100%;
+  width: 100%;
+  display: block;
+  overflow: hidden;
+}
+.pos-container-padding {
+  height: 100%;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+.main-column {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+.col-1,
+.col-2 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.pos-item-list {
+  flex: 1;
+}
+.wishes {
+  flex: 2;
+  height: 100%;
+  overflow: auto;
+}
+.wishes table {
+  width: 100%;
+  min-width: 300px;
+}
+.wishes table tr:nth-child(even) {
+  background-color: rgba(0,0,0,.1);
+}
+.wishes table tr td:nth-child(1n) {
+  width: 50px;
+}
+.wishes table tr td:nth-child(2n) {
+  width: auto;
+  min-width: 100px;
+}
+.wishes table tr td:nth-child(3n) {
+  width: 50px;
+}
+.wishes table tr td:nth-child(4n) {
+  width: 120px;
+}
+.wishes table tr td:nth-child(5n) {
+  width: 40px;
+}
+.wishes table tr.mat-header-row {
+  height: 48px;
+}
+.wishes table tr.mat-row {
+  height: 32px;
+}
+
+.pos-item-list-container {
+  flex: 1;
+}
+.pos-item-list {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+.dropsite {
+  height: 100%;
+}
+.wishes table tr.example-detail-row {
+  height: 0;
+}
+.wishes table tr.example-element-row td {
+  border-bottom-width: 0;
+}
+/**/
+.ngx-contextmenu .dropdown-menu {
+  border: solid 1px chartreuse;
+  background-color: darkgreen;
+  padding: 0;
+}
+.ngx-contextmenu li {
+  display: block;
+  border-top: solid 1px chartreuse;
+  text-transform: uppercase;
+  text-align: center;
+}
+.ngx-contextmenu li:first-child {
+  border-top:none;
+}
+.ngx-contextmenu a {
+  color:chartreuse;
+  display: block;
+  padding: 0.5em 1em;
+}
+.ngx-contextmenu a:hover {
+  color:darkgreen;
+  background-color:chartreuse;
+}

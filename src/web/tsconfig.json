@@ -1,0 +1,33 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc/app",
+    "types": [],
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "enableIvy": false,
+    "fullTemplateTypeCheck": true,
+    "preserveWhitespaces": false,
+    "strictInjectionParameters": true
+  },
+  "include": [
+    ".",
+    "../lib",
+    "../worker",
+    "../animation"
+  ],
+  "exclude": [
+    "../lib/scrollbar",
+    "../lib/color-picker2",
+    "../lib/context-menu2",
+    "../lib/calendar/module/component",
+    "test.ts",
+    "**/*.spec.ts"
+  ]
+}

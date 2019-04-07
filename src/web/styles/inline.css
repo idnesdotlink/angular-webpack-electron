@@ -1,0 +1,44 @@
+html, body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+html, body, app-root, app-root > .placeholder {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+app-root > .placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/*
+app-boot-bg-loader .initial-load-animation .loading-bar, .loading-bg .initial-load-animation .loading-bar {
+  width: 130px;
+  height: 2px;
+  margin: 0 auto;
+  border-radius: 2px;
+  background-color: #cfcfcf;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transform: rotateY(0);
+  transition: transform .3s ease-in;
+}
+
+#app-boot-bg-loader .initial-load-animation .loading-bar .blue-bar, .loading-bg .initial-load-animation .loading-bar .blue-bar {
+  height: 100%;
+  width: 68px;
+  position: absolute;
+  transform: translate(-34px,0);
+  background-color: #0073b1;
+  border-radius: 2px;
+  animation: initial-loading 1.5s infinite ease;
+}
+*/

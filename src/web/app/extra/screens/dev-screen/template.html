@@ -1,0 +1,85 @@
+<page-standard>
+  <scroll-padding>
+    <box-padding padding="10" style="height: 1000px;">
+      <td-breadcrumbs>
+        <a td-breadcrumb [routerLink]="['/admin', 'dev']" [queryParams]="{query: 1}">Home</a>
+        <a td-breadcrumb [routerLink]="['/admin', 'dev']" [queryParams]="{query: 2}">Breadcrumb 1</a>
+        <a td-breadcrumb [routerLink]="['/admin', 'dev']" [queryParams]="{query: 3}">Breadcrumb 2</a>
+        <a td-breadcrumb [routerLink]="['/admin', 'dev']" [queryParams]="{query: 4}">Breadcrumb 3</a>
+        <td-breadcrumb>Current</td-breadcrumb>
+      </td-breadcrumbs>
+      <!-- <div>
+    <button mat-button (click)="loadData()">Load Data</button>
+  </div>
+  <div>
+    <button mat-button (click)="calculateData()">Calculate Data</button>
+  </div>
+  <div>
+    <button mat-button (click)="findChild()">Calculate 2 Data</button>
+  </div>
+  <div>
+    <input [(ngModel)]="xyz">
+    {{ xyz }}
+    <button mat-button (click)="wow()">try</button>
+  </div> -->
+      <!-- <context-menu2></context-menu2> -->
+      <!-- <search-demo></search-demo> -->
+      <!-- <file-upload-demo></file-upload-demo> -->
+      <div fxLayout="column">
+        <div fxLayout="row" fxLayoutGap="10px">
+          <mat-form-field style="width: 85px;">
+            <span matPrefix>+0&nbsp;</span>
+            <input type="tel" matInput placeholder="Area" [(ngModel)]="www" mask="ABBB" [patterns]="mypattern"
+              maxlength="4" pattern="[0-9]*" appearance="standard" autocomplete="off" spellcheck="false">
+            <button mat-button *ngIf="www" matSuffix mat-icon-button aria-label="Clear" (click)="www=''">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field style="width: 150px;">
+            <input type="tel" matInput [(ngModel)]="abc" placeholder="Telephone" mask="ABB-BBB-BBB-BBB"
+              [patterns]="mypattern" maxlength="15" pattern="[0-9]*" appearance="standard" autocomplete="off"
+              spellcheck="false">
+            <button mat-button *ngIf="abc" matSuffix mat-icon-button aria-label="Clear" (click)="abc=''">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutGap="10px">
+          <mat-form-field style="width: 55px;">
+            <input type="text" matInput [(ngModel)]="rt" placeholder="RT" mask="ABB" [patterns]="rtrw" maxlength="3"
+              pattern="[0-9]*" appearance="standard" autocomplete="off" spellcheck="false">
+            <button mat-button *ngIf="rt" matSuffix mat-icon-button aria-label="Clear" (click)="rt=''">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field style="width: 55px;">
+            <input type="text" matInput [(ngModel)]="rw" placeholder="RW" mask="ABB" [patterns]="rtrw" maxlength="3"
+              pattern="[0-9]*" appearance="standard" autocomplete="off" spellcheck="false">
+            <button mat-button *ngIf="rw" matSuffix mat-icon-button aria-label="Clear" (click)="rw=''">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <mat-form-field>
+          <textarea matInput placeholder="Alamat" rows="5" cols="20" maxlength="350" cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" [(ngModel)]="xyz" style="resize: none;"
+            autocomplete="off" spellcheck="false">
+      </textarea>
+        </mat-form-field>
+        <!-- <markdown ngPreserveWhitespaces [data]="xyz">
+  </markdown> -->
+        <mat-form-field>
+          <input type="text" matInput [(ngModel)]="paz" placeholder="Password" appearance="standard" autocomplete="off"
+            spellcheck="false">
+        </mat-form-field>
+        <mat-calendar-2></mat-calendar-2>
+        <mat-password-strength [password]="paz" style="width:100px;"></mat-password-strength>
+        <mat-form-field>
+          <mat-select placeholder="Select">
+            <mat-option value="option">Option</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </box-padding>
+  </scroll-padding>
+</page-standard>

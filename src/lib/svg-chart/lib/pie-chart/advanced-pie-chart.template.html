@@ -1,0 +1,48 @@
+<div
+  [style.width.px]="width"
+  [style.height.px]="height">
+  <div class="advanced-pie chart"
+    [style.width.px]="dims.width"
+    [style.height.px]="dims.height">
+    <ng-svg-charts-chart
+      [view]="[width, height]"
+      [showLegend]="false"
+      [animations]="animations">
+      <svg:g
+        [attr.transform]="transform"
+        class="pie chart">
+        <svg:g ng-svg-charts-pie-series
+          [colors]="colors"
+          [series]="results"
+          [innerRadius]="innerRadius"
+          [activeEntries]="activeEntries"
+          [outerRadius]="outerRadius"
+          [gradient]="gradient"
+          [tooltipDisabled]="tooltipDisabled"
+          [tooltipTemplate]="tooltipTemplate"
+          [tooltipText]="tooltipText"
+          (select)="onClick($event)"
+          [animations]="animations">
+        </svg:g>
+      </svg:g>
+    </ng-svg-charts-chart>
+  </div>
+  <div
+    class="advanced-pie-legend-wrapper"
+    [style.width.px]="width - dims.width"
+    [style.height.px]="height">
+    <ng-svg-charts-advanced-legend
+      [data]="results"
+      [colors]="colors"
+      [width]="width - dims.width - margin[1]"
+      [label]="label"
+      [animations]="animations"
+      [valueFormatting]="valueFormatting"
+      [labelFormatting]="nameFormatting"
+      [percentageFormatting]="percentageFormatting"
+      (select)="onClick($event)"
+      (activate)="onActivate($event)"
+      (deactivate)="onDeactivate($event)">
+    </ng-svg-charts-advanced-legend>
+  </div>
+</div>

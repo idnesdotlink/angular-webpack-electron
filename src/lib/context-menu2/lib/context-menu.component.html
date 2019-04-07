@@ -1,0 +1,11 @@
+<!-- <a class="button is-primary" (click)="show(tpl, origin)" #origin>Popover</a> -->
+<button mat-button (click)="show(tpl, origin)" #origin>
+  button
+</button>
+
+<ng-template #tpl let-close="close">
+	And here's some amazing content. It's very engaging. Right?
+	<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+		<a class="button is-danger is-small" (click)="close({id: 2})">Close</a>
+	</div>
+</ng-template>

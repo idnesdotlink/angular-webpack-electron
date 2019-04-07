@@ -1,0 +1,35 @@
+<div class="svg-tree-container">
+  <div
+    #svgSvg
+    svg-svg
+    (selected)="onSelected($event)"
+    (resized)="onResizeSvg($event)">
+</div>
+  <mat-toolbar class="control">
+    <button mat-button mat-icon-button (click)="edit1()">
+      <mat-icon>looks_one</mat-icon>
+    </button>
+    <button mat-button mat-icon-button (click)="recalculateLvl()">
+      <mat-icon>replay</mat-icon>
+    </button>
+    <button mat-button mat-icon-button (click)="add()">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button mat-button mat-icon-button (click)="showId = !showId">I</button>
+    <button mat-button mat-icon-button (click)="showLevel = !showLevel">
+      L
+    </button>
+    <button mat-button mat-icon-button (click)="showBlocked = !showBlocked">
+      B
+    </button>
+    <button mat-button mat-icon-button (click)="showPathToRoot = !showPathToRoot">
+      A
+    </button>
+    <button mat-button mat-icon-button (click)="onDescendants()">
+      D
+    </button>
+    <button mat-button mat-icon-button (click)="save()">
+      <mat-icon>save</mat-icon>
+    </button>
+  </mat-toolbar>
+</div>

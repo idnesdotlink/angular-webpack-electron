@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+rm -rf .git && git init && git config user.name "idnesdotlink" && git config user.email "16096613+idnesdotlink@users.noreply.github.com" && git remote add origin "https://github.com/idnesdotlink/angular-webpack-electron.git" && git add . && git commit -m "reinit" && git push -u origin master

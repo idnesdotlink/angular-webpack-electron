@@ -1,0 +1,163 @@
+<page-standard (clickBack)="clickBack()">
+  <mat-horizontal-stepper
+    [linear]="isLinear"
+    (animationDone)="animationDone()"
+    #stepper class="psg-psg">
+    <mat-step [stepControl]="personalGroup">
+      <ng-template matStepLabel>Data Personal</ng-template>
+        <box-padding>
+          <scroll-padding [padding]="30">
+              <form [formGroup]="personalGroup">
+                <mat-form-field>
+                  <input
+                    appearance="standard"
+                    autocomplete="off"
+                    spellcheck="false"
+                    matInput
+                    placeholder="Nama"
+                    formControlName="nama"
+                    maxlength="32"
+                    [value]="personalGroup.get('nama').value"
+                    required>
+                    <mat-hint align="end">{{personalGroup.get('nama').value?.length || 0}}/32</mat-hint>
+                </mat-form-field>
+                <div class="radio-group-container">
+                  <p>Gender</p>
+                  <mat-radio-group formControlName="gender">
+                    <mat-radio-button class="example-radio-button" value="L">Laki-laki</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" value="P">Perempuan</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div class="radio-group-container">
+                  <p>Jenis Tanda Pengenal</p>
+                  <mat-radio-group formControlName="identity" >
+                    <mat-radio-button class="example-radio-button" value="ktp">KTP</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" value="sim">SIM</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" value="passport">Passport</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <mat-form-field>
+                  <input
+                    maxlength="24"
+                    appearance="standard"
+                    autocomplete="off"
+                    spellcheck="false"
+                    matInput placeholder="Nomor Tanda Pengenal"
+                    formControlName="pin"
+                    [value]="personalGroup.get('pin').value"
+                    required>
+                    <mat-hint align="end">{{personalGroup.get('pin').value?.length || 0}}/24</mat-hint>
+                </mat-form-field>
+                <div>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      type="text"
+                      formControlName="phone"
+                      [value]="personalGroup.get('phone').value">
+                      <mat-hint align="end">{{personalGroup.get('phone').value?.length || 0}}/15</mat-hint>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <button mat-stroked-button matStepperNext>Next</button>
+                </div>
+              </form>
+              <!-- <span
+              internationalCode
+              [(ngModel)]="pn"
+              [defaultCountry]="'id'"
+              #phoneNumber="ngModel"
+              name="phone_number"
+              [allowedCountries]="['id', 'ca', 'us', 'my', 'sg']">
+            </span> -->
+            <mat-form-field class="flg">
+              <mat-select [(ngModel)]="pn" panelClass="flg-panel">
+                <mat-select-trigger>
+                    <span [class]="'flag-icon flag-icon-' + pn"></span>
+                </mat-select-trigger>
+                <ng-template ngFor let-flag [ngForOf]="['id', 'gb', 'my', 'au', 'vn', 'th']">
+                  <mat-option [value]="flag"><span [class]="'flag-icon flag-icon-' + flag"></span></mat-option>
+                </ng-template>
+              </mat-select>
+            </mat-form-field>
+              <mat-form-field class="example-full-width">
+                  <span matPrefix>
+                  </span>
+                  <input
+                    type="tel"
+                    matInput
+                    placeholder="Telephone"
+                    digitOnly
+                    maxlength="15"
+                    pattern="[0-9]*"
+                    appearance="standard"
+                    autocomplete="off"
+                    spellcheck="false">
+              </mat-form-field>
+              <button mat-stroked-button (click)="show()">OK</button>
+        </scroll-padding>
+      </box-padding>
+    </mat-step>
+    <mat-step [stepControl]="addressGroup">
+      <ng-template matStepLabel>Alamat</ng-template>
+      <box-padding>
+        <scroll-padding padding="20">
+            <form [formGroup]="addressGroup">
+              <ng-template ngFor let-select [ngForOf]="addressSelect">
+                <div>
+                  <ng-template matStepLabel>{{ select.label }}</ng-template>
+                  <mat-form-field>
+                    <mat-select placeholder="Pilih {{ select.label }}" [formControlName]="select.formControlName">
+                      <ng-template ngFor let-type [ngForOf]="select.options">
+                        <mat-option [value]="type.value">{{ type.name }}</mat-option>
+                      </ng-template>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </ng-template>
+              <div>
+                  <ng-template matStepLabel>Alamat</ng-template>
+                  <mat-form-field>
+                    <input
+                      appearance="standard"
+                      autocomplete="off"
+                      spellcheck="false"
+                      matInput
+                      placeholder="Alamat"
+                      formControlName="address"
+                      required>
+                  </mat-form-field>
+              </div>
+              <div>
+                <button mat-stroked-button matStepperPrevious>Back</button>
+                <button mat-stroked-button matStepperNext>Next</button>
+              </div>
+            </form>
+        </scroll-padding>
+      </box-padding>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <div>
+        Nama: {{ personalGroup.get('nama').value }}<br/>
+        Gender: {{ (personalGroup.get('gender').value === 'L' ? 'Laki-laki' : 'Perempuan')  }}<br/>
+        Tanda Pengenal: {{ personalGroup.get('identity').value | uppercase }}<br/>
+        Nomor: {{ personalGroup.get('pin').value }}<br/>
+      </div>
+      <div *ngIf="addressGroup.valid">
+        {{ addressSelected.address }}<br/>
+        Kelurahan/Desa: {{ addressSelected.villages }}<br/>
+        Kecamatan: {{ addressSelected.districts }}<br/>
+        Kabupaten/Kota: {{ addressSelected.regencies }}<br/>
+        Provinsi: {{ addressSelected.provinces }}
+      </div>
+      <mat-checkbox [(ngModel)]="oktosave">Check me!</mat-checkbox>
+      {{ oktosave ? 'ok' : 'no' }}
+      <div>
+        <button [disabled]="!oktosave" mat-icon-button (click)="save()">Simpan</button>
+        <button mat-stroked-button matStepperPrevious>Back</button>
+        <button mat-stroked-button (click)="reset(stepper)">Reset</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+</page-standard>

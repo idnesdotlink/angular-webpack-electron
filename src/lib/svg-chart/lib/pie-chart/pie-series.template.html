@@ -1,0 +1,41 @@
+<svg:g *ngFor="let arc of data; trackBy:trackBy">
+  <svg:g ng-svg-charts-pie-label
+    *ngIf="labelVisible(arc)"
+    [data]="arc"
+    [radius]="outerRadius"
+    [color]="color(arc)"
+    [label]="labelText(arc)"
+    [labelTrim]="trimLabels"
+    [labelTrimSize]="maxLabelLength"
+    [max]="max"
+    [value]="arc.value"
+    [explodeSlices]="explodeSlices"
+    [animations]="animations">
+  </svg:g>
+  <svg:g
+    ng-svg-charts-pie-arc
+    [startAngle]="arc.startAngle"
+    [endAngle]="arc.endAngle"
+    [innerRadius]="innerRadius"
+    [outerRadius]="outerRadius"
+    [fill]="color(arc)"
+    [value]="arc.data.value"
+    [gradient]="gradient"
+    [data]="arc.data"
+    [max]="max"
+    [explodeSlices]="explodeSlices"
+    [isActive]="isActive(arc.data)"
+    [animate]="animations"
+    (select)="onClick($event)"
+    (activate)="activate.emit($event)"
+    (deactivate)="deactivate.emit($event)"
+    (dblclick)="dblclick.emit($event)"
+    ngx-tooltip
+    [tooltipDisabled]="tooltipDisabled"
+    [tooltipPlacement]="'top'"
+    [tooltipType]="'tooltip'"
+    [tooltipTitle]="getTooltipTitle(arc)"
+    [tooltipTemplate]="tooltipTemplate"
+    [tooltipContext]="arc.data">
+  </svg:g>
+</svg:g>

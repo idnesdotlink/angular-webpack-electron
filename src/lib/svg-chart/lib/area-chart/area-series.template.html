@@ -1,0 +1,13 @@
+<svg:g ng-svg-charts-area
+  class="area-series"
+  [data]="data"
+  [path]="path"
+  [fill]="colors.getColor(data.name)"
+  [stops]="gradientStops"
+  [startingPath]="startingPath"
+  [opacity]="opacity"
+  [gradient]="gradient || hasGradient"
+  [animations]="animations"
+  [class.active]="isActive(data)"
+  [class.inactive]="isInactive(data)"
+/>

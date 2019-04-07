@@ -1,0 +1,195 @@
+<svg:svg
+  #svgSvg
+  [attr.viewBox]="getViewBoxV"
+  preserveAspectRatio="xMinYMin meet">
+  <svg:defs>
+    <svg:style>
+    /* <![CDATA[ */
+    .background {
+      fill: grey;
+      fill-opacity: .2;
+    }
+    .pan-zoom > rect {
+      fill: transparent;
+      fill-opacity: .2;
+
+    }
+    .circle {
+      pointer-events: bounding-box;
+    }
+    .circle rect:last-child {
+      fill: orange;
+      fill-opacity: 0.8;
+      cursor: pointer;
+    }
+    .circle rect:first-child {
+      fill: transparent;
+      stroke: red;
+      stroke-width: 2px;
+      stroke-opacity: 0;
+      cursor: pointer;
+    }
+    .circle:hover rect:first-child {
+      stroke-opacity: .2;
+    }
+    .node.selected .circle rect.rectpsg {
+      fill: blue;
+    }
+    .rectpsg {
+      fill: white;
+      z-index: 3000;
+      fill-opacity: 1;
+    }
+    .link path {
+      fill: none;
+      stroke: transparent;
+      stroke-width: 1.2px;
+      stroke-opacity: .3;
+    }
+    .blocked {
+      visibility: hidden;
+    }
+    .show-blocked .blocked {
+      visibility: visible;
+    }
+    .data-id {
+      font-size: 7px;
+      visibility: hidden;
+      font-family: roboto;
+      text-shadow: 1px 1px 0px #ffffff;
+    }
+    .data {
+      z-index: 100000;
+    }
+    .show-id .data-id {
+      visibility: visible;
+    }
+    .data-level {
+      font-size: 8px;
+      text-anchor: middle;
+      visibility: hidden;
+      font-family: roboto;
+      text-shadow: 1px 1px 0px #ffffff;
+    }
+    .show-level .data-level {
+      visibility: visible;
+    }
+    .node .link path.elbow {
+      stroke: grey;
+      fill: none;
+      stroke-width: 5px;
+      stroke-opacity: 1;
+      visibility: visible;
+
+    }
+    .node.selected .link path.elbow {
+      visibility: visible;
+    }
+    .elbow-combine {
+      fill: none;
+      stroke: grey;
+      stroke-width:1px;
+      shape-rendering:
+      crispEdges;
+      stroke-opacity: .5;
+    }
+    .ptr {
+      visibility: hidden;
+      fill: none;
+      stroke: red;
+      stroke-width: 1px;
+      stroke-opacity: 1;
+    }
+    .show-ptr .selected .ptr {
+      visibility: visible;
+    }
+    /* ]]> */
+    </svg:style>
+    <svg id="clear" width="24" height="24" viewBox="0 0 24 24">
+      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+    <svg id="face_image" width="24" height="24" viewBox="0 0 24 24">
+      <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
+      <path fill="none" d="M0 0h24v24H0z"/>
+    </svg>
+    <svg id="add_circle" width="24" height="24" viewBox="0 0 24 24">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+    </svg>
+    <svg id="account_circle" width="24" height="24" viewBox="0 0 24 24">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+      <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+    <svg id="remove_circle" width="24" height="24" viewBox="0 0 24 24">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/>
+    </svg>
+  </svg:defs>
+  <svg:rect
+    class="background bg-1"
+    [attr.width]="svgWidth"
+    [attr.height]="svgHeight"/>
+  <svg:rect
+    class="background bg-2"
+    [attr.width]="mWidth"
+    [attr.height]="mHeight"
+    [attr.transform]="bgTransform"/>
+  <svg:g class="pan-zoom" [attr.transform]="bgTransform">
+    <svg:rect [attr.width]="mWidth" [attr.height]="mHeight" class="pan-zoom-bg"/>
+    <svg:g [ngClass]="nodesClassL" class="nodes">
+      <svg:g *ngFor="let node of tree" [ngClass]="node.classes">
+        <use
+          *ngIf="node.data.parentId !== null && node.data.lvl >= node.parent.data.lvl"
+          href="#clear"
+          height="8"
+          width="8"
+          [attr.x]="node.x-4"
+          [attr.y]="node.y-32"
+          fill="red"
+          class="blocked"/>
+        <svg:path
+          [attr.d]="node.pathElbowCombine.b"
+          class="elbow-combine"/>
+        <svg:path
+          [attr.d]="node.pathToRoot"
+          class="ptr"/>
+        <svg:g class="circle" (click)="clickCircle({e: $event, n: node})">
+          <svg:rect
+            [attr.x]="node.x-21"
+            [attr.y]="node.y-21"
+            width="42"
+            height="42" style="fill: none;"/>
+          <svg:rect
+            [attr.x]="node.x-15"
+            [attr.y]="node.y-15"
+            rx="15"
+            ry="15"
+            width="30"
+            height="30"
+            class="rectpsg"/>
+            <use
+              href="#account_circle"
+              height="30"
+              width="30"
+              [attr.x]="node.x-15"
+              [attr.y]="node.y-15"
+              fill="black"/>
+        </svg:g><!-- .circle -->
+        <use
+          style="visibility: hidden;"
+          href="#remove_circle"
+          *ngIf="node.children !== undefined"
+          height="12"
+          width="12"
+          [attr.x]="node.x-6"
+          [attr.y]="node.y+18"
+          fill="black"/>
+        <svg:g class="data">
+          <svg:text *ngIf="node.parent !== null" class="data-level" [attr.transform]="node.ttLvl">{{ node.data.lvlName }}</svg:text>
+          <svg:text *ngIf="node.parent !== null" class="data-id" [attr.transform]="node.ttId">{{ node.data.id }}</svg:text>
+        </svg:g>
+      </svg:g><!-- .node -->
+    </svg:g><!-- .nodes -->
+  </svg:g><!-- .pan-zoom -->
+</svg:svg>

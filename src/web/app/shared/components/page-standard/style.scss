@@ -1,0 +1,35 @@
+:host {
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+:host .box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+:host .box .bar {
+  height: 24px;
+  display: flex;
+  background-color: darkorange;
+}
+:host .box .content {
+  flex: 1;
+  overflow: hidden;
+}
+.fill-remaining {
+  flex: 1;
+}
+:host .mat-icon-button {
+  height: 24px;
+  width: 24px;
+  line-height: 24px;
+  border-radius: 0;
+}
+.bottom .bar {
+  order: 1
+}
+.bottom .content {
+  order: 0;
+}
