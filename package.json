@@ -22,7 +22,8 @@
     "ps": "./node_modules/.bin/tsc -P ./src/lib/password-strength/tsconfig.lib.es5.json",
     "psc": "./node_modules/.bin/ivy-ngcc -P ./src/lib/password-strength/tsconfig.lib.es5.json",
     "psc2": "./node_modules/.bin/ngc -P ./src/lib/password-strength/src/tsconfig.lib.es5.json",
-    "svgc": "./node_modules/.bin/ngc -P ./src/lib/svg-chart/tsconfig.json"
+    "svgc": "./node_modules/.bin/ngc -P ./src/lib/svg-chart/tsconfig.json",
+    "pak": "./node_modules/.bin/ng-packagr -p ./src/lib/svg-chart/package.json -c ./src/lib/svg-chart/tsconfig.json"
   },
   "author": {
     "name": "idnesdotlink",
@@ -187,6 +188,7 @@
     "ts-helpers": "^1.1.2",
     "ts-loader": "^5.3.3",
     "ts-node": "^8.0.3",
+    "ts-utils": "^6.0.7",
     "tsconfig-paths": "^3.8.0",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
     "tsickle": "^0.34.3",
