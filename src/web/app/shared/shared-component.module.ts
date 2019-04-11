@@ -32,6 +32,7 @@ import { PhonePipeModule } from '@lib/phone-pipe/lib/phonepipe.module';
 import { NgxMaskModule } from '@lib/input-mask';
 import { MatPasswordStrengthModule } from '@lib/password-strength';
 import { MatCalendarModule } from '@lib/calendar';
+import { CobaModule } from '@try/coba';
 
 const components = [
   AppBase,
@@ -62,6 +63,7 @@ const modules = [
   ContextMenuModule2,
   ClickOutsideModule,
   PhonePipeModule,
+  CobaModule
   // SharedLibModule
 ];
 

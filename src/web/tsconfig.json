@@ -20,7 +20,8 @@
     ".",
     "../lib",
     "../worker",
-    "../animation"
+    "../animation",
+    "../try/coba/dist"
   ],
   "exclude": [
     "../lib/scrollbar",

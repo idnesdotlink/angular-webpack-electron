@@ -68,6 +68,12 @@
       ],
       "@lazy": [
         "./src/lazy"
+      ],
+      "@try/*": [
+        "./src/try/*"
+      ],
+      "@try": [
+        "./src/try"
       ]
     }
   },

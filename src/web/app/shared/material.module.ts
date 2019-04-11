@@ -1,3 +1,4 @@
+
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -84,7 +85,7 @@ const modules = [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    ... modules
+    ...modules
   ],
   exports: modules
 })

@@ -1,0 +1,27 @@
+{
+    "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+    "name": "coba",
+    "version": "1.0.0",
+    "main": "dist/bundles/coba.umd.js",
+    "module": "dist/fesm5/coba.js",
+    "es2015": "dist/fesm2015/coba.js",
+    "esm5": "dist/esm5/coba.js",
+    "esm2015": "dist/esm2015/coba.js",
+    "fesm5": "dist/fesm5/coba.js",
+    "fesm2015": "dist/fesm2015/coba.js",
+    "typings": "dist/coba.d.ts",
+    "metadata": "dist/coba.metadata.json",
+    "licenses": "MIT",
+    "private": true,
+    "ngPackage": {
+        "lib": {
+            "entryFile": "public_api.ts"
+        },
+        "dest": "../../try/coba"
+    },
+    "peerDependencies": {
+        "@angular/common": "^7.2.12",
+        "@angular/core": "^7.2.12"
+    },
+    "dependencies": false
+}
