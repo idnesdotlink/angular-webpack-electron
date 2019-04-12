@@ -1,6 +1,6 @@
 {
     "$schema": "../../../node_modules/ng-packagr/package.schema.json",
-    "name": "coba",
+    "name": "@try/coba",
     "version": "1.0.0",
     "main": "dist/bundles/coba.umd.js",
     "module": "dist/fesm5/coba.js",

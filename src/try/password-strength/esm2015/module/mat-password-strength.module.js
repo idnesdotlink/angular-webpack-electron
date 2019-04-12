@@ -1,0 +1,44 @@
+import * as tslib_1 from "tslib";
+var MatPasswordStrengthModule_1;
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatCardModule, MatIconModule, MatProgressBarModule, MatRippleModule } from '@angular/material';
+import { MatPasswordStrengthComponent } from './component/mat-password-strength/mat-password-strength.component';
+import { MatPasswordStrengthInfoComponent } from './component/mat-password-strength-info/mat-password-strength-info.component';
+import { MatPassToggleVisibilityComponent } from './component/mat-pass-toggle-visibility/mat-pass-toggle-visibility.component';
+// Export module's public API
+export { MatPasswordStrengthComponent } from './component/mat-password-strength/mat-password-strength.component';
+export { MatPasswordStrengthInfoComponent } from './component/mat-password-strength-info/mat-password-strength-info.component';
+export { MatPassToggleVisibilityComponent } from './component/mat-pass-toggle-visibility/mat-pass-toggle-visibility.component';
+let MatPasswordStrengthModule = MatPasswordStrengthModule_1 = class MatPasswordStrengthModule {
+    static forRoot() {
+        return {
+            ngModule: MatPasswordStrengthModule_1,
+            providers: []
+        };
+    }
+};
+MatPasswordStrengthModule = MatPasswordStrengthModule_1 = tslib_1.__decorate([
+    NgModule({
+        imports: [
+            CommonModule,
+            MatProgressBarModule,
+            MatCardModule,
+            MatIconModule,
+            MatRippleModule
+        ],
+        exports: [
+            MatPasswordStrengthComponent,
+            MatPasswordStrengthInfoComponent,
+            MatPassToggleVisibilityComponent
+        ],
+        declarations: [
+            MatPasswordStrengthComponent,
+            MatPasswordStrengthInfoComponent,
+            MatPassToggleVisibilityComponent
+        ],
+        entryComponents: [MatPassToggleVisibilityComponent]
+    })
+], MatPasswordStrengthModule);
+export { MatPasswordStrengthModule };
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibWF0LXBhc3N3b3JkLXN0cmVuZ3RoLm1vZHVsZS5qcyIsInNvdXJjZVJvb3QiOiJuZzovL0B0cnkvcGFzc3dvcmQtc3RyZW5ndGgvIiwic291cmNlcyI6WyJtb2R1bGUvbWF0LXBhc3N3b3JkLXN0cmVuZ3RoLm1vZHVsZS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFBLE9BQU8sRUFBQyxZQUFZLEVBQUMsTUFBTSxpQkFBaUIsQ0FBQztBQUM3QyxPQUFPLEVBQXNCLFFBQVEsRUFBQyxNQUFNLGVBQWUsQ0FBQztBQUM1RCxPQUFPLEVBQUMsYUFBYSxFQUFFLGFBQWEsRUFBRSxvQkFBb0IsRUFBRSxlQUFlLEVBQUMsTUFBTSxtQkFBbUIsQ0FBQztBQUV0RyxPQUFPLEVBQUMsNEJBQTRCLEVBQUMsTUFBTSxtRUFBbUUsQ0FBQztBQUMvRyxPQUFPLEVBQUMsZ0NBQWdDLEVBQUMsTUFBTSw2RUFBNkUsQ0FBQztBQUM3SCxPQUFPLEVBQUMsZ0NBQWdDLEVBQUMsTUFBTSw2RUFBNkUsQ0FBQztBQUU3SCw2QkFBNkI7QUFDN0IsT0FBTyxFQUFDLDRCQUE0QixFQUFDLE1BQU0sbUVBQW1FLENBQUM7QUFDL0csT0FBTyxFQUNMLGdDQUFnQyxFQUNqQyxNQUFNLDZFQUE2RSxDQUFDO0FBQ3JGLE9BQU8sRUFBQyxnQ0FBZ0MsRUFBQyxNQUFNLDZFQUE2RSxDQUFDO0FBc0I3SCxJQUFhLHlCQUF5QixpQ0FBdEMsTUFBYSx5QkFBeUI7SUFDcEMsTUFBTSxDQUFDLE9BQU87UUFDWixPQUFPO1lBQ0wsUUFBUSxFQUFFLDJCQUF5QjtZQUNuQyxTQUFTLEVBQUUsRUFBRTtTQUNkLENBQUM7SUFDSixDQUFDO0NBQ0YsQ0FBQTtBQVBZLHlCQUF5QjtJQXBCckMsUUFBUSxDQUFDO1FBQ1IsT0FBTyxFQUFFO1lBQ1AsWUFBWTtZQUNaLG9CQUFvQjtZQUNwQixhQUFhO1lBQ2IsYUFBYTtZQUNiLGVBQWU7U0FDaEI7UUFDRCxPQUFPLEVBQUU7WUFDUCw0QkFBNEI7WUFDNUIsZ0NBQWdDO1lBQ2hDLGdDQUFnQztTQUNqQztRQUNELFlBQVksRUFBRTtZQUNaLDRCQUE0QjtZQUM1QixnQ0FBZ0M7WUFDaEMsZ0NBQWdDO1NBQ2pDO1FBQ0QsZUFBZSxFQUFFLENBQUMsZ0NBQWdDLENBQUM7S0FDcEQsQ0FBQztHQUNXLHlCQUF5QixDQU9yQztTQVBZLHlCQUF5QiIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7Q29tbW9uTW9kdWxlfSBmcm9tICdAYW5ndWxhci9jb21tb24nO1xuaW1wb3J0IHtNb2R1bGVXaXRoUHJvdmlkZXJzLCBOZ01vZHVsZX0gZnJvbSAnQGFuZ3VsYXIvY29yZSc7XG5pbXBvcnQge01hdENhcmRNb2R1bGUsIE1hdEljb25Nb2R1bGUsIE1hdFByb2dyZXNzQmFyTW9kdWxlLCBNYXRSaXBwbGVNb2R1bGV9IGZyb20gJ0Bhbmd1bGFyL21hdGVyaWFsJztcblxuaW1wb3J0IHtNYXRQYXNzd29yZFN0cmVuZ3RoQ29tcG9uZW50fSBmcm9tICcuL2NvbXBvbmVudC9tYXQtcGFzc3dvcmQtc3RyZW5ndGgvbWF0LXBhc3N3b3JkLXN0cmVuZ3RoLmNvbXBvbmVudCc7XG5pbXBvcnQge01hdFBhc3N3b3JkU3RyZW5ndGhJbmZvQ29tcG9uZW50fSBmcm9tICcuL2NvbXBvbmVudC9tYXQtcGFzc3dvcmQtc3RyZW5ndGgtaW5mby9tYXQtcGFzc3dvcmQtc3RyZW5ndGgtaW5mby5jb21wb25lbnQnO1xuaW1wb3J0IHtNYXRQYXNzVG9nZ2xlVmlzaWJpbGl0eUNvbXBvbmVudH0gZnJvbSAnLi9jb21wb25lbnQvbWF0LXBhc3MtdG9nZ2xlLXZpc2liaWxpdHkvbWF0LXBhc3MtdG9nZ2xlLXZpc2liaWxpdHkuY29tcG9uZW50JztcblxuLy8gRXhwb3J0IG1vZHVsZSdzIHB1YmxpYyBBUElcbmV4cG9ydCB7TWF0UGFzc3dvcmRTdHJlbmd0aENvbXBvbmVudH0gZnJvbSAnLi9jb21wb25lbnQvbWF0LXBhc3N3b3JkLXN0cmVuZ3RoL21hdC1wYXNzd29yZC1zdHJlbmd0aC5jb21wb25lbnQnO1xuZXhwb3J0IHtcbiAgTWF0UGFzc3dvcmRTdHJlbmd0aEluZm9Db21wb25lbnRcbn0gZnJvbSAnLi9jb21wb25lbnQvbWF0LXBhc3N3b3JkLXN0cmVuZ3RoLWluZm8vbWF0LXBhc3N3b3JkLXN0cmVuZ3RoLWluZm8uY29tcG9uZW50JztcbmV4cG9ydCB7TWF0UGFzc1RvZ2dsZVZpc2liaWxpdHlDb21wb25lbnR9IGZyb20gJy4vY29tcG9uZW50L21hdC1wYXNzLXRvZ2dsZS12aXNpYmlsaXR5L21hdC1wYXNzLXRvZ2dsZS12aXNpYmlsaXR5LmNvbXBvbmVudCc7XG5cbkBOZ01vZHVsZSh7XG4gIGltcG9ydHM6IFtcbiAgICBDb21tb25Nb2R1bGUsXG4gICAgTWF0UHJvZ3Jlc3NCYXJNb2R1bGUsXG4gICAgTWF0Q2FyZE1vZHVsZSxcbiAgICBNYXRJY29uTW9kdWxlLFxuICAgIE1hdFJpcHBsZU1vZHVsZVxuICBdLFxuICBleHBvcnRzOiBbXG4gICAgTWF0UGFzc3dvcmRTdHJlbmd0aENvbXBvbmVudCxcbiAgICBNYXRQYXNzd29yZFN0cmVuZ3RoSW5mb0NvbXBvbmVudCxcbiAgICBNYXRQYXNzVG9nZ2xlVmlzaWJpbGl0eUNvbXBvbmVudFxuICBdLFxuICBkZWNsYXJhdGlvbnM6IFtcbiAgICBNYXRQYXNzd29yZFN0cmVuZ3RoQ29tcG9uZW50LFxuICAgIE1hdFBhc3N3b3JkU3RyZW5ndGhJbmZvQ29tcG9uZW50LFxuICAgIE1hdFBhc3NUb2dnbGVWaXNpYmlsaXR5Q29tcG9uZW50XG4gIF0sXG4gIGVudHJ5Q29tcG9uZW50czogW01hdFBhc3NUb2dnbGVWaXNpYmlsaXR5Q29tcG9uZW50XVxufSlcbmV4cG9ydCBjbGFzcyBNYXRQYXNzd29yZFN0cmVuZ3RoTW9kdWxlIHtcbiAgc3RhdGljIGZvclJvb3QoKTogTW9kdWxlV2l0aFByb3ZpZGVycyB7XG4gICAgcmV0dXJuIHtcbiAgICAgIG5nTW9kdWxlOiBNYXRQYXNzd29yZFN0cmVuZ3RoTW9kdWxlLFxuICAgICAgcHJvdmlkZXJzOiBbXVxuICAgIH07XG4gIH1cbn1cbiJdfQ==

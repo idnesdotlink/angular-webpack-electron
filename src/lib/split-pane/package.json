@@ -1,0 +1,27 @@
+{
+    "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+    "name": "@try/split-pane",
+    "version": "1.0.0",
+    "main": "dist/bundles/split-pane.umd.js",
+    "module": "dist/fesm5/split-pane.js",
+    "es2015": "dist/fesm2015/split-pane.js",
+    "esm5": "dist/esm5/split-pane.js",
+    "esm2015": "dist/esm2015/split-pane.js",
+    "fesm5": "dist/fesm5/split-pane.js",
+    "fesm2015": "dist/fesm2015/split-pane.js",
+    "typings": "dist/split-pane.d.ts",
+    "metadata": "dist/split-pane.metadata.json",
+    "licenses": "MIT",
+    "private": true,
+    "ngPackage": {
+        "lib": {
+            "entryFile": "index.ts"
+        },
+        "dest": "../../try/split-pane"
+    },
+    "peerDependencies": {
+        "@angular/common": "^7.2.12",
+        "@angular/core": "^7.2.12"
+    },
+    "dependencies": false
+}

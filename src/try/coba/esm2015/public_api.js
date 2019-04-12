@@ -1,7 +1,3 @@
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
- */
-export { CobaComponent } from './lib/coba.component';
-export { CobaModule } from './lib/coba.module';
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljX2FwaS5qcyIsInNvdXJjZVJvb3QiOiJuZzovL2NvYmEvIiwic291cmNlcyI6WyJwdWJsaWNfYXBpLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7QUFBQSw4QkFBYyxzQkFBc0IsQ0FBQztBQUNyQywyQkFBYyxtQkFBbUIsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCAqIGZyb20gJy4vbGliL2NvYmEuY29tcG9uZW50JztcbmV4cG9ydCAqIGZyb20gJy4vbGliL2NvYmEubW9kdWxlJzsiXX0=
+export * from './lib/coba.component';
+export * from './lib/coba.module';
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljX2FwaS5qcyIsInNvdXJjZVJvb3QiOiJuZzovL0B0cnkvY29iYS8iLCJzb3VyY2VzIjpbInB1YmxpY19hcGkudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsY0FBYyxzQkFBc0IsQ0FBQztBQUNyQyxjQUFjLG1CQUFtQixDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0ICogZnJvbSAnLi9saWIvY29iYS5jb21wb25lbnQnO1xuZXhwb3J0ICogZnJvbSAnLi9saWIvY29iYS5tb2R1bGUnOyJdfQ==

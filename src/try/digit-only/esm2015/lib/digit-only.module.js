@@ -1,0 +1,14 @@
+import * as tslib_1 from "tslib";
+import { NgModule } from '@angular/core';
+import { DigitOnlyDirective } from './digit-only.directive';
+let DigitOnlyModule = class DigitOnlyModule {
+};
+DigitOnlyModule = tslib_1.__decorate([
+    NgModule({
+        imports: [],
+        declarations: [DigitOnlyDirective],
+        exports: [DigitOnlyDirective]
+    })
+], DigitOnlyModule);
+export { DigitOnlyModule };
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZGlnaXQtb25seS5tb2R1bGUuanMiLCJzb3VyY2VSb290Ijoibmc6Ly9AdHJ5L2RpZ2l0LW9ubHkvIiwic291cmNlcyI6WyJsaWIvZGlnaXQtb25seS5tb2R1bGUudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUFBLE9BQU8sRUFBRSxRQUFRLEVBQUUsTUFBTSxlQUFlLENBQUM7QUFDekMsT0FBTyxFQUFFLGtCQUFrQixFQUFFLE1BQU0sd0JBQXdCLENBQUM7QUFPNUQsSUFBYSxlQUFlLEdBQTVCLE1BQWEsZUFBZTtDQUFHLENBQUE7QUFBbEIsZUFBZTtJQUwzQixRQUFRLENBQUM7UUFDUixPQUFPLEVBQUUsRUFBRTtRQUNYLFlBQVksRUFBRSxDQUFDLGtCQUFrQixDQUFDO1FBQ2xDLE9BQU8sRUFBRSxDQUFDLGtCQUFrQixDQUFDO0tBQzlCLENBQUM7R0FDVyxlQUFlLENBQUc7U0FBbEIsZUFBZSIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IE5nTW9kdWxlIH0gZnJvbSAnQGFuZ3VsYXIvY29yZSc7XG5pbXBvcnQgeyBEaWdpdE9ubHlEaXJlY3RpdmUgfSBmcm9tICcuL2RpZ2l0LW9ubHkuZGlyZWN0aXZlJztcblxuQE5nTW9kdWxlKHtcbiAgaW1wb3J0czogW10sXG4gIGRlY2xhcmF0aW9uczogW0RpZ2l0T25seURpcmVjdGl2ZV0sXG4gIGV4cG9ydHM6IFtEaWdpdE9ubHlEaXJlY3RpdmVdXG59KVxuZXhwb3J0IGNsYXNzIERpZ2l0T25seU1vZHVsZSB7fVxuIl19

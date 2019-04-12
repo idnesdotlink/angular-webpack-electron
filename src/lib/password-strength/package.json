@@ -1,0 +1,27 @@
+{
+    "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+    "name": "@try/password-strength",
+    "version": "1.0.0",
+    "main": "dist/bundles/password-strength.umd.js",
+    "module": "dist/fesm5/password-strength.js",
+    "es2015": "dist/fesm2015/password-strength.js",
+    "esm5": "dist/esm5/password-strength.js",
+    "esm2015": "dist/esm2015/password-strength.js",
+    "fesm5": "dist/fesm5/password-strength.js",
+    "fesm2015": "dist/fesm2015/password-strength.js",
+    "typings": "dist/password-strength.d.ts",
+    "metadata": "dist/password-strength.metadata.json",
+    "licenses": "MIT",
+    "private": true,
+    "ngPackage": {
+        "lib": {
+            "entryFile": "index.ts"
+        },
+        "dest": "../../try/password-strength"
+    },
+    "peerDependencies": {
+        "@angular/common": "^7.2.12",
+        "@angular/core": "^7.2.12"
+    },
+    "dependencies": false
+}
