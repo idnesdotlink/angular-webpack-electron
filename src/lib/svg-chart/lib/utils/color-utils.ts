@@ -1,4 +1,4 @@
-import * as d3_color from 'd3-color';
+import { color, rgb } from 'd3-color';
 
 /**
  * Converts a hex to RGB
@@ -7,7 +7,7 @@ import * as d3_color from 'd3-color';
  */
 export function hexToRgb(value: string): any {
   // deprecated, use d3.color()
-  return d3_color.rgb(value);
+  return rgb(value);
 }
 
 /**
@@ -17,7 +17,7 @@ export function hexToRgb(value: string): any {
  * @export
  */
 export function invertColor(value: string): string {
-  const color = d3_color.rgb(value);
+  const color = rgb(value);
   const { r, g, b, opacity } = color;
   if (opacity === 0) {
     return color.toString();

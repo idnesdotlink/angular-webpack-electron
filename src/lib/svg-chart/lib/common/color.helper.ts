@@ -11,7 +11,7 @@ export class ColorHelper {
   customColors: any;
 
   constructor(scheme, type, domain, customColors?) {
-    if (typeof(scheme) === 'string') {
+    if (typeof (scheme) === 'string') {
       scheme = colorSets.find(cs => {
         return cs.name === scheme;
       });
@@ -25,7 +25,7 @@ export class ColorHelper {
   }
 
   generateColorScheme(scheme, type, domain) {
-    if (typeof(scheme) === 'string') {
+    if (typeof (scheme) === 'string') {
       scheme = colorSets.find(cs => {
         return cs.name === scheme;
       });

@@ -28,4 +28,4 @@ import { GaugeModule } from './gauge/gauge.module';
     GaugeModule
   ]
 })
-export class SvgChartsModule {}
+export class SvgChartsModule { }

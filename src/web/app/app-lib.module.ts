@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MarkdownModule } from '@lib/mark-down';
+import { MarkdownModule } from '@try/mark-down';
 // import { DigitOnlyModule } from '@lib/digit-only';
 @NgModule({
   imports: [

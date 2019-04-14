@@ -1,0 +1,18 @@
+import * as tslib_1 from "tslib";
+import { Injectable } from '@angular/core';
+import { InjectionService } from './injection.service';
+import { InjectionRegistery } from './injection-registery.service';
+import { TooltipContentComponent } from './tooltip.component';
+let TooltipService = class TooltipService extends InjectionRegistery {
+    constructor(injectionService) {
+        super(injectionService);
+        this.injectionService = injectionService;
+        this.type = TooltipContentComponent;
+    }
+};
+TooltipService = tslib_1.__decorate([
+    Injectable(),
+    tslib_1.__metadata("design:paramtypes", [InjectionService])
+], TooltipService);
+export { TooltipService };
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidG9vbHRpcC5zZXJ2aWNlLmpzIiwic291cmNlUm9vdCI6Im5nOi8vQHRyeS9zdmctY2hhcnQvIiwic291cmNlcyI6WyJsaWIvY29tbW9uL3Rvb2x0aXAvdG9vbHRpcC5zZXJ2aWNlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7QUFBQSxPQUFPLEVBQUUsVUFBVSxFQUFFLE1BQU0sZUFBZSxDQUFDO0FBQzNDLE9BQU8sRUFBRSxnQkFBZ0IsRUFBRSxNQUFNLHFCQUFxQixDQUFDO0FBQ3ZELE9BQU8sRUFBRSxrQkFBa0IsRUFBRSxNQUFNLCtCQUErQixDQUFDO0FBQ25FLE9BQU8sRUFBRSx1QkFBdUIsRUFBRSxNQUFNLHFCQUFxQixDQUFDO0FBRzlELElBQWEsY0FBYyxHQUEzQixNQUFhLGNBQWUsU0FBUSxrQkFBa0I7SUFJcEQsWUFBbUIsZ0JBQWtDO1FBQ25ELEtBQUssQ0FBQyxnQkFBZ0IsQ0FBQyxDQUFDO1FBRFAscUJBQWdCLEdBQWhCLGdCQUFnQixDQUFrQjtRQUZyRCxTQUFJLEdBQVEsdUJBQXVCLENBQUM7SUFJcEMsQ0FBQztDQUVGLENBQUE7QUFSWSxjQUFjO0lBRDFCLFVBQVUsRUFBRTs2Q0FLMEIsZ0JBQWdCO0dBSjFDLGNBQWMsQ0FRMUI7U0FSWSxjQUFjIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgSW5qZWN0YWJsZSB9IGZyb20gJ0Bhbmd1bGFyL2NvcmUnO1xuaW1wb3J0IHsgSW5qZWN0aW9uU2VydmljZSB9IGZyb20gJy4vaW5qZWN0aW9uLnNlcnZpY2UnO1xuaW1wb3J0IHsgSW5qZWN0aW9uUmVnaXN0ZXJ5IH0gZnJvbSAnLi9pbmplY3Rpb24tcmVnaXN0ZXJ5LnNlcnZpY2UnO1xuaW1wb3J0IHsgVG9vbHRpcENvbnRlbnRDb21wb25lbnQgfSBmcm9tICcuL3Rvb2x0aXAuY29tcG9uZW50JztcblxuQEluamVjdGFibGUoKVxuZXhwb3J0IGNsYXNzIFRvb2x0aXBTZXJ2aWNlIGV4dGVuZHMgSW5qZWN0aW9uUmVnaXN0ZXJ5IHtcblxuICB0eXBlOiBhbnkgPSBUb29sdGlwQ29udGVudENvbXBvbmVudDtcblxuICBjb25zdHJ1Y3RvcihwdWJsaWMgaW5qZWN0aW9uU2VydmljZTogSW5qZWN0aW9uU2VydmljZSkge1xuICAgIHN1cGVyKGluamVjdGlvblNlcnZpY2UpO1xuICB9XG5cbn1cbiJdfQ==

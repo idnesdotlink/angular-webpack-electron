@@ -29,7 +29,7 @@ import {
 } from '@lib/tera-data';
 import { ContextMenuModule as ContextMenuModule2 } from '@lib/context-menu2';
 import { PhonePipeModule } from '@lib/phone-pipe/lib/phonepipe.module';
-import { NgxMaskModule } from '@lib/input-mask';
+import { MaskModule } from '@try/input-mask';
 import { MatPasswordStrengthModule } from '@lib/password-strength';
 import { MatCalendarModule } from '@lib/calendar';
 import { CobaModule } from '@try/coba';
@@ -69,7 +69,7 @@ const modules = [
 
 const imported = [
   ...modules,
-  NgxMaskModule.forRoot(),
+  MaskModule.forRoot(),
   ScrollToModule.forRoot(),
   AngularSplitModule.forRoot(),
   MatPasswordStrengthModule.forRoot(),

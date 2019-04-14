@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { SvgChartsModule } from '@lib/svg-chart';
-import { MarkdownModule } from '@lib/mark-down';
+import { MarkdownModule } from '@try/mark-down';
 import { ColorPickerModule } from '@lib/color-picker';
 import { ScrollToModule } from '@lib/scroll-to';
-import { NgxMaskModule } from '@lib/input-mask';
+import { MaskModule } from '@try/input-mask';
 // import { ContextMenuModule as Ctx2 } from '@lib/context-menu2';
 
 const modules = [
@@ -14,8 +14,8 @@ const modules = [
 ];
 
 @NgModule({
-  imports: [... modules, MarkdownModule.forChild(), NgxMaskModule.forChild()],
-  exports: [... modules, MarkdownModule, NgxMaskModule],
+  imports: [...modules, MarkdownModule.forChild(), MaskModule.forChild()],
+  exports: [...modules, MarkdownModule, MaskModule],
   providers: []
 })
 export class ExtraLibModule { }

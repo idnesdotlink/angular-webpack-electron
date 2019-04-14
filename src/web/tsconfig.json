@@ -20,10 +20,12 @@
     ".",
     "../lib",
     "../worker",
-    "../animation",
-    "../try/coba/dist"
+    "../animation"
   ],
   "exclude": [
+    "../lib/coba",
+    "../lib/mark-down",
+    "../lib/digit-only",
     "../lib/scrollbar",
     "../lib/color-picker2",
     "../lib/context-menu2",
