@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { trimLabel } from '../common/trim-label.helper';
 import { roundedRect } from '../common/shape.helper';
-import { count, decimalChecker } from '../common/count';
+import { count, decimalChecker } from '../common/count/count.helper';
 
 @Component({
   selector: 'g[ng-svg-charts-card]',
@@ -167,10 +167,10 @@ export class CardComponent implements OnChanges, OnDestroy {
       const decs = decimalChecker(val);
       const valueFormatting = this.valueFormatting || (card => card.value.toLocaleString());
 
-      const callback = ({value, finished}) => {
+      const callback = ({ value, finished }) => {
         this.zone.run(() => {
           value = finished ? val : value;
-          this.value = valueFormatting({label: this.label, data: this.data, value});
+          this.value = valueFormatting({ label: this.label, data: this.data, value });
           if (!finished) {
             this.value = this.paddedValue(this.value);
           }

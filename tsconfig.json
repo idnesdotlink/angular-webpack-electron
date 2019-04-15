@@ -81,5 +81,11 @@
     "./node_modules",
     "./dist",
     "./src/lib/scrollbar"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "enableIvy": false,
+    "fullTemplateTypeCheck": true,
+    "preserveWhitespaces": false,
+    "strictInjectionParameters": true
+  }
 }

@@ -1,19 +1,18 @@
-import { __values, __decorate, __metadata, __extends, __read, __spread, __assign } from 'tslib';
-import { Injectable, ApplicationRef, ComponentFactoryResolver, Injector, Input, ViewChild, HostBinding, HostListener, Component, ViewEncapsulation, ElementRef, Renderer2, Output, Directive, ViewContainerRef, EventEmitter, NgModule, ChangeDetectionStrategy, ChangeDetectorRef, NgZone, TemplateRef, ContentChild } from '@angular/core';
+import { __values, __decorate, __metadata, __extends, __read, __spread } from 'tslib';
+import { Injectable, ApplicationRef, ComponentFactoryResolver, Injector, Input, ViewChild, HostBinding, HostListener, Component, ViewEncapsulation, ElementRef, Renderer2, Output, EventEmitter, ChangeDetectionStrategy, ViewContainerRef, ChangeDetectorRef, NgZone, NgModule, Directive, TemplateRef, ContentChild } from '@angular/core';
 import { CommonModule, Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { DomSanitizer } from '@angular/platform-browser';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { rgb } from 'd3-color';
 import { range, min, max } from 'd3-array';
 import { scaleQuantile, scaleOrdinal, scaleLinear, scaleBand, scaleTime, scalePoint } from 'd3-scale';
 import { brushX } from 'd3-brush';
 import { event, select } from 'd3-selection';
-import { curveLinear, area, line, curveCardinalClosed, lineRadial, arc, pie } from 'd3-shape';
+import { curveLinear, area, line, arc, pie } from 'd3-shape';
 import { interpolate } from 'd3-interpolate';
 import { format } from 'd3-format';
-import { treemap, stratify } from 'd3-hierarchy';
+import { timeFormat } from 'd3-time-format';
 
 // The export is needed here to generate a valid polyfills.metadata.json file
 function ngxChartsPolyfills() {
@@ -24,304 +23,6 @@ function ngxChartsPolyfills() {
     }
 }
 ngxChartsPolyfills();
-
-var PlacementTypes;
-(function (PlacementTypes) {
-    PlacementTypes[PlacementTypes["top"] = 'top'] = "top";
-    PlacementTypes[PlacementTypes["bottom"] = 'bottom'] = "bottom";
-    PlacementTypes[PlacementTypes["left"] = 'left'] = "left";
-    PlacementTypes[PlacementTypes["right"] = 'right'] = "right";
-})(PlacementTypes || (PlacementTypes = {}));
-
-var caretOffset = 7;
-function verticalPosition(elDimensions, popoverDimensions, alignment) {
-    if (alignment === 'top') {
-        return elDimensions.top - caretOffset;
-    }
-    if (alignment === 'bottom') {
-        return elDimensions.top + elDimensions.height - popoverDimensions.height + caretOffset;
-    }
-    if (alignment === 'center') {
-        return elDimensions.top + elDimensions.height / 2 - popoverDimensions.height / 2;
-    }
-    return undefined;
-}
-function horizontalPosition(elDimensions, popoverDimensions, alignment) {
-    if (alignment === 'left') {
-        return elDimensions.left - caretOffset;
-    }
-    if (alignment === 'right') {
-        return elDimensions.left + elDimensions.width - popoverDimensions.width + caretOffset;
-    }
-    if (alignment === 'center') {
-        return elDimensions.left + elDimensions.width / 2 - popoverDimensions.width / 2;
-    }
-    return undefined;
-}
-/**
- * Position helper for the popover directive.
- *
- * @export
- * @class PositionHelper
- */
-var PositionHelper = /** @class */ (function () {
-    function PositionHelper() {
-    }
-    /**
-     * Calculate vertical alignment position
-     *
-     * @static
-     * @param {any} elDimensions
-     * @param {any} popoverDimensions
-     * @param {any} alignment
-     * @returns {number}
-     *
-     * @memberOf PositionHelper
-     */
-    PositionHelper.calculateVerticalAlignment = function (elDimensions, popoverDimensions, alignment) {
-        var result = verticalPosition(elDimensions, popoverDimensions, alignment);
-        if (result + popoverDimensions.height > window.innerHeight) {
-            result = window.innerHeight - popoverDimensions.height;
-        }
-        return result;
-    };
-    /**
-     * Calculate vertical caret position
-     *
-     * @static
-     * @param {any} elDimensions
-     * @param {any} popoverDimensions
-     * @param {any} caretDimensions
-     * @param {any} alignment
-     * @returns {number}
-     *
-     * @memberOf PositionHelper
-     */
-    PositionHelper.calculateVerticalCaret = function (elDimensions, popoverDimensions, caretDimensions, alignment) {
-        var result;
-        if (alignment === 'top') {
-            result = elDimensions.height / 2 - caretDimensions.height / 2 + caretOffset;
-        }
-        if (alignment === 'bottom') {
-            result = popoverDimensions.height - elDimensions.height / 2 - caretDimensions.height / 2 - caretOffset;
-        }
-        if (alignment === 'center') {
-            result = popoverDimensions.height / 2 - caretDimensions.height / 2;
-        }
-        var popoverPosition = verticalPosition(elDimensions, popoverDimensions, alignment);
-        if (popoverPosition + popoverDimensions.height > window.innerHeight) {
-            result += (popoverPosition + popoverDimensions.height - window.innerHeight);
-        }
-        return result;
-    };
-    /**
-     * Calculate horz alignment position
-     *
-     * @static
-     * @param {any} elDimensions
-     * @param {any} popoverDimensions
-     * @param {any} alignment
-     * @returns {number}
-     *
-     * @memberOf PositionHelper
-     */
-    PositionHelper.calculateHorizontalAlignment = function (elDimensions, popoverDimensions, alignment) {
-        var result = horizontalPosition(elDimensions, popoverDimensions, alignment);
-        if (result + popoverDimensions.width > window.innerWidth) {
-            result = window.innerWidth - popoverDimensions.width;
-        }
-        return result;
-    };
-    /**
-     * Calculate horz caret position
-     *
-     * @static
-     * @param {any} elDimensions
-     * @param {any} popoverDimensions
-     * @param {any} caretDimensions
-     * @param {any} alignment
-     * @returns {number}
-     *
-     * @memberOf PositionHelper
-     */
-    PositionHelper.calculateHorizontalCaret = function (elDimensions, popoverDimensions, caretDimensions, alignment) {
-        var result;
-        if (alignment === 'left') {
-            result = elDimensions.width / 2 - caretDimensions.width / 2 + caretOffset;
-        }
-        if (alignment === 'right') {
-            result = popoverDimensions.width - elDimensions.width / 2 - caretDimensions.width / 2 - caretOffset;
-        }
-        if (alignment === 'center') {
-            result = popoverDimensions.width / 2 - caretDimensions.width / 2;
-        }
-        var popoverPosition = horizontalPosition(elDimensions, popoverDimensions, alignment);
-        if (popoverPosition + popoverDimensions.width > window.innerWidth) {
-            result += (popoverPosition + popoverDimensions.width - window.innerWidth);
-        }
-        return result;
-    };
-    /**
-     * Checks if the element's position should be flipped
-     *
-     * @static
-     * @param {any} elDimensions
-     * @param {any} popoverDimensions
-     * @param {any} placement
-     * @param {any} alignment
-     * @param {any} spacing
-     * @returns {boolean}
-     *
-     * @memberOf PositionHelper
-     */
-    PositionHelper.shouldFlip = function (elDimensions, popoverDimensions, placement, alignment, spacing) {
-        var flip = false;
-        if (placement === 'right') {
-            var popoverPosition = horizontalPosition(elDimensions, popoverDimensions, alignment);
-            if (popoverPosition + popoverDimensions.width + spacing > window.innerWidth) {
-                flip = true;
-            }
-        }
-        if (placement === 'left') {
-            var popoverPosition = horizontalPosition(elDimensions, popoverDimensions, alignment);
-            if (popoverPosition - spacing < 0) {
-                flip = true;
-            }
-        }
-        if (placement === 'top') {
-            if (elDimensions.top - popoverDimensions.height - spacing < 0) {
-                flip = true;
-            }
-        }
-        if (placement === 'bottom') {
-            var popoverPosition = verticalPosition(elDimensions, popoverDimensions, alignment);
-            if (popoverPosition + popoverDimensions.height + spacing > window.innerHeight) {
-                flip = true;
-            }
-        }
-        return flip;
-    };
-    /**
-     * Position caret
-     *
-     * @static
-     * @param {any} placement
-     * @param {any} elmDim
-     * @param {any} hostDim
-     * @param {any} caretDimensions
-     * @param {any} alignment
-     * @returns {*}
-     *
-     * @memberOf PositionHelper
-     */
-    PositionHelper.positionCaret = function (placement, elmDim, hostDim, caretDimensions, alignment) {
-        var top = 0;
-        var left = 0;
-        if (placement === PlacementTypes.right) {
-            left = -7;
-            top = PositionHelper.calculateVerticalCaret(hostDim, elmDim, caretDimensions, alignment);
-        }
-        else if (placement === PlacementTypes.left) {
-            left = elmDim.width;
-            top = PositionHelper.calculateVerticalCaret(hostDim, elmDim, caretDimensions, alignment);
-        }
-        else if (placement === PlacementTypes.top) {
-            top = elmDim.height;
-            left = PositionHelper.calculateHorizontalCaret(hostDim, elmDim, caretDimensions, alignment);
-        }
-        else if (placement === PlacementTypes.bottom) {
-            top = -7;
-            left = PositionHelper.calculateHorizontalCaret(hostDim, elmDim, caretDimensions, alignment);
-        }
-        return { top: top, left: left };
-    };
-    /**
-     * Position content
-     *
-     * @static
-     * @param {any} placement
-     * @param {any} elmDim
-     * @param {any} hostDim
-     * @param {any} spacing
-     * @param {any} alignment
-     * @returns {*}
-     *
-     * @memberOf PositionHelper
-     */
-    PositionHelper.positionContent = function (placement, elmDim, hostDim, spacing, alignment) {
-        var top = 0;
-        var left = 0;
-        if (placement === PlacementTypes.right) {
-            left = hostDim.left + hostDim.width + spacing;
-            top = PositionHelper.calculateVerticalAlignment(hostDim, elmDim, alignment);
-        }
-        else if (placement === PlacementTypes.left) {
-            left = hostDim.left - elmDim.width - spacing;
-            top = PositionHelper.calculateVerticalAlignment(hostDim, elmDim, alignment);
-        }
-        else if (placement === PlacementTypes.top) {
-            top = hostDim.top - elmDim.height - spacing;
-            left = PositionHelper.calculateHorizontalAlignment(hostDim, elmDim, alignment);
-        }
-        else if (placement === PlacementTypes.bottom) {
-            top = hostDim.top + hostDim.height + spacing;
-            left = PositionHelper.calculateHorizontalAlignment(hostDim, elmDim, alignment);
-        }
-        return { top: top, left: left };
-    };
-    /**
-     * Determine placement based on flip
-     *
-     * @static
-     * @param {any} placement
-     * @param {any} elmDim
-     * @param {any} hostDim
-     * @param {any} spacing
-     * @param {any} alignment
-     * @returns {*}
-     *
-     * @memberOf PositionHelper
-     */
-    PositionHelper.determinePlacement = function (placement, elmDim, hostDim, spacing, alignment) {
-        var shouldFlip = PositionHelper.shouldFlip(hostDim, elmDim, placement, alignment, spacing);
-        if (shouldFlip) {
-            if (placement === PlacementTypes.right) {
-                return PlacementTypes.left;
-            }
-            else if (placement === PlacementTypes.left) {
-                return PlacementTypes.right;
-            }
-            else if (placement === PlacementTypes.top) {
-                return PlacementTypes.bottom;
-            }
-            else if (placement === PlacementTypes.bottom) {
-                return PlacementTypes.top;
-            }
-        }
-        return placement;
-    };
-    return PositionHelper;
-}());
-
-var StyleTypes;
-(function (StyleTypes) {
-    StyleTypes[StyleTypes["popover"] = 'popover'] = "popover";
-    StyleTypes[StyleTypes["tooltip"] = 'tooltip'] = "tooltip";
-})(StyleTypes || (StyleTypes = {}));
-
-var AlignmentTypes;
-(function (AlignmentTypes) {
-    AlignmentTypes[AlignmentTypes["left"] = 'left'] = "left";
-    AlignmentTypes[AlignmentTypes["center"] = 'center'] = "center";
-    AlignmentTypes[AlignmentTypes["right"] = 'right'] = "right";
-})(AlignmentTypes || (AlignmentTypes = {}));
-
-var ShowTypes;
-(function (ShowTypes) {
-    ShowTypes[ShowTypes["all"] = 'all'] = "all";
-    ShowTypes[ShowTypes["focus"] = 'focus'] = "focus";
-    ShowTypes[ShowTypes["mouseover"] = 'mouseover'] = "mouseover";
-})(ShowTypes || (ShowTypes = {}));
 
 /**
  * Injection service is a helper to append components
@@ -642,6 +343,297 @@ function throttleable(duration, options) {
     };
 }
 
+var PlacementTypes;
+(function (PlacementTypes) {
+    PlacementTypes[PlacementTypes["top"] = 'top'] = "top";
+    PlacementTypes[PlacementTypes["bottom"] = 'bottom'] = "bottom";
+    PlacementTypes[PlacementTypes["left"] = 'left'] = "left";
+    PlacementTypes[PlacementTypes["right"] = 'right'] = "right";
+})(PlacementTypes || (PlacementTypes = {}));
+
+var caretOffset = 7;
+function verticalPosition(elDimensions, popoverDimensions, alignment) {
+    if (alignment === 'top') {
+        return elDimensions.top - caretOffset;
+    }
+    if (alignment === 'bottom') {
+        return elDimensions.top + elDimensions.height - popoverDimensions.height + caretOffset;
+    }
+    if (alignment === 'center') {
+        return elDimensions.top + elDimensions.height / 2 - popoverDimensions.height / 2;
+    }
+    return undefined;
+}
+function horizontalPosition(elDimensions, popoverDimensions, alignment) {
+    if (alignment === 'left') {
+        return elDimensions.left - caretOffset;
+    }
+    if (alignment === 'right') {
+        return elDimensions.left + elDimensions.width - popoverDimensions.width + caretOffset;
+    }
+    if (alignment === 'center') {
+        return elDimensions.left + elDimensions.width / 2 - popoverDimensions.width / 2;
+    }
+    return undefined;
+}
+/**
+ * Position helper for the popover directive.
+ *
+ * @export
+ * @class PositionHelper
+ */
+var PositionHelper = /** @class */ (function () {
+    function PositionHelper() {
+    }
+    /**
+     * Calculate vertical alignment position
+     *
+     * @static
+     * @param {any} elDimensions
+     * @param {any} popoverDimensions
+     * @param {any} alignment
+     * @returns {number}
+     *
+     * @memberOf PositionHelper
+     */
+    PositionHelper.calculateVerticalAlignment = function (elDimensions, popoverDimensions, alignment) {
+        var result = verticalPosition(elDimensions, popoverDimensions, alignment);
+        if (result + popoverDimensions.height > window.innerHeight) {
+            result = window.innerHeight - popoverDimensions.height;
+        }
+        return result;
+    };
+    /**
+     * Calculate vertical caret position
+     *
+     * @static
+     * @param {any} elDimensions
+     * @param {any} popoverDimensions
+     * @param {any} caretDimensions
+     * @param {any} alignment
+     * @returns {number}
+     *
+     * @memberOf PositionHelper
+     */
+    PositionHelper.calculateVerticalCaret = function (elDimensions, popoverDimensions, caretDimensions, alignment) {
+        var result;
+        if (alignment === 'top') {
+            result = elDimensions.height / 2 - caretDimensions.height / 2 + caretOffset;
+        }
+        if (alignment === 'bottom') {
+            result = popoverDimensions.height - elDimensions.height / 2 - caretDimensions.height / 2 - caretOffset;
+        }
+        if (alignment === 'center') {
+            result = popoverDimensions.height / 2 - caretDimensions.height / 2;
+        }
+        var popoverPosition = verticalPosition(elDimensions, popoverDimensions, alignment);
+        if (popoverPosition + popoverDimensions.height > window.innerHeight) {
+            result += (popoverPosition + popoverDimensions.height - window.innerHeight);
+        }
+        return result;
+    };
+    /**
+     * Calculate horz alignment position
+     *
+     * @static
+     * @param {any} elDimensions
+     * @param {any} popoverDimensions
+     * @param {any} alignment
+     * @returns {number}
+     *
+     * @memberOf PositionHelper
+     */
+    PositionHelper.calculateHorizontalAlignment = function (elDimensions, popoverDimensions, alignment) {
+        var result = horizontalPosition(elDimensions, popoverDimensions, alignment);
+        if (result + popoverDimensions.width > window.innerWidth) {
+            result = window.innerWidth - popoverDimensions.width;
+        }
+        return result;
+    };
+    /**
+     * Calculate horz caret position
+     *
+     * @static
+     * @param {any} elDimensions
+     * @param {any} popoverDimensions
+     * @param {any} caretDimensions
+     * @param {any} alignment
+     * @returns {number}
+     *
+     * @memberOf PositionHelper
+     */
+    PositionHelper.calculateHorizontalCaret = function (elDimensions, popoverDimensions, caretDimensions, alignment) {
+        var result;
+        if (alignment === 'left') {
+            result = elDimensions.width / 2 - caretDimensions.width / 2 + caretOffset;
+        }
+        if (alignment === 'right') {
+            result = popoverDimensions.width - elDimensions.width / 2 - caretDimensions.width / 2 - caretOffset;
+        }
+        if (alignment === 'center') {
+            result = popoverDimensions.width / 2 - caretDimensions.width / 2;
+        }
+        var popoverPosition = horizontalPosition(elDimensions, popoverDimensions, alignment);
+        if (popoverPosition + popoverDimensions.width > window.innerWidth) {
+            result += (popoverPosition + popoverDimensions.width - window.innerWidth);
+        }
+        return result;
+    };
+    /**
+     * Checks if the element's position should be flipped
+     *
+     * @static
+     * @param {any} elDimensions
+     * @param {any} popoverDimensions
+     * @param {any} placement
+     * @param {any} alignment
+     * @param {any} spacing
+     * @returns {boolean}
+     *
+     * @memberOf PositionHelper
+     */
+    PositionHelper.shouldFlip = function (elDimensions, popoverDimensions, placement, alignment, spacing) {
+        var flip = false;
+        if (placement === 'right') {
+            var popoverPosition = horizontalPosition(elDimensions, popoverDimensions, alignment);
+            if (popoverPosition + popoverDimensions.width + spacing > window.innerWidth) {
+                flip = true;
+            }
+        }
+        if (placement === 'left') {
+            var popoverPosition = horizontalPosition(elDimensions, popoverDimensions, alignment);
+            if (popoverPosition - spacing < 0) {
+                flip = true;
+            }
+        }
+        if (placement === 'top') {
+            if (elDimensions.top - popoverDimensions.height - spacing < 0) {
+                flip = true;
+            }
+        }
+        if (placement === 'bottom') {
+            var popoverPosition = verticalPosition(elDimensions, popoverDimensions, alignment);
+            if (popoverPosition + popoverDimensions.height + spacing > window.innerHeight) {
+                flip = true;
+            }
+        }
+        return flip;
+    };
+    /**
+     * Position caret
+     *
+     * @static
+     * @param {any} placement
+     * @param {any} elmDim
+     * @param {any} hostDim
+     * @param {any} caretDimensions
+     * @param {any} alignment
+     * @returns {*}
+     *
+     * @memberOf PositionHelper
+     */
+    PositionHelper.positionCaret = function (placement, elmDim, hostDim, caretDimensions, alignment) {
+        var top = 0;
+        var left = 0;
+        if (placement === PlacementTypes.right) {
+            left = -7;
+            top = PositionHelper.calculateVerticalCaret(hostDim, elmDim, caretDimensions, alignment);
+        }
+        else if (placement === PlacementTypes.left) {
+            left = elmDim.width;
+            top = PositionHelper.calculateVerticalCaret(hostDim, elmDim, caretDimensions, alignment);
+        }
+        else if (placement === PlacementTypes.top) {
+            top = elmDim.height;
+            left = PositionHelper.calculateHorizontalCaret(hostDim, elmDim, caretDimensions, alignment);
+        }
+        else if (placement === PlacementTypes.bottom) {
+            top = -7;
+            left = PositionHelper.calculateHorizontalCaret(hostDim, elmDim, caretDimensions, alignment);
+        }
+        return { top: top, left: left };
+    };
+    /**
+     * Position content
+     *
+     * @static
+     * @param {any} placement
+     * @param {any} elmDim
+     * @param {any} hostDim
+     * @param {any} spacing
+     * @param {any} alignment
+     * @returns {*}
+     *
+     * @memberOf PositionHelper
+     */
+    PositionHelper.positionContent = function (placement, elmDim, hostDim, spacing, alignment) {
+        var top = 0;
+        var left = 0;
+        if (placement === PlacementTypes.right) {
+            left = hostDim.left + hostDim.width + spacing;
+            top = PositionHelper.calculateVerticalAlignment(hostDim, elmDim, alignment);
+        }
+        else if (placement === PlacementTypes.left) {
+            left = hostDim.left - elmDim.width - spacing;
+            top = PositionHelper.calculateVerticalAlignment(hostDim, elmDim, alignment);
+        }
+        else if (placement === PlacementTypes.top) {
+            top = hostDim.top - elmDim.height - spacing;
+            left = PositionHelper.calculateHorizontalAlignment(hostDim, elmDim, alignment);
+        }
+        else if (placement === PlacementTypes.bottom) {
+            top = hostDim.top + hostDim.height + spacing;
+            left = PositionHelper.calculateHorizontalAlignment(hostDim, elmDim, alignment);
+        }
+        return { top: top, left: left };
+    };
+    /**
+     * Determine placement based on flip
+     *
+     * @static
+     * @param {any} placement
+     * @param {any} elmDim
+     * @param {any} hostDim
+     * @param {any} spacing
+     * @param {any} alignment
+     * @returns {*}
+     *
+     * @memberOf PositionHelper
+     */
+    PositionHelper.determinePlacement = function (placement, elmDim, hostDim, spacing, alignment) {
+        var shouldFlip = PositionHelper.shouldFlip(hostDim, elmDim, placement, alignment, spacing);
+        if (shouldFlip) {
+            if (placement === PlacementTypes.right) {
+                return PlacementTypes.left;
+            }
+            else if (placement === PlacementTypes.left) {
+                return PlacementTypes.right;
+            }
+            else if (placement === PlacementTypes.top) {
+                return PlacementTypes.bottom;
+            }
+            else if (placement === PlacementTypes.bottom) {
+                return PlacementTypes.top;
+            }
+        }
+        return placement;
+    };
+    return PositionHelper;
+}());
+
+var StyleTypes;
+(function (StyleTypes) {
+    StyleTypes[StyleTypes["popover"] = 'popover'] = "popover";
+    StyleTypes[StyleTypes["tooltip"] = 'tooltip'] = "tooltip";
+})(StyleTypes || (StyleTypes = {}));
+
+var AlignmentTypes;
+(function (AlignmentTypes) {
+    AlignmentTypes[AlignmentTypes["left"] = 'left'] = "left";
+    AlignmentTypes[AlignmentTypes["center"] = 'center'] = "center";
+    AlignmentTypes[AlignmentTypes["right"] = 'right'] = "right";
+})(AlignmentTypes || (AlignmentTypes = {}));
+
 var TooltipContentComponent = /** @class */ (function () {
     function TooltipContentComponent(element, renderer) {
         this.element = element;
@@ -779,298 +771,6 @@ var TooltipService = /** @class */ (function (_super) {
     ], TooltipService);
     return TooltipService;
 }(InjectionRegistery));
-
-var TooltipDirective = /** @class */ (function () {
-    function TooltipDirective(tooltipService, viewContainerRef, renderer) {
-        this.tooltipService = tooltipService;
-        this.viewContainerRef = viewContainerRef;
-        this.renderer = renderer;
-        this.tooltipCssClass = '';
-        this.tooltipTitle = '';
-        this.tooltipAppendToBody = true;
-        this.tooltipSpacing = 10;
-        this.tooltipDisabled = false;
-        this.tooltipShowCaret = true;
-        this.tooltipPlacement = PlacementTypes.top;
-        this.tooltipAlignment = AlignmentTypes.center;
-        this.tooltipType = StyleTypes.popover;
-        this.tooltipCloseOnClickOutside = true;
-        this.tooltipCloseOnMouseLeave = true;
-        this.tooltipHideTimeout = 300;
-        this.tooltipShowTimeout = 100;
-        this.tooltipShowEvent = ShowTypes.all;
-        this.tooltipImmediateExit = false;
-        this.show = new EventEmitter();
-        this.hide = new EventEmitter();
-    }
-    Object.defineProperty(TooltipDirective.prototype, "listensForFocus", {
-        get: function () {
-            return this.tooltipShowEvent === ShowTypes.all ||
-                this.tooltipShowEvent === ShowTypes.focus;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(TooltipDirective.prototype, "listensForHover", {
-        get: function () {
-            return this.tooltipShowEvent === ShowTypes.all ||
-                this.tooltipShowEvent === ShowTypes.mouseover;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    TooltipDirective.prototype.ngOnDestroy = function () {
-        this.hideTooltip(true);
-    };
-    TooltipDirective.prototype.onFocus = function () {
-        if (this.listensForFocus) {
-            this.showTooltip();
-        }
-    };
-    TooltipDirective.prototype.onBlur = function () {
-        if (this.listensForFocus) {
-            this.hideTooltip(true);
-        }
-    };
-    TooltipDirective.prototype.onMouseEnter = function () {
-        if (this.listensForHover) {
-            this.showTooltip();
-        }
-    };
-    TooltipDirective.prototype.onMouseLeave = function (target) {
-        if (this.listensForHover && this.tooltipCloseOnMouseLeave) {
-            clearTimeout(this.timeout);
-            if (this.component) {
-                var contentDom = this.component.instance.element.nativeElement;
-                var contains = contentDom.contains(target);
-                if (contains) {
-                    return;
-                }
-            }
-            this.hideTooltip(this.tooltipImmediateExit);
-        }
-    };
-    TooltipDirective.prototype.onMouseClick = function () {
-        if (this.listensForHover) {
-            this.hideTooltip(true);
-        }
-    };
-    TooltipDirective.prototype.showTooltip = function (immediate) {
-        var _this = this;
-        if (this.component || this.tooltipDisabled) {
-            return;
-        }
-        var time = immediate ? 0 : this.tooltipShowTimeout;
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(function () {
-            _this.tooltipService.destroyAll();
-            var options = _this.createBoundOptions();
-            _this.component = _this.tooltipService.create(options);
-            // add a tiny timeout to avoid event re-triggers
-            setTimeout(function () {
-                if (_this.component) {
-                    _this.addHideListeners(_this.component.instance.element.nativeElement);
-                }
-            }, 10);
-            _this.show.emit(true);
-        }, time);
-    };
-    TooltipDirective.prototype.addHideListeners = function (tooltip) {
-        var _this = this;
-        // on mouse enter, cancel the hide triggered by the leave
-        this.mouseEnterContentEvent = this.renderer.listen(tooltip, 'mouseenter', function () {
-            clearTimeout(_this.timeout);
-        });
-        // content mouse leave listener
-        if (this.tooltipCloseOnMouseLeave) {
-            this.mouseLeaveContentEvent = this.renderer.listen(tooltip, 'mouseleave', function () {
-                _this.hideTooltip(_this.tooltipImmediateExit);
-            });
-        }
-        // content close on click outside
-        if (this.tooltipCloseOnClickOutside) {
-            this.documentClickEvent = this.renderer.listen(document, 'click', function (event) {
-                var contains = tooltip.contains(event.target);
-                if (!contains) {
-                    _this.hideTooltip();
-                }
-            });
-        }
-    };
-    TooltipDirective.prototype.hideTooltip = function (immediate) {
-        var _this = this;
-        if (immediate === void 0) { immediate = false; }
-        if (!this.component) {
-            return;
-        }
-        var destroyFn = function () {
-            // remove events
-            if (_this.mouseLeaveContentEvent) {
-                _this.mouseLeaveContentEvent();
-            }
-            if (_this.mouseEnterContentEvent) {
-                _this.mouseEnterContentEvent();
-            }
-            if (_this.documentClickEvent) {
-                _this.documentClickEvent();
-            }
-            // emit events
-            _this.hide.emit(true);
-            // destroy component
-            _this.tooltipService.destroy(_this.component);
-            _this.component = undefined;
-        };
-        clearTimeout(this.timeout);
-        if (!immediate) {
-            this.timeout = setTimeout(destroyFn, this.tooltipHideTimeout);
-        }
-        else {
-            destroyFn();
-        }
-    };
-    TooltipDirective.prototype.createBoundOptions = function () {
-        return {
-            title: this.tooltipTitle,
-            template: this.tooltipTemplate,
-            host: this.viewContainerRef.element,
-            placement: this.tooltipPlacement,
-            alignment: this.tooltipAlignment,
-            type: this.tooltipType,
-            showCaret: this.tooltipShowCaret,
-            cssClass: this.tooltipCssClass,
-            spacing: this.tooltipSpacing,
-            context: this.tooltipContext
-        };
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipCssClass", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipTitle", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipAppendToBody", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipSpacing", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipDisabled", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipShowCaret", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Number)
-    ], TooltipDirective.prototype, "tooltipPlacement", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Number)
-    ], TooltipDirective.prototype, "tooltipAlignment", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Number)
-    ], TooltipDirective.prototype, "tooltipType", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipCloseOnClickOutside", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipCloseOnMouseLeave", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipHideTimeout", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipShowTimeout", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipTemplate", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Number)
-    ], TooltipDirective.prototype, "tooltipShowEvent", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipContext", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "tooltipImmediateExit", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "show", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], TooltipDirective.prototype, "hide", void 0);
-    __decorate([
-        HostListener('focusin'),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", void 0)
-    ], TooltipDirective.prototype, "onFocus", null);
-    __decorate([
-        HostListener('blur'),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", void 0)
-    ], TooltipDirective.prototype, "onBlur", null);
-    __decorate([
-        HostListener('mouseenter'),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", void 0)
-    ], TooltipDirective.prototype, "onMouseEnter", null);
-    __decorate([
-        HostListener('mouseleave', ['$event.target']),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
-        __metadata("design:returntype", void 0)
-    ], TooltipDirective.prototype, "onMouseLeave", null);
-    __decorate([
-        HostListener('click'),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", void 0)
-    ], TooltipDirective.prototype, "onMouseClick", null);
-    TooltipDirective = __decorate([
-        Directive({ selector: '[ngx-tooltip]' }),
-        __metadata("design:paramtypes", [TooltipService,
-            ViewContainerRef,
-            Renderer2])
-    ], TooltipDirective);
-    return TooltipDirective;
-}());
-
-var TooltipModule = /** @class */ (function () {
-    function TooltipModule() {
-    }
-    TooltipModule = __decorate([
-        NgModule({
-            declarations: [TooltipContentComponent, TooltipDirective],
-            providers: [InjectionService, TooltipService],
-            exports: [TooltipContentComponent, TooltipDirective],
-            imports: [CommonModule],
-            entryComponents: [TooltipContentComponent]
-        })
-    ], TooltipModule);
-    return TooltipModule;
-}());
 
 var ChartComponent = /** @class */ (function () {
     function ChartComponent(vcr, tooltipService) {
@@ -1571,234 +1271,6 @@ var AdvancedLegendComponent = /** @class */ (function () {
     return AdvancedLegendComponent;
 }());
 
-var cache = {};
-/**
- * Generates a short id.
- *
- * Description:
- *   A 4-character alphanumeric sequence (364 = 1.6 million)
- *   This should only be used for JavaScript specific models.
- *   http://stackoverflow.com/questions/6248666/how-to-generate-short-uid-like-ax4j9z-in-js
- *
- *   Example: `ebgf`
- */
-function id() {
-    var newId = ('0000' + (Math.random() * Math.pow(36, 4) << 0).toString(36)).slice(-4);
-    // append a 'a' because neo gets mad
-    newId = "a" + newId;
-    // ensure not already used
-    if (!cache[newId]) {
-        cache[newId] = true;
-        return newId;
-    }
-    return id();
-}
-
-var colorSets = [
-    {
-        name: 'vivid',
-        selectable: true,
-        group: 'Ordinal',
-        domain: [
-            '#647c8a', '#3f51b5', '#2196f3', '#00b862', '#afdf0a', '#a7b61a', '#f3e562', '#ff9800', '#ff5722', '#ff4514'
-        ]
-    },
-    {
-        name: 'natural',
-        selectable: true,
-        group: 'Ordinal',
-        domain: [
-            '#bf9d76', '#e99450', '#d89f59', '#f2dfa7', '#a5d7c6', '#7794b1', '#afafaf', '#707160', '#ba9383', '#d9d5c3'
-        ]
-    },
-    {
-        name: 'cool',
-        selectable: true,
-        group: 'Ordinal',
-        domain: [
-            '#a8385d', '#7aa3e5', '#a27ea8', '#aae3f5', '#adcded', '#a95963', '#8796c0', '#7ed3ed', '#50abcc', '#ad6886'
-        ]
-    },
-    {
-        name: 'fire',
-        selectable: true,
-        group: 'Ordinal',
-        domain: [
-            '#ff3d00', '#bf360c', '#ff8f00', '#ff6f00', '#ff5722', '#e65100', '#ffca28', '#ffab00'
-        ]
-    },
-    {
-        name: 'solar',
-        selectable: true,
-        group: 'Continuous',
-        domain: [
-            '#fff8e1', '#ffecb3', '#ffe082', '#ffd54f', '#ffca28', '#ffc107', '#ffb300', '#ffa000', '#ff8f00', '#ff6f00'
-        ]
-    },
-    {
-        name: 'air',
-        selectable: true,
-        group: 'Continuous',
-        domain: [
-            '#e1f5fe', '#b3e5fc', '#81d4fa', '#4fc3f7', '#29b6f6', '#03a9f4', '#039be5', '#0288d1', '#0277bd', '#01579b'
-        ]
-    },
-    {
-        name: 'aqua',
-        selectable: true,
-        group: 'Continuous',
-        domain: [
-            '#e0f7fa', '#b2ebf2', '#80deea', '#4dd0e1', '#26c6da', '#00bcd4', '#00acc1', '#0097a7', '#00838f', '#006064'
-        ]
-    },
-    {
-        name: 'flame',
-        selectable: false,
-        group: 'Ordinal',
-        domain: [
-            '#A10A28', '#D3342D', '#EF6D49', '#FAAD67', '#FDDE90', '#DBED91', '#A9D770', '#6CBA67', '#2C9653', '#146738'
-        ]
-    },
-    {
-        name: 'ocean',
-        selectable: false,
-        group: 'Ordinal',
-        domain: [
-            '#1D68FB', '#33C0FC', '#4AFFFE', '#AFFFFF', '#FFFC63', '#FDBD2D', '#FC8A25', '#FA4F1E', '#FA141B', '#BA38D1'
-        ]
-    },
-    {
-        name: 'forest',
-        selectable: false,
-        group: 'Ordinal',
-        domain: [
-            '#55C22D', '#C1F33D', '#3CC099', '#AFFFFF', '#8CFC9D', '#76CFFA', '#BA60FB', '#EE6490', '#C42A1C', '#FC9F32'
-        ]
-    },
-    {
-        name: 'horizon',
-        selectable: false,
-        group: 'Ordinal',
-        domain: [
-            '#2597FB', '#65EBFD', '#99FDD0', '#FCEE4B', '#FEFCFA', '#FDD6E3', '#FCB1A8', '#EF6F7B', '#CB96E8', '#EFDEE0'
-        ]
-    },
-    {
-        name: 'neons',
-        selectable: false,
-        group: 'Ordinal',
-        domain: [
-            '#FF3333', '#FF33FF', '#CC33FF', '#0000FF', '#33CCFF', '#33FFFF', '#33FF66', '#CCFF33', '#FFCC00', '#FF6600'
-        ]
-    },
-    {
-        name: 'picnic',
-        selectable: false,
-        group: 'Ordinal',
-        domain: [
-            '#FAC51D', '#66BD6D', '#FAA026', '#29BB9C', '#E96B56', '#55ACD2', '#B7332F', '#2C83C9', '#9166B8', '#92E7E8'
-        ]
-    },
-    {
-        name: 'night',
-        selectable: false,
-        group: 'Ordinal',
-        domain: [
-            '#2B1B5A', '#501356', '#183356', '#28203F', '#391B3C', '#1E2B3C', '#120634',
-            '#2D0432', '#051932', '#453080', '#75267D', '#2C507D', '#4B3880', '#752F7D', '#35547D'
-        ]
-    },
-    {
-        name: 'nightLights',
-        selectable: false,
-        group: 'Ordinal',
-        domain: [
-            '#4e31a5', '#9c25a7', '#3065ab', '#57468b', '#904497', '#46648b',
-            '#32118d', '#a00fb3', '#1052a2', '#6e51bd', '#b63cc3', '#6c97cb', '#8671c1', '#b455be', '#7496c3'
-        ]
-    }
-];
-
-function sortLinear(data, property, direction) {
-    if (direction === void 0) { direction = 'asc'; }
-    return data.sort(function (a, b) {
-        if (direction === 'asc') {
-            return a[property] - b[property];
-        }
-        else {
-            return b[property] - a[property];
-        }
-    });
-}
-function sortByDomain(data, property, direction, domain) {
-    if (direction === void 0) { direction = 'asc'; }
-    return data.sort(function (a, b) {
-        var aVal = a[property];
-        var bVal = b[property];
-        var aIdx = domain.indexOf(aVal);
-        var bIdx = domain.indexOf(bVal);
-        if (direction === 'asc') {
-            return aIdx - bIdx;
-        }
-        else {
-            return bIdx - aIdx;
-        }
-    });
-}
-function sortByTime(data, property, direction) {
-    if (direction === void 0) { direction = 'asc'; }
-    return data.sort(function (a, b) {
-        var aDate = a[property].getTime();
-        var bDate = b[property].getTime();
-        if (direction === 'asc') {
-            if (aDate > bDate)
-                return 1;
-            if (bDate > aDate)
-                return -1;
-            return 0;
-        }
-        else {
-            if (aDate > bDate)
-                return -1;
-            if (bDate > aDate)
-                return 1;
-            return 0;
-        }
-    });
-}
-
-/**
- * Accepts a color (string) and returns a inverted hex color (string)
- * http://stackoverflow.com/questions/9600295/automatically-change-text-color-to-assure-readability
- *
- * @export
- */
-function invertColor(value) {
-    var color = rgb(value);
-    var r = color.r, g = color.g, b = color.b, opacity = color.opacity;
-    if (opacity === 0) {
-        return color.toString();
-    }
-    var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-    var depth = (yiq >= 128) ? -.8 : .8;
-    return shadeRGBColor(color, depth);
-}
-/**
- * Given a rgb, it will darken/lighten
- * http://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
- *
- * @export
- */
-function shadeRGBColor(_a, percent) {
-    var r = _a.r, g = _a.g, b = _a.b;
-    var t = percent < 0 ? 0 : 255;
-    var p = percent < 0 ? percent * -1 : percent;
-    r = (Math.round((t - r) * p) + r);
-    g = (Math.round((t - g) * p) + g);
-    b = (Math.round((t - b) * p) + b);
-    return "rgb(" + r + ", " + g + ", " + b + ")";
-}
-
 /**
  * Visibility Observer
  */
@@ -1850,10 +1322,6 @@ var VisibilityObserver = /** @class */ (function () {
     ], VisibilityObserver.prototype, "visible", void 0);
     return VisibilityObserver;
 }());
-
-function isDate(value) {
-    return toString.call(value) === '[object Date]';
-}
 
 var BaseChartComponent = /** @class */ (function () {
     function BaseChartComponent(chartElement, zone, cd) {
@@ -2828,6 +2296,453 @@ var AxesModule = /** @class */ (function () {
     ], AxesModule);
     return AxesModule;
 }());
+
+var ShowTypes;
+(function (ShowTypes) {
+    ShowTypes[ShowTypes["all"] = 'all'] = "all";
+    ShowTypes[ShowTypes["focus"] = 'focus'] = "focus";
+    ShowTypes[ShowTypes["mouseover"] = 'mouseover'] = "mouseover";
+})(ShowTypes || (ShowTypes = {}));
+
+var TooltipDirective = /** @class */ (function () {
+    function TooltipDirective(tooltipService, viewContainerRef, renderer) {
+        this.tooltipService = tooltipService;
+        this.viewContainerRef = viewContainerRef;
+        this.renderer = renderer;
+        this.tooltipCssClass = '';
+        this.tooltipTitle = '';
+        this.tooltipAppendToBody = true;
+        this.tooltipSpacing = 10;
+        this.tooltipDisabled = false;
+        this.tooltipShowCaret = true;
+        this.tooltipPlacement = PlacementTypes.top;
+        this.tooltipAlignment = AlignmentTypes.center;
+        this.tooltipType = StyleTypes.popover;
+        this.tooltipCloseOnClickOutside = true;
+        this.tooltipCloseOnMouseLeave = true;
+        this.tooltipHideTimeout = 300;
+        this.tooltipShowTimeout = 100;
+        this.tooltipShowEvent = ShowTypes.all;
+        this.tooltipImmediateExit = false;
+        this.show = new EventEmitter();
+        this.hide = new EventEmitter();
+    }
+    Object.defineProperty(TooltipDirective.prototype, "listensForFocus", {
+        get: function () {
+            return this.tooltipShowEvent === ShowTypes.all ||
+                this.tooltipShowEvent === ShowTypes.focus;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TooltipDirective.prototype, "listensForHover", {
+        get: function () {
+            return this.tooltipShowEvent === ShowTypes.all ||
+                this.tooltipShowEvent === ShowTypes.mouseover;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TooltipDirective.prototype.ngOnDestroy = function () {
+        this.hideTooltip(true);
+    };
+    TooltipDirective.prototype.onFocus = function () {
+        if (this.listensForFocus) {
+            this.showTooltip();
+        }
+    };
+    TooltipDirective.prototype.onBlur = function () {
+        if (this.listensForFocus) {
+            this.hideTooltip(true);
+        }
+    };
+    TooltipDirective.prototype.onMouseEnter = function () {
+        if (this.listensForHover) {
+            this.showTooltip();
+        }
+    };
+    TooltipDirective.prototype.onMouseLeave = function (target) {
+        if (this.listensForHover && this.tooltipCloseOnMouseLeave) {
+            clearTimeout(this.timeout);
+            if (this.component) {
+                var contentDom = this.component.instance.element.nativeElement;
+                var contains = contentDom.contains(target);
+                if (contains) {
+                    return;
+                }
+            }
+            this.hideTooltip(this.tooltipImmediateExit);
+        }
+    };
+    TooltipDirective.prototype.onMouseClick = function () {
+        if (this.listensForHover) {
+            this.hideTooltip(true);
+        }
+    };
+    TooltipDirective.prototype.showTooltip = function (immediate) {
+        var _this = this;
+        if (this.component || this.tooltipDisabled) {
+            return;
+        }
+        var time = immediate ? 0 : this.tooltipShowTimeout;
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(function () {
+            _this.tooltipService.destroyAll();
+            var options = _this.createBoundOptions();
+            _this.component = _this.tooltipService.create(options);
+            // add a tiny timeout to avoid event re-triggers
+            setTimeout(function () {
+                if (_this.component) {
+                    _this.addHideListeners(_this.component.instance.element.nativeElement);
+                }
+            }, 10);
+            _this.show.emit(true);
+        }, time);
+    };
+    TooltipDirective.prototype.addHideListeners = function (tooltip) {
+        var _this = this;
+        // on mouse enter, cancel the hide triggered by the leave
+        this.mouseEnterContentEvent = this.renderer.listen(tooltip, 'mouseenter', function () {
+            clearTimeout(_this.timeout);
+        });
+        // content mouse leave listener
+        if (this.tooltipCloseOnMouseLeave) {
+            this.mouseLeaveContentEvent = this.renderer.listen(tooltip, 'mouseleave', function () {
+                _this.hideTooltip(_this.tooltipImmediateExit);
+            });
+        }
+        // content close on click outside
+        if (this.tooltipCloseOnClickOutside) {
+            this.documentClickEvent = this.renderer.listen(document, 'click', function (event) {
+                var contains = tooltip.contains(event.target);
+                if (!contains) {
+                    _this.hideTooltip();
+                }
+            });
+        }
+    };
+    TooltipDirective.prototype.hideTooltip = function (immediate) {
+        var _this = this;
+        if (immediate === void 0) { immediate = false; }
+        if (!this.component) {
+            return;
+        }
+        var destroyFn = function () {
+            // remove events
+            if (_this.mouseLeaveContentEvent) {
+                _this.mouseLeaveContentEvent();
+            }
+            if (_this.mouseEnterContentEvent) {
+                _this.mouseEnterContentEvent();
+            }
+            if (_this.documentClickEvent) {
+                _this.documentClickEvent();
+            }
+            // emit events
+            _this.hide.emit(true);
+            // destroy component
+            _this.tooltipService.destroy(_this.component);
+            _this.component = undefined;
+        };
+        clearTimeout(this.timeout);
+        if (!immediate) {
+            this.timeout = setTimeout(destroyFn, this.tooltipHideTimeout);
+        }
+        else {
+            destroyFn();
+        }
+    };
+    TooltipDirective.prototype.createBoundOptions = function () {
+        return {
+            title: this.tooltipTitle,
+            template: this.tooltipTemplate,
+            host: this.viewContainerRef.element,
+            placement: this.tooltipPlacement,
+            alignment: this.tooltipAlignment,
+            type: this.tooltipType,
+            showCaret: this.tooltipShowCaret,
+            cssClass: this.tooltipCssClass,
+            spacing: this.tooltipSpacing,
+            context: this.tooltipContext
+        };
+    };
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipCssClass", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipTitle", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipAppendToBody", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipSpacing", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipDisabled", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipShowCaret", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Number)
+    ], TooltipDirective.prototype, "tooltipPlacement", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Number)
+    ], TooltipDirective.prototype, "tooltipAlignment", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Number)
+    ], TooltipDirective.prototype, "tooltipType", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipCloseOnClickOutside", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipCloseOnMouseLeave", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipHideTimeout", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipShowTimeout", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipTemplate", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Number)
+    ], TooltipDirective.prototype, "tooltipShowEvent", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipContext", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "tooltipImmediateExit", void 0);
+    __decorate([
+        Output(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "show", void 0);
+    __decorate([
+        Output(),
+        __metadata("design:type", Object)
+    ], TooltipDirective.prototype, "hide", void 0);
+    __decorate([
+        HostListener('focusin'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], TooltipDirective.prototype, "onFocus", null);
+    __decorate([
+        HostListener('blur'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], TooltipDirective.prototype, "onBlur", null);
+    __decorate([
+        HostListener('mouseenter'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], TooltipDirective.prototype, "onMouseEnter", null);
+    __decorate([
+        HostListener('mouseleave', ['$event.target']),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", void 0)
+    ], TooltipDirective.prototype, "onMouseLeave", null);
+    __decorate([
+        HostListener('click'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], TooltipDirective.prototype, "onMouseClick", null);
+    TooltipDirective = __decorate([
+        Directive({ selector: '[ngx-tooltip]' }),
+        __metadata("design:paramtypes", [TooltipService,
+            ViewContainerRef,
+            Renderer2])
+    ], TooltipDirective);
+    return TooltipDirective;
+}());
+
+var TooltipModule = /** @class */ (function () {
+    function TooltipModule() {
+    }
+    TooltipModule = __decorate([
+        NgModule({
+            declarations: [TooltipContentComponent, TooltipDirective],
+            providers: [InjectionService, TooltipService],
+            exports: [TooltipContentComponent, TooltipDirective],
+            imports: [CommonModule],
+            entryComponents: [TooltipContentComponent]
+        })
+    ], TooltipModule);
+    return TooltipModule;
+}());
+
+var cache = {};
+/**
+ * Generates a short id.
+ *
+ * Description:
+ *   A 4-character alphanumeric sequence (364 = 1.6 million)
+ *   This should only be used for JavaScript specific models.
+ *   http://stackoverflow.com/questions/6248666/how-to-generate-short-uid-like-ax4j9z-in-js
+ *
+ *   Example: `ebgf`
+ */
+function id() {
+    var newId = ('0000' + (Math.random() * Math.pow(36, 4) << 0).toString(36)).slice(-4);
+    // append a 'a' because neo gets mad
+    newId = "a" + newId;
+    // ensure not already used
+    if (!cache[newId]) {
+        cache[newId] = true;
+        return newId;
+    }
+    return id();
+}
+
+var colorSets = [
+    {
+        name: 'vivid',
+        selectable: true,
+        group: 'Ordinal',
+        domain: [
+            '#647c8a', '#3f51b5', '#2196f3', '#00b862', '#afdf0a', '#a7b61a', '#f3e562', '#ff9800', '#ff5722', '#ff4514'
+        ]
+    },
+    {
+        name: 'natural',
+        selectable: true,
+        group: 'Ordinal',
+        domain: [
+            '#bf9d76', '#e99450', '#d89f59', '#f2dfa7', '#a5d7c6', '#7794b1', '#afafaf', '#707160', '#ba9383', '#d9d5c3'
+        ]
+    },
+    {
+        name: 'cool',
+        selectable: true,
+        group: 'Ordinal',
+        domain: [
+            '#a8385d', '#7aa3e5', '#a27ea8', '#aae3f5', '#adcded', '#a95963', '#8796c0', '#7ed3ed', '#50abcc', '#ad6886'
+        ]
+    },
+    {
+        name: 'fire',
+        selectable: true,
+        group: 'Ordinal',
+        domain: [
+            '#ff3d00', '#bf360c', '#ff8f00', '#ff6f00', '#ff5722', '#e65100', '#ffca28', '#ffab00'
+        ]
+    },
+    {
+        name: 'solar',
+        selectable: true,
+        group: 'Continuous',
+        domain: [
+            '#fff8e1', '#ffecb3', '#ffe082', '#ffd54f', '#ffca28', '#ffc107', '#ffb300', '#ffa000', '#ff8f00', '#ff6f00'
+        ]
+    },
+    {
+        name: 'air',
+        selectable: true,
+        group: 'Continuous',
+        domain: [
+            '#e1f5fe', '#b3e5fc', '#81d4fa', '#4fc3f7', '#29b6f6', '#03a9f4', '#039be5', '#0288d1', '#0277bd', '#01579b'
+        ]
+    },
+    {
+        name: 'aqua',
+        selectable: true,
+        group: 'Continuous',
+        domain: [
+            '#e0f7fa', '#b2ebf2', '#80deea', '#4dd0e1', '#26c6da', '#00bcd4', '#00acc1', '#0097a7', '#00838f', '#006064'
+        ]
+    },
+    {
+        name: 'flame',
+        selectable: false,
+        group: 'Ordinal',
+        domain: [
+            '#A10A28', '#D3342D', '#EF6D49', '#FAAD67', '#FDDE90', '#DBED91', '#A9D770', '#6CBA67', '#2C9653', '#146738'
+        ]
+    },
+    {
+        name: 'ocean',
+        selectable: false,
+        group: 'Ordinal',
+        domain: [
+            '#1D68FB', '#33C0FC', '#4AFFFE', '#AFFFFF', '#FFFC63', '#FDBD2D', '#FC8A25', '#FA4F1E', '#FA141B', '#BA38D1'
+        ]
+    },
+    {
+        name: 'forest',
+        selectable: false,
+        group: 'Ordinal',
+        domain: [
+            '#55C22D', '#C1F33D', '#3CC099', '#AFFFFF', '#8CFC9D', '#76CFFA', '#BA60FB', '#EE6490', '#C42A1C', '#FC9F32'
+        ]
+    },
+    {
+        name: 'horizon',
+        selectable: false,
+        group: 'Ordinal',
+        domain: [
+            '#2597FB', '#65EBFD', '#99FDD0', '#FCEE4B', '#FEFCFA', '#FDD6E3', '#FCB1A8', '#EF6F7B', '#CB96E8', '#EFDEE0'
+        ]
+    },
+    {
+        name: 'neons',
+        selectable: false,
+        group: 'Ordinal',
+        domain: [
+            '#FF3333', '#FF33FF', '#CC33FF', '#0000FF', '#33CCFF', '#33FFFF', '#33FF66', '#CCFF33', '#FFCC00', '#FF6600'
+        ]
+    },
+    {
+        name: 'picnic',
+        selectable: false,
+        group: 'Ordinal',
+        domain: [
+            '#FAC51D', '#66BD6D', '#FAA026', '#29BB9C', '#E96B56', '#55ACD2', '#B7332F', '#2C83C9', '#9166B8', '#92E7E8'
+        ]
+    },
+    {
+        name: 'night',
+        selectable: false,
+        group: 'Ordinal',
+        domain: [
+            '#2B1B5A', '#501356', '#183356', '#28203F', '#391B3C', '#1E2B3C', '#120634',
+            '#2D0432', '#051932', '#453080', '#75267D', '#2C507D', '#4B3880', '#752F7D', '#35547D'
+        ]
+    },
+    {
+        name: 'nightLights',
+        selectable: false,
+        group: 'Ordinal',
+        domain: [
+            '#4e31a5', '#9c25a7', '#3065ab', '#57468b', '#904497', '#46648b',
+            '#32118d', '#a00fb3', '#1052a2', '#6e51bd', '#b63cc3', '#6c97cb', '#8671c1', '#b455be', '#7496c3'
+        ]
+    }
+];
 
 var ColorHelper = /** @class */ (function () {
     function ColorHelper(scheme, type, domain, customColors) {
@@ -5812,6 +5727,54 @@ var AreaChartStackedComponent = /** @class */ (function (_super) {
     ], AreaChartStackedComponent);
     return AreaChartStackedComponent;
 }(BaseChartComponent));
+
+function sortLinear(data, property, direction) {
+    if (direction === void 0) { direction = 'asc'; }
+    return data.sort(function (a, b) {
+        if (direction === 'asc') {
+            return a[property] - b[property];
+        }
+        else {
+            return b[property] - a[property];
+        }
+    });
+}
+function sortByDomain(data, property, direction, domain) {
+    if (direction === void 0) { direction = 'asc'; }
+    return data.sort(function (a, b) {
+        var aVal = a[property];
+        var bVal = b[property];
+        var aIdx = domain.indexOf(aVal);
+        var bIdx = domain.indexOf(bVal);
+        if (direction === 'asc') {
+            return aIdx - bIdx;
+        }
+        else {
+            return bIdx - aIdx;
+        }
+    });
+}
+function sortByTime(data, property, direction) {
+    if (direction === void 0) { direction = 'asc'; }
+    return data.sort(function (a, b) {
+        var aDate = a[property].getTime();
+        var bDate = b[property].getTime();
+        if (direction === 'asc') {
+            if (aDate > bDate)
+                return 1;
+            if (bDate > aDate)
+                return -1;
+            return 0;
+        }
+        else {
+            if (aDate > bDate)
+                return -1;
+            if (bDate > aDate)
+                return 1;
+            return 0;
+        }
+    });
+}
 
 var AreaSeriesComponent = /** @class */ (function () {
     function AreaSeriesComponent() {
@@ -9768,1277 +9731,6 @@ var BarChartModule = /** @class */ (function () {
     return BarChartModule;
 }());
 
-function getDomain(values, scaleType, autoScale, minVal, maxVal) {
-    var domain = [];
-    if (scaleType === 'linear') {
-        values = values.map(function (v) { return Number(v); });
-        if (!autoScale) {
-            values.push(0);
-        }
-    }
-    if (scaleType === 'time' || scaleType === 'linear') {
-        var min = minVal ? minVal : Math.min.apply(Math, __spread(values));
-        var max = maxVal ? maxVal : Math.max.apply(Math, __spread(values));
-        domain = [min, max];
-    }
-    else {
-        domain = values;
-    }
-    return domain;
-}
-function getScale(domain, range, scaleType, roundDomains) {
-    var scale;
-    if (scaleType === 'time') {
-        scale = scaleTime()
-            .range(range)
-            .domain(domain);
-    }
-    else if (scaleType === 'linear') {
-        scale = scaleLinear()
-            .range(range)
-            .domain(domain);
-        if (roundDomains) {
-            scale = scale.nice();
-        }
-    }
-    else if (scaleType === 'ordinal') {
-        scale = scalePoint()
-            .range([range[0], range[1]])
-            .domain(domain);
-    }
-    return scale;
-}
-
-var BubbleChartComponent = /** @class */ (function (_super) {
-    __extends(BubbleChartComponent, _super);
-    function BubbleChartComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.showGridLines = true;
-        _this.legend = false;
-        _this.legendTitle = 'Legend';
-        _this.legendPosition = 'right';
-        _this.xAxis = true;
-        _this.yAxis = true;
-        _this.trimXAxisTicks = true;
-        _this.trimYAxisTicks = true;
-        _this.maxXAxisTickLength = 16;
-        _this.maxYAxisTickLength = 16;
-        _this.roundDomains = false;
-        _this.maxRadius = 10;
-        _this.minRadius = 3;
-        _this.schemeType = 'ordinal';
-        _this.tooltipDisabled = false;
-        _this.activate = new EventEmitter();
-        _this.deactivate = new EventEmitter();
-        _this.scaleType = 'linear';
-        _this.margin = [10, 20, 10, 20];
-        _this.bubblePadding = [0, 0, 0, 0];
-        _this.xAxisHeight = 0;
-        _this.yAxisWidth = 0;
-        _this.activeEntries = [];
-        return _this;
-    }
-    BubbleChartComponent.prototype.update = function () {
-        _super.prototype.update.call(this);
-        this.dims = calculateViewDimensions({
-            width: this.width,
-            height: this.height,
-            margins: this.margin,
-            showXAxis: this.xAxis,
-            showYAxis: this.yAxis,
-            xAxisHeight: this.xAxisHeight,
-            yAxisWidth: this.yAxisWidth,
-            showXLabel: this.showXAxisLabel,
-            showYLabel: this.showYAxisLabel,
-            showLegend: this.legend,
-            legendType: this.schemeType,
-            legendPosition: this.legendPosition
-        });
-        this.seriesDomain = this.results.map(function (d) { return d.name; });
-        this.rDomain = this.getRDomain();
-        this.xDomain = this.getXDomain();
-        this.yDomain = this.getYDomain();
-        this.transform = "translate(" + this.dims.xOffset + "," + this.margin[0] + ")";
-        var colorDomain = this.schemeType === 'ordinal' ? this.seriesDomain : this.rDomain;
-        this.colors = new ColorHelper(this.scheme, this.schemeType, colorDomain, this.customColors);
-        this.data = this.results;
-        this.minRadius = Math.max(this.minRadius, 1);
-        this.maxRadius = Math.max(this.maxRadius, 1);
-        this.rScale = this.getRScale(this.rDomain, [this.minRadius, this.maxRadius]);
-        this.bubblePadding = [0, 0, 0, 0];
-        this.setScales();
-        this.bubblePadding = this.getBubblePadding();
-        this.setScales();
-        this.legendOptions = this.getLegendOptions();
-        this.clipPathId = 'clip' + id().toString();
-        this.clipPath = "url(#" + this.clipPathId + ")";
-    };
-    BubbleChartComponent.prototype.hideCircles = function () {
-        this.deactivateAll();
-    };
-    BubbleChartComponent.prototype.onClick = function (data, series) {
-        if (series) {
-            data.series = series.name;
-        }
-        this.select.emit(data);
-    };
-    BubbleChartComponent.prototype.getBubblePadding = function () {
-        var e_1, _a, e_2, _b;
-        var yMin = 0;
-        var xMin = 0;
-        var yMax = this.dims.height;
-        var xMax = this.dims.width;
-        try {
-            for (var _c = __values(this.data), _d = _c.next(); !_d.done; _d = _c.next()) {
-                var s = _d.value;
-                try {
-                    for (var _e = __values(s.series), _f = _e.next(); !_f.done; _f = _e.next()) {
-                        var d = _f.value;
-                        var r = this.rScale(d.r);
-                        var cx = (this.xScaleType === 'linear') ? this.xScale(Number(d.x)) : this.xScale(d.x);
-                        var cy = (this.yScaleType === 'linear') ? this.yScale(Number(d.y)) : this.yScale(d.y);
-                        xMin = Math.max(r - cx, xMin);
-                        yMin = Math.max(r - cy, yMin);
-                        yMax = Math.max(cy + r, yMax);
-                        xMax = Math.max(cx + r, xMax);
-                    }
-                }
-                catch (e_2_1) { e_2 = { error: e_2_1 }; }
-                finally {
-                    try {
-                        if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
-                    }
-                    finally { if (e_2) throw e_2.error; }
-                }
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
-            }
-            finally { if (e_1) throw e_1.error; }
-        }
-        xMax = Math.max(xMax - this.dims.width, 0);
-        yMax = Math.max(yMax - this.dims.height, 0);
-        return [yMin, xMax, yMax, xMin];
-    };
-    BubbleChartComponent.prototype.setScales = function () {
-        var width = this.dims.width;
-        if (this.xScaleMin === undefined && this.xScaleMax === undefined) {
-            width = width - this.bubblePadding[1];
-        }
-        var height = this.dims.height;
-        if (this.yScaleMin === undefined && this.yScaleMax === undefined) {
-            height = height - this.bubblePadding[2];
-        }
-        this.xScale = this.getXScale(this.xDomain, width);
-        this.yScale = this.getYScale(this.yDomain, height);
-    };
-    BubbleChartComponent.prototype.getYScale = function (domain, height) {
-        return getScale(domain, [height, this.bubblePadding[0]], this.yScaleType, this.roundDomains);
-    };
-    BubbleChartComponent.prototype.getXScale = function (domain, width) {
-        return getScale(domain, [this.bubblePadding[3], width], this.xScaleType, this.roundDomains);
-    };
-    BubbleChartComponent.prototype.getRScale = function (domain, range) {
-        var scale = scaleLinear()
-            .range(range)
-            .domain(domain);
-        return this.roundDomains ? scale.nice() : scale;
-    };
-    BubbleChartComponent.prototype.getLegendOptions = function () {
-        var opts = {
-            scaleType: this.schemeType,
-            colors: undefined,
-            domain: [],
-            position: this.legendPosition,
-            title: undefined
-        };
-        if (opts.scaleType === 'ordinal') {
-            opts.domain = this.seriesDomain;
-            opts.colors = this.colors;
-            opts.title = this.legendTitle;
-        }
-        else {
-            opts.domain = this.rDomain;
-            opts.colors = this.colors.scale;
-        }
-        return opts;
-    };
-    BubbleChartComponent.prototype.getXDomain = function () {
-        var e_3, _a, e_4, _b;
-        var values = [];
-        try {
-            for (var _c = __values(this.results), _d = _c.next(); !_d.done; _d = _c.next()) {
-                var results = _d.value;
-                try {
-                    for (var _e = __values(results.series), _f = _e.next(); !_f.done; _f = _e.next()) {
-                        var d = _f.value;
-                        if (!values.includes(d.x)) {
-                            values.push(d.x);
-                        }
-                    }
-                }
-                catch (e_4_1) { e_4 = { error: e_4_1 }; }
-                finally {
-                    try {
-                        if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
-                    }
-                    finally { if (e_4) throw e_4.error; }
-                }
-            }
-        }
-        catch (e_3_1) { e_3 = { error: e_3_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
-            }
-            finally { if (e_3) throw e_3.error; }
-        }
-        this.xScaleType = getScaleType(values);
-        return getDomain(values, this.xScaleType, this.autoScale, this.xScaleMin, this.xScaleMax);
-    };
-    BubbleChartComponent.prototype.getYDomain = function () {
-        var e_5, _a, e_6, _b;
-        var values = [];
-        try {
-            for (var _c = __values(this.results), _d = _c.next(); !_d.done; _d = _c.next()) {
-                var results = _d.value;
-                try {
-                    for (var _e = __values(results.series), _f = _e.next(); !_f.done; _f = _e.next()) {
-                        var d = _f.value;
-                        if (!values.includes(d.y)) {
-                            values.push(d.y);
-                        }
-                    }
-                }
-                catch (e_6_1) { e_6 = { error: e_6_1 }; }
-                finally {
-                    try {
-                        if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
-                    }
-                    finally { if (e_6) throw e_6.error; }
-                }
-            }
-        }
-        catch (e_5_1) { e_5 = { error: e_5_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
-            }
-            finally { if (e_5) throw e_5.error; }
-        }
-        this.yScaleType = getScaleType(values);
-        return getDomain(values, this.yScaleType, this.autoScale, this.yScaleMin, this.yScaleMax);
-    };
-    BubbleChartComponent.prototype.getRDomain = function () {
-        var e_7, _a, e_8, _b;
-        var min = Infinity;
-        var max = -Infinity;
-        try {
-            for (var _c = __values(this.results), _d = _c.next(); !_d.done; _d = _c.next()) {
-                var results = _d.value;
-                try {
-                    for (var _e = __values(results.series), _f = _e.next(); !_f.done; _f = _e.next()) {
-                        var d = _f.value;
-                        var value = Number(d.r) || 1;
-                        min = Math.min(min, value);
-                        max = Math.max(max, value);
-                    }
-                }
-                catch (e_8_1) { e_8 = { error: e_8_1 }; }
-                finally {
-                    try {
-                        if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
-                    }
-                    finally { if (e_8) throw e_8.error; }
-                }
-            }
-        }
-        catch (e_7_1) { e_7 = { error: e_7_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
-            }
-            finally { if (e_7) throw e_7.error; }
-        }
-        return [min, max];
-    };
-    BubbleChartComponent.prototype.updateYAxisWidth = function (_a) {
-        var width = _a.width;
-        this.yAxisWidth = width;
-        this.update();
-    };
-    BubbleChartComponent.prototype.updateXAxisHeight = function (_a) {
-        var height = _a.height;
-        this.xAxisHeight = height;
-        this.update();
-    };
-    BubbleChartComponent.prototype.onActivate = function (item) {
-        var idx = this.activeEntries.findIndex(function (d) {
-            return d.name === item.name;
-        });
-        if (idx > -1) {
-            return;
-        }
-        this.activeEntries = __spread([item], this.activeEntries);
-        this.activate.emit({ value: item, entries: this.activeEntries });
-    };
-    BubbleChartComponent.prototype.onDeactivate = function (item) {
-        var idx = this.activeEntries.findIndex(function (d) {
-            return d.name === item.name;
-        });
-        this.activeEntries.splice(idx, 1);
-        this.activeEntries = __spread(this.activeEntries);
-        this.deactivate.emit({ value: item, entries: this.activeEntries });
-    };
-    BubbleChartComponent.prototype.deactivateAll = function () {
-        var e_9, _a;
-        this.activeEntries = __spread(this.activeEntries);
-        try {
-            for (var _b = __values(this.activeEntries), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var entry = _c.value;
-                this.deactivate.emit({ value: entry, entries: [] });
-            }
-        }
-        catch (e_9_1) { e_9 = { error: e_9_1 }; }
-        finally {
-            try {
-                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
-            }
-            finally { if (e_9) throw e_9.error; }
-        }
-        this.activeEntries = [];
-    };
-    BubbleChartComponent.prototype.trackBy = function (index, item) {
-        return item.name;
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "showGridLines", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "legend", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "legendTitle", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "legendPosition", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "xAxis", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "yAxis", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Boolean)
-    ], BubbleChartComponent.prototype, "showXAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Boolean)
-    ], BubbleChartComponent.prototype, "showYAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], BubbleChartComponent.prototype, "xAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], BubbleChartComponent.prototype, "yAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "trimXAxisTicks", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "trimYAxisTicks", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "maxXAxisTickLength", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "maxYAxisTickLength", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "xAxisTickFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "yAxisTickFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Array)
-    ], BubbleChartComponent.prototype, "xAxisTicks", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Array)
-    ], BubbleChartComponent.prototype, "yAxisTicks", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "roundDomains", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "maxRadius", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "minRadius", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Boolean)
-    ], BubbleChartComponent.prototype, "autoScale", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "schemeType", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "tooltipDisabled", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "xScaleMin", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "xScaleMax", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "yScaleMin", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleChartComponent.prototype, "yScaleMax", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", EventEmitter)
-    ], BubbleChartComponent.prototype, "activate", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", EventEmitter)
-    ], BubbleChartComponent.prototype, "deactivate", void 0);
-    __decorate([
-        ContentChild('tooltipTemplate'),
-        __metadata("design:type", TemplateRef)
-    ], BubbleChartComponent.prototype, "tooltipTemplate", void 0);
-    __decorate([
-        HostListener('mouseleave'),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", void 0)
-    ], BubbleChartComponent.prototype, "hideCircles", null);
-    BubbleChartComponent = __decorate([
-        Component({
-            selector: 'ng-svg-charts-bubble-chart',
-            template: "\n    <ng-svg-charts-chart\n      [view]=\"[width, height]\"\n      [showLegend]=\"legend\"\n      [activeEntries]=\"activeEntries\"\n      [legendOptions]=\"legendOptions\"\n      [animations]=\"animations\"\n      (legendLabelClick)=\"onClick($event)\"\n      (legendLabelActivate)=\"onActivate($event)\"\n      (legendLabelDeactivate)=\"onDeactivate($event)\">\n      <svg:defs>\n        <svg:clipPath [attr.id]=\"clipPathId\">\n          <svg:rect\n            [attr.width]=\"dims.width + 10\"\n            [attr.height]=\"dims.height + 10\"\n            [attr.transform]=\"'translate(-5, -5)'\"/>\n        </svg:clipPath>\n      </svg:defs>\n      <svg:g [attr.transform]=\"transform\" class=\"bubble-chart chart\">\n        <svg:g ng-svg-charts-x-axis\n          *ngIf=\"xAxis\"\n          [showGridLines]=\"showGridLines\"\n          [dims]=\"dims\"\n          [xScale]=\"xScale\"\n          [showLabel]=\"showXAxisLabel\"\n          [labelText]=\"xAxisLabel\"\n          [trimTicks]=\"trimXAxisTicks\"\n          [maxTickLength]=\"maxXAxisTickLength\"\n          [tickFormatting]=\"xAxisTickFormatting\"\n          [ticks]=\"xAxisTicks\"\n          (dimensionsChanged)=\"updateXAxisHeight($event)\"/>\n        <svg:g ng-svg-charts-y-axis\n          *ngIf=\"yAxis\"\n          [showGridLines]=\"showGridLines\"\n          [yScale]=\"yScale\"\n          [dims]=\"dims\"\n          [showLabel]=\"showYAxisLabel\"\n          [labelText]=\"yAxisLabel\"\n          [trimTicks]=\"trimYAxisTicks\"\n          [maxTickLength]=\"maxYAxisTickLength\"\n          [tickFormatting]=\"yAxisTickFormatting\"\n          [ticks]=\"yAxisTicks\"\n          (dimensionsChanged)=\"updateYAxisWidth($event)\"/>\n        <svg:rect\n          class=\"bubble-chart-area\"\n          x=\"0\"\n          y=\"0\"\n          [attr.width]=\"dims.width\"\n          [attr.height]=\"dims.height\"\n          style=\"fill: rgb(255, 0, 0); opacity: 0; cursor: 'auto';\"\n          (mouseenter)=\"deactivateAll()\"\n        />\n        <svg:g [attr.clip-path]=\"clipPath\">\n          <svg:g *ngFor=\"let series of data; trackBy:trackBy\" [@animationState]=\"'active'\">\n            <svg:g ng-svg-charts-bubble-series\n              [xScale]=\"xScale\"\n              [yScale]=\"yScale\"\n              [rScale]=\"rScale\"\n              [xScaleType]=\"xScaleType\"\n              [yScaleType]=\"yScaleType\"\n              [xAxisLabel]=\"xAxisLabel\"\n              [yAxisLabel]=\"yAxisLabel\"\n              [colors]=\"colors\"\n              [data]=\"series\"\n              [activeEntries]=\"activeEntries\"\n              [tooltipDisabled]=\"tooltipDisabled\"\n              [tooltipTemplate]=\"tooltipTemplate\"\n              (select)=\"onClick($event, series)\"\n              (activate)=\"onActivate($event)\"\n              (deactivate)=\"onDeactivate($event)\" />\n          </svg:g>\n        </svg:g>\n      </svg:g>\n    </ng-svg-charts-chart>\n  ",
-            changeDetection: ChangeDetectionStrategy.OnPush,
-            encapsulation: ViewEncapsulation.None,
-            animations: [
-                trigger('animationState', [
-                    transition(':leave', [
-                        style({
-                            opacity: 1,
-                        }),
-                        animate(500, style({
-                            opacity: 0
-                        }))
-                    ])
-                ])
-            ],
-            styles: [".ng-svg-charts{float:left;overflow:visible}.ng-svg-charts .arc,.ng-svg-charts .bar,.ng-svg-charts .circle{pointer-events:fill;cursor:pointer}.ng-svg-charts .arc.active,.ng-svg-charts .arc:hover,.ng-svg-charts .bar.active,.ng-svg-charts .bar:hover,.ng-svg-charts .card.active,.ng-svg-charts .card:hover,.ng-svg-charts .cell.active,.ng-svg-charts .cell:hover{opacity:.8;-webkit-transition:opacity .1s ease-in-out;-o-transition:opacity .1s ease-in-out;transition:opacity .1s ease-in-out}.ng-svg-charts .arc:focus,.ng-svg-charts .bar:focus,.ng-svg-charts .card:focus,.ng-svg-charts .cell:focus,.ng-svg-charts g:focus{outline:0}.ng-svg-charts .area-series.inactive,.ng-svg-charts .line-series-range.inactive,.ng-svg-charts .line-series.inactive,.ng-svg-charts .polar-series-area.inactive,.ng-svg-charts .polar-series-path.inactive{-webkit-transition:opacity .1s ease-in-out;-o-transition:opacity .1s ease-in-out;transition:opacity .1s ease-in-out;opacity:.2}.ng-svg-charts .line-highlight{display:none}.ng-svg-charts .line-highlight.active{display:block}.ng-svg-charts .area{opacity:.6}.ng-svg-charts .circle:hover{cursor:pointer}.ng-svg-charts .label{font-size:12px;font-weight:400}.ng-svg-charts .tooltip-anchor{fill:#000}.ng-svg-charts .gridline-path{stroke:#ddd;stroke-width:1;fill:none}.ng-svg-charts .refline-path{stroke:#a8b2c7;stroke-width:1;stroke-dasharray:5;stroke-dashoffset:5}.ng-svg-charts .refline-label{font-size:9px}.ng-svg-charts .reference-area{fill-opacity:.05;fill:#000}.ng-svg-charts .gridline-path-dotted{stroke:#ddd;stroke-width:1;fill:none;stroke-dasharray:1,20;stroke-dashoffset:3}.ng-svg-charts .grid-panel rect{fill:none}.ng-svg-charts .grid-panel.odd rect{fill:rgba(0,0,0,.05)}"]
-        })
-    ], BubbleChartComponent);
-    return BubbleChartComponent;
-}(BaseChartComponent));
-
-var BubbleSeriesComponent = /** @class */ (function () {
-    function BubbleSeriesComponent() {
-        this.tooltipDisabled = false;
-        this.select = new EventEmitter();
-        this.activate = new EventEmitter();
-        this.deactivate = new EventEmitter();
-    }
-    BubbleSeriesComponent.prototype.ngOnChanges = function (changes) {
-        this.update();
-    };
-    BubbleSeriesComponent.prototype.update = function () {
-        this.circles = this.getCircles();
-    };
-    BubbleSeriesComponent.prototype.getCircles = function () {
-        var _this = this;
-        var seriesName = this.data.name;
-        return this.data.series.map(function (d, i) {
-            if (typeof d.y !== 'undefined' && typeof d.x !== 'undefined') {
-                var y = d.y;
-                var x = d.x;
-                var r = d.r;
-                var radius = _this.rScale(r || 1);
-                var tooltipLabel = formatLabel(d.name);
-                var cx = (_this.xScaleType === 'linear') ? _this.xScale(Number(x)) : _this.xScale(x);
-                var cy = (_this.yScaleType === 'linear') ? _this.yScale(Number(y)) : _this.yScale(y);
-                var color = (_this.colors.scaleType === 'linear') ?
-                    _this.colors.getColor(r) :
-                    _this.colors.getColor(seriesName);
-                var isActive = !_this.activeEntries.length ? true : _this.isActive({ name: seriesName });
-                var opacity = isActive ? 1 : 0.3;
-                var data = {
-                    series: seriesName,
-                    name: d.name,
-                    value: d.y,
-                    x: d.x,
-                    radius: d.r
-                };
-                return {
-                    data: data,
-                    x: x,
-                    y: y,
-                    r: r,
-                    classNames: ["circle-data-" + i],
-                    value: y,
-                    label: x,
-                    cx: cx,
-                    cy: cy,
-                    radius: radius,
-                    tooltipLabel: tooltipLabel,
-                    color: color,
-                    opacity: opacity,
-                    seriesName: seriesName,
-                    isActive: isActive,
-                    transform: "translate(" + cx + "," + cy + ")"
-                };
-            }
-        }).filter(function (circle) { return circle !== undefined; });
-    };
-    BubbleSeriesComponent.prototype.getTooltipText = function (circle) {
-        var hasRadius = typeof circle.r !== 'undefined';
-        var hasTooltipLabel = circle.tooltipLabel && circle.tooltipLabel.length;
-        var hasSeriesName = circle.seriesName && circle.seriesName.length;
-        var radiusValue = hasRadius ? formatLabel(circle.r) : '';
-        var xAxisLabel = this.xAxisLabel && this.xAxisLabel !== '' ? this.xAxisLabel + ":" : '';
-        var yAxisLabel = this.yAxisLabel && this.yAxisLabel !== '' ? this.yAxisLabel + ":" : '';
-        var x = formatLabel(circle.x);
-        var y = formatLabel(circle.y);
-        var name = (hasSeriesName && hasTooltipLabel) ?
-            circle.seriesName + " \u2022 " + circle.tooltipLabel :
-            circle.seriesName + circle.tooltipLabel;
-        var tooltipTitle = (hasSeriesName || hasTooltipLabel) ?
-            "<span class=\"tooltip-label\">" + name + "</span>" :
-            '';
-        return "\n      " + tooltipTitle + "\n      <span class=\"tooltip-label\">\n        <label>" + xAxisLabel + "</label> " + x + "<br />\n        <label>" + yAxisLabel + "</label> " + y + "\n      </span>\n      <span class=\"tooltip-val\">\n        " + radiusValue + "\n      </span>\n    ";
-    };
-    BubbleSeriesComponent.prototype.onClick = function (value, label) {
-        this.select.emit({
-            name: label,
-            value: value
-        });
-    };
-    BubbleSeriesComponent.prototype.isActive = function (entry) {
-        if (!this.activeEntries) {
-            return false;
-        }
-        var item = this.activeEntries.find(function (d) {
-            return entry.name === d.name;
-        });
-        return item !== undefined;
-    };
-    BubbleSeriesComponent.prototype.isVisible = function (circle) {
-        if (this.activeEntries.length > 0) {
-            return this.isActive({ name: circle.seriesName });
-        }
-        return circle.opacity !== 0;
-    };
-    BubbleSeriesComponent.prototype.activateCircle = function (circle) {
-        circle.barVisible = true;
-        this.activate.emit({ name: this.data.name });
-    };
-    BubbleSeriesComponent.prototype.deactivateCircle = function (circle) {
-        circle.barVisible = false;
-        this.deactivate.emit({ name: this.data.name });
-    };
-    BubbleSeriesComponent.prototype.trackBy = function (index, circle) {
-        return circle.data.series + " " + circle.data.name;
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleSeriesComponent.prototype, "data", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleSeriesComponent.prototype, "xScale", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleSeriesComponent.prototype, "yScale", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleSeriesComponent.prototype, "rScale", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleSeriesComponent.prototype, "xScaleType", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleSeriesComponent.prototype, "yScaleType", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleSeriesComponent.prototype, "colors", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleSeriesComponent.prototype, "visibleValue", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Array)
-    ], BubbleSeriesComponent.prototype, "activeEntries", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], BubbleSeriesComponent.prototype, "xAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], BubbleSeriesComponent.prototype, "yAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], BubbleSeriesComponent.prototype, "tooltipDisabled", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", TemplateRef)
-    ], BubbleSeriesComponent.prototype, "tooltipTemplate", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], BubbleSeriesComponent.prototype, "select", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], BubbleSeriesComponent.prototype, "activate", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], BubbleSeriesComponent.prototype, "deactivate", void 0);
-    BubbleSeriesComponent = __decorate([
-        Component({
-            selector: 'g[ng-svg-charts-bubble-series]',
-            template: "\n    <svg:g *ngFor=\"let circle of circles; trackBy: trackBy\">\n      <svg:g [attr.transform]=\"circle.transform\">\n        <svg:g ng-svg-charts-circle\n          [@animationState]=\"'active'\"\n          class=\"circle\"\n          [cx]=\"0\"\n          [cy]=\"0\"\n          [r]=\"circle.radius\"\n          [fill]=\"circle.color\"\n          [style.opacity]=\"circle.opacity\"\n          [class.active]=\"circle.isActive\"\n          [pointerEvents]=\"'all'\"\n          [data]=\"circle.value\"\n          [classNames]=\"circle.classNames\"\n          (select)=\"onClick($event, circle.label)\"\n          (activate)=\"activateCircle(circle)\"\n          (deactivate)=\"deactivateCircle(circle)\"\n          ngx-tooltip\n          [tooltipDisabled]=\"tooltipDisabled\"\n          [tooltipPlacement]=\"'top'\"\n          [tooltipType]=\"'tooltip'\"\n          [tooltipTitle]=\"tooltipTemplate ? undefined : getTooltipText(circle)\"\n          [tooltipTemplate]=\"tooltipTemplate\"\n          [tooltipContext]=\"circle.data\"\n        />\n      </svg:g>\n    </svg:g>\n  ",
-            changeDetection: ChangeDetectionStrategy.OnPush,
-            animations: [
-                trigger('animationState', [
-                    transition(':enter', [
-                        style({
-                            opacity: 0,
-                            transform: 'scale(0)'
-                        }),
-                        animate(250, style({ opacity: 1, transform: 'scale(1)' }))
-                    ])
-                ])
-            ]
-        })
-    ], BubbleSeriesComponent);
-    return BubbleSeriesComponent;
-}());
-
-var BubbleChartModule = /** @class */ (function () {
-    function BubbleChartModule() {
-    }
-    BubbleChartModule = __decorate([
-        NgModule({
-            imports: [ChartCommonModule],
-            declarations: [
-                BubbleChartComponent,
-                BubbleSeriesComponent
-            ],
-            exports: [
-                BubbleChartComponent,
-                BubbleSeriesComponent
-            ]
-        })
-    ], BubbleChartModule);
-    return BubbleChartModule;
-}());
-
-var HeatMapCellComponent = /** @class */ (function () {
-    function HeatMapCellComponent(element) {
-        this.gradient = false;
-        this.animations = true;
-        this.select = new EventEmitter();
-        this.element = element.nativeElement;
-    }
-    HeatMapCellComponent.prototype.ngOnChanges = function (changes) {
-        this.transform = "translate(" + this.x + " , " + this.y + ")";
-        this.startOpacity = 0.3;
-        this.gradientId = 'grad' + id().toString();
-        this.gradientUrl = "url(#" + this.gradientId + ")";
-        this.gradientStops = this.getGradientStops();
-        if (this.animations) {
-            this.loadAnimation();
-        }
-    };
-    HeatMapCellComponent.prototype.getGradientStops = function () {
-        return [
-            {
-                offset: 0,
-                color: this.fill,
-                opacity: this.startOpacity
-            },
-            {
-                offset: 100,
-                color: this.fill,
-                opacity: 1
-            }
-        ];
-    };
-    HeatMapCellComponent.prototype.loadAnimation = function () {
-        var node = select(this.element).select('.cell');
-        node.attr('opacity', 0);
-        this.animateToCurrentForm();
-    };
-    HeatMapCellComponent.prototype.animateToCurrentForm = function () {
-        var node = select(this.element).select('.cell');
-        node.transition().duration(750)
-            .attr('opacity', 1);
-    };
-    HeatMapCellComponent.prototype.onClick = function () {
-        this.select.emit(this.data);
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapCellComponent.prototype, "fill", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapCellComponent.prototype, "x", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapCellComponent.prototype, "y", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapCellComponent.prototype, "width", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapCellComponent.prototype, "height", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapCellComponent.prototype, "data", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapCellComponent.prototype, "label", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapCellComponent.prototype, "gradient", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapCellComponent.prototype, "animations", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], HeatMapCellComponent.prototype, "select", void 0);
-    HeatMapCellComponent = __decorate([
-        Component({
-            selector: 'g[ng-svg-charts-heat-map-cell]',
-            template: "\n    <svg:g [attr.transform]=\"transform\" class=\"cell\">\n      <defs *ngIf=\"gradient\">\n        <svg:g ng-svg-charts-svg-linear-gradient\n          orientation=\"vertical\"\n          [name]=\"gradientId\"\n          [stops]=\"gradientStops\"\n        />\n      </defs>\n      <svg:rect\n        [attr.fill]=\"gradient ? gradientUrl : fill\"\n        rx=\"3\"\n        [attr.width]=\"width\"\n        [attr.height]=\"height\"\n        class=\"cell\"\n        style=\"cursor: pointer\"\n        (click)=\"onClick()\"\n      />\n    </svg:g>\n  ",
-            changeDetection: ChangeDetectionStrategy.OnPush
-        }),
-        __metadata("design:paramtypes", [ElementRef])
-    ], HeatMapCellComponent);
-    return HeatMapCellComponent;
-}());
-
-var HeatCellSeriesComponent = /** @class */ (function () {
-    function HeatCellSeriesComponent() {
-        this.tooltipDisabled = false;
-        this.animations = true;
-        this.select = new EventEmitter();
-    }
-    HeatCellSeriesComponent.prototype.ngOnInit = function () {
-        if (!this.tooltipText) {
-            this.tooltipText = this.getTooltipText;
-        }
-    };
-    HeatCellSeriesComponent.prototype.ngOnChanges = function (changes) {
-        this.update();
-    };
-    HeatCellSeriesComponent.prototype.update = function () {
-        this.cells = this.getCells();
-    };
-    HeatCellSeriesComponent.prototype.getCells = function () {
-        var _this = this;
-        var cells = [];
-        this.data.map(function (row) {
-            row.series.map(function (cell) {
-                var value = cell.value;
-                cells.push({
-                    row: row,
-                    cell: cell,
-                    x: _this.xScale(row.name),
-                    y: _this.yScale(cell.name),
-                    width: _this.xScale.bandwidth(),
-                    height: _this.yScale.bandwidth(),
-                    fill: _this.colors.getColor(value),
-                    data: value,
-                    label: formatLabel(cell.name),
-                    series: row.name
-                });
-            });
-        });
-        return cells;
-    };
-    HeatCellSeriesComponent.prototype.getTooltipText = function (_a) {
-        var label = _a.label, data = _a.data, series = _a.series;
-        return "\n      <span class=\"tooltip-label\">" + series + " \u2022 " + label + "</span>\n      <span class=\"tooltip-val\">" + data.toLocaleString() + "</span>\n    ";
-    };
-    HeatCellSeriesComponent.prototype.trackBy = function (index, item) {
-        return item.tooltipText;
-    };
-    HeatCellSeriesComponent.prototype.onClick = function (value, label, series) {
-        this.select.emit({
-            name: label,
-            value: value,
-            series: series
-        });
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatCellSeriesComponent.prototype, "data", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatCellSeriesComponent.prototype, "colors", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatCellSeriesComponent.prototype, "xScale", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatCellSeriesComponent.prototype, "yScale", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Boolean)
-    ], HeatCellSeriesComponent.prototype, "gradient", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatCellSeriesComponent.prototype, "tooltipDisabled", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatCellSeriesComponent.prototype, "tooltipText", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", TemplateRef)
-    ], HeatCellSeriesComponent.prototype, "tooltipTemplate", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatCellSeriesComponent.prototype, "animations", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], HeatCellSeriesComponent.prototype, "select", void 0);
-    HeatCellSeriesComponent = __decorate([
-        Component({
-            selector: 'g[ng-svg-charts-heat-map-cell-series]',
-            template: "\n    <svg:g\n      ng-svg-charts-heat-map-cell\n      *ngFor=\"let c of cells; trackBy:trackBy\"\n      [x]=\"c.x\"\n      [y]=\"c.y\"\n      [width]=\"c.width\"\n      [height]=\"c.height\"\n      [fill]=\"c.fill\"\n      [data]=\"c.data\"\n      (select)=\"onClick($event, c.label, c.series)\"\n      [gradient]=\"gradient\"\n      [animations]=\"animations\"\n      ngx-tooltip\n      [tooltipDisabled]=\"tooltipDisabled\"\n      [tooltipPlacement]=\"'top'\"\n      [tooltipType]=\"'tooltip'\"\n      [tooltipTitle]=\"tooltipTemplate ? undefined : tooltipText(c)\"\n      [tooltipTemplate]=\"tooltipTemplate\"\n      [tooltipContext]=\"{series: c.series, name: c.label, value: c.data}\">\n    </svg:g>\n  ",
-            changeDetection: ChangeDetectionStrategy.OnPush
-        })
-    ], HeatCellSeriesComponent);
-    return HeatCellSeriesComponent;
-}());
-
-var HeatMapComponent = /** @class */ (function (_super) {
-    __extends(HeatMapComponent, _super);
-    function HeatMapComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.legendTitle = 'Legend';
-        _this.legendPosition = 'right';
-        _this.innerPadding = 8;
-        _this.trimXAxisTicks = true;
-        _this.trimYAxisTicks = true;
-        _this.maxXAxisTickLength = 16;
-        _this.maxYAxisTickLength = 16;
-        _this.tooltipDisabled = false;
-        _this.margin = [10, 20, 10, 20];
-        _this.xAxisHeight = 0;
-        _this.yAxisWidth = 0;
-        _this.scaleType = 'linear';
-        return _this;
-    }
-    HeatMapComponent.prototype.update = function () {
-        _super.prototype.update.call(this);
-        this.formatDates();
-        this.xDomain = this.getXDomain();
-        this.yDomain = this.getYDomain();
-        this.valueDomain = this.getValueDomain();
-        this.scaleType = getScaleType(this.valueDomain, false);
-        this.dims = calculateViewDimensions({
-            width: this.width,
-            height: this.height,
-            margins: this.margin,
-            showXAxis: this.xAxis,
-            showYAxis: this.yAxis,
-            xAxisHeight: this.xAxisHeight,
-            yAxisWidth: this.yAxisWidth,
-            showXLabel: this.showXAxisLabel,
-            showYLabel: this.showYAxisLabel,
-            showLegend: this.legend,
-            legendType: this.scaleType,
-            legendPosition: this.legendPosition
-        });
-        if (this.scaleType === 'linear') {
-            var min = this.min;
-            var max = this.max;
-            if (!this.min) {
-                min = Math.min.apply(Math, __spread([0], this.valueDomain));
-            }
-            if (!this.max) {
-                max = Math.max.apply(Math, __spread(this.valueDomain));
-            }
-            this.valueDomain = [min, max];
-        }
-        this.xScale = this.getXScale();
-        this.yScale = this.getYScale();
-        this.setColors();
-        this.legendOptions = this.getLegendOptions();
-        this.transform = "translate(" + this.dims.xOffset + " , " + this.margin[0] + ")";
-        this.rects = this.getRects();
-    };
-    HeatMapComponent.prototype.getXDomain = function () {
-        var e_1, _a;
-        var domain = [];
-        try {
-            for (var _b = __values(this.results), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var group = _c.value;
-                if (!domain.includes(group.name)) {
-                    domain.push(group.name);
-                }
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
-            }
-            finally { if (e_1) throw e_1.error; }
-        }
-        return domain;
-    };
-    HeatMapComponent.prototype.getYDomain = function () {
-        var e_2, _a, e_3, _b;
-        var domain = [];
-        try {
-            for (var _c = __values(this.results), _d = _c.next(); !_d.done; _d = _c.next()) {
-                var group = _d.value;
-                try {
-                    for (var _e = __values(group.series), _f = _e.next(); !_f.done; _f = _e.next()) {
-                        var d = _f.value;
-                        if (!domain.includes(d.name)) {
-                            domain.push(d.name);
-                        }
-                    }
-                }
-                catch (e_3_1) { e_3 = { error: e_3_1 }; }
-                finally {
-                    try {
-                        if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
-                    }
-                    finally { if (e_3) throw e_3.error; }
-                }
-            }
-        }
-        catch (e_2_1) { e_2 = { error: e_2_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
-            }
-            finally { if (e_2) throw e_2.error; }
-        }
-        return domain;
-    };
-    HeatMapComponent.prototype.getValueDomain = function () {
-        var e_4, _a, e_5, _b;
-        var domain = [];
-        try {
-            for (var _c = __values(this.results), _d = _c.next(); !_d.done; _d = _c.next()) {
-                var group = _d.value;
-                try {
-                    for (var _e = __values(group.series), _f = _e.next(); !_f.done; _f = _e.next()) {
-                        var d = _f.value;
-                        if (!domain.includes(d.value)) {
-                            domain.push(d.value);
-                        }
-                    }
-                }
-                catch (e_5_1) { e_5 = { error: e_5_1 }; }
-                finally {
-                    try {
-                        if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
-                    }
-                    finally { if (e_5) throw e_5.error; }
-                }
-            }
-        }
-        catch (e_4_1) { e_4 = { error: e_4_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
-            }
-            finally { if (e_4) throw e_4.error; }
-        }
-        return domain;
-    };
-    /**
-     * Converts the input to gap paddingInner in fraction
-     * Supports the following inputs:
-     *    Numbers: 8
-     *    Strings: "8", "8px", "8%"
-     *    Arrays: [8,2], "8,2", "[8,2]"
-     *    Mixed: [8,"2%"], ["8px","2%"], "8,2%", "[8,2%]"
-     *
-     * @param {(string | number | Array<string | number>)} value
-     * @param {number} [index=0]
-     * @param {number} N
-     * @param {number} L
-     * @returns {number}
-     *
-     * @memberOf HeatMapComponent
-     */
-    HeatMapComponent.prototype.getDimension = function (value, index, N, L) {
-        if (index === void 0) { index = 0; }
-        if (typeof value === 'string') {
-            value = value
-                .replace('[', '')
-                .replace(']', '')
-                .replace('px', '')
-                .replace('\'', '');
-            if (value.includes(',')) {
-                value = value.split(',');
-            }
-        }
-        if (Array.isArray(value) && typeof index === 'number') {
-            return this.getDimension(value[index], null, N, L);
-        }
-        if (typeof value === 'string' && value.includes('%')) {
-            return +value.replace('%', '') / 100;
-        }
-        return N / (L / +value + 1);
-    };
-    HeatMapComponent.prototype.getXScale = function () {
-        var f = this.getDimension(this.innerPadding, 0, this.xDomain.length, this.dims.width);
-        return scaleBand()
-            .rangeRound([0, this.dims.width])
-            .domain(this.xDomain)
-            .paddingInner(f);
-    };
-    HeatMapComponent.prototype.getYScale = function () {
-        var f = this.getDimension(this.innerPadding, 1, this.yDomain.length, this.dims.height);
-        return scaleBand()
-            .rangeRound([this.dims.height, 0])
-            .domain(this.yDomain)
-            .paddingInner(f);
-    };
-    HeatMapComponent.prototype.getRects = function () {
-        var _this = this;
-        var rects = [];
-        this.xDomain.map(function (xVal) {
-            _this.yDomain.map(function (yVal) {
-                rects.push({
-                    x: _this.xScale(xVal),
-                    y: _this.yScale(yVal),
-                    rx: 3,
-                    width: _this.xScale.bandwidth(),
-                    height: _this.yScale.bandwidth(),
-                    fill: 'rgba(200,200,200,0.03)'
-                });
-            });
-        });
-        return rects;
-    };
-    HeatMapComponent.prototype.onClick = function (data) {
-        this.select.emit(data);
-    };
-    HeatMapComponent.prototype.setColors = function () {
-        this.colors = new ColorHelper(this.scheme, this.scaleType, this.valueDomain);
-    };
-    HeatMapComponent.prototype.getLegendOptions = function () {
-        return {
-            scaleType: this.scaleType,
-            domain: this.valueDomain,
-            colors: this.scaleType === 'ordinal' ? this.colors : this.colors.scale,
-            title: this.scaleType === 'ordinal' ? this.legendTitle : undefined,
-            position: this.legendPosition
-        };
-    };
-    HeatMapComponent.prototype.updateYAxisWidth = function (_a) {
-        var width = _a.width;
-        this.yAxisWidth = width;
-        this.update();
-    };
-    HeatMapComponent.prototype.updateXAxisHeight = function (_a) {
-        var height = _a.height;
-        this.xAxisHeight = height;
-        this.update();
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "legend", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "legendTitle", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "legendPosition", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "xAxis", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "yAxis", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "showXAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "showYAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "xAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "yAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Boolean)
-    ], HeatMapComponent.prototype, "gradient", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "innerPadding", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "trimXAxisTicks", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "trimYAxisTicks", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "maxXAxisTickLength", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "maxYAxisTickLength", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "xAxisTickFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "yAxisTickFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Array)
-    ], HeatMapComponent.prototype, "xAxisTicks", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Array)
-    ], HeatMapComponent.prototype, "yAxisTicks", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "tooltipDisabled", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "tooltipText", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "min", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], HeatMapComponent.prototype, "max", void 0);
-    __decorate([
-        ContentChild('tooltipTemplate'),
-        __metadata("design:type", TemplateRef)
-    ], HeatMapComponent.prototype, "tooltipTemplate", void 0);
-    HeatMapComponent = __decorate([
-        Component({
-            selector: 'ng-svg-charts-heat-map',
-            template: "\n    <ng-svg-charts-chart\n      [view]=\"[width, height]\"\n      [showLegend]=\"legend\"\n      [animations]=\"animations\"\n      [legendOptions]=\"legendOptions\"\n      (legendLabelClick)=\"onClick($event)\">\n      <svg:g [attr.transform]=\"transform\" class=\"heat-map chart\">\n        <svg:g ng-svg-charts-x-axis\n          *ngIf=\"xAxis\"\n          [xScale]=\"xScale\"\n          [dims]=\"dims\"\n          [showLabel]=\"showXAxisLabel\"\n          [labelText]=\"xAxisLabel\"\n          [trimTicks]=\"trimXAxisTicks\"\n          [maxTickLength]=\"maxXAxisTickLength\"\n          [tickFormatting]=\"xAxisTickFormatting\"\n          [ticks]=\"xAxisTicks\"\n          (dimensionsChanged)=\"updateXAxisHeight($event)\">\n        </svg:g>\n        <svg:g ng-svg-charts-y-axis\n          *ngIf=\"yAxis\"\n          [yScale]=\"yScale\"\n          [dims]=\"dims\"\n          [showLabel]=\"showYAxisLabel\"\n          [labelText]=\"yAxisLabel\"\n          [trimTicks]=\"trimYAxisTicks\"\n          [maxTickLength]=\"maxYAxisTickLength\"\n          [tickFormatting]=\"yAxisTickFormatting\"\n          [ticks]=\"yAxisTicks\"\n          (dimensionsChanged)=\"updateYAxisWidth($event)\">\n        </svg:g>\n        <svg:rect *ngFor=\"let rect of rects\"\n          [attr.x]=\"rect.x\"\n          [attr.y]=\"rect.y\"\n          [attr.rx]=\"rect.rx\"\n          [attr.width]=\"rect.width\"\n          [attr.height]=\"rect.height\"\n          [attr.fill]=\"rect.fill\"\n        />\n        <svg:g ng-svg-charts-heat-map-cell-series\n          [xScale]=\"xScale\"\n          [yScale]=\"yScale\"\n          [colors]=\"colors\"\n          [data]=\"results\"\n          [gradient]=\"gradient\"\n          [animations]=\"animations\"\n          [tooltipDisabled]=\"tooltipDisabled\"\n          [tooltipTemplate]=\"tooltipTemplate\"\n          [tooltipText]=\"tooltipText\"\n          (select)=\"onClick($event)\"\n        />\n      </svg:g>\n    </ng-svg-charts-chart>\n  ",
-            changeDetection: ChangeDetectionStrategy.OnPush,
-            encapsulation: ViewEncapsulation.None,
-            styles: [".ng-svg-charts{float:left;overflow:visible}.ng-svg-charts .arc,.ng-svg-charts .bar,.ng-svg-charts .circle{pointer-events:fill;cursor:pointer}.ng-svg-charts .arc.active,.ng-svg-charts .arc:hover,.ng-svg-charts .bar.active,.ng-svg-charts .bar:hover,.ng-svg-charts .card.active,.ng-svg-charts .card:hover,.ng-svg-charts .cell.active,.ng-svg-charts .cell:hover{opacity:.8;-webkit-transition:opacity .1s ease-in-out;-o-transition:opacity .1s ease-in-out;transition:opacity .1s ease-in-out}.ng-svg-charts .arc:focus,.ng-svg-charts .bar:focus,.ng-svg-charts .card:focus,.ng-svg-charts .cell:focus,.ng-svg-charts g:focus{outline:0}.ng-svg-charts .area-series.inactive,.ng-svg-charts .line-series-range.inactive,.ng-svg-charts .line-series.inactive,.ng-svg-charts .polar-series-area.inactive,.ng-svg-charts .polar-series-path.inactive{-webkit-transition:opacity .1s ease-in-out;-o-transition:opacity .1s ease-in-out;transition:opacity .1s ease-in-out;opacity:.2}.ng-svg-charts .line-highlight{display:none}.ng-svg-charts .line-highlight.active{display:block}.ng-svg-charts .area{opacity:.6}.ng-svg-charts .circle:hover{cursor:pointer}.ng-svg-charts .label{font-size:12px;font-weight:400}.ng-svg-charts .tooltip-anchor{fill:#000}.ng-svg-charts .gridline-path{stroke:#ddd;stroke-width:1;fill:none}.ng-svg-charts .refline-path{stroke:#a8b2c7;stroke-width:1;stroke-dasharray:5;stroke-dashoffset:5}.ng-svg-charts .refline-label{font-size:9px}.ng-svg-charts .reference-area{fill-opacity:.05;fill:#000}.ng-svg-charts .gridline-path-dotted{stroke:#ddd;stroke-width:1;fill:none;stroke-dasharray:1,20;stroke-dashoffset:3}.ng-svg-charts .grid-panel rect{fill:none}.ng-svg-charts .grid-panel.odd rect{fill:rgba(0,0,0,.05)}"]
-        })
-    ], HeatMapComponent);
-    return HeatMapComponent;
-}(BaseChartComponent));
-
-var HeatMapModule = /** @class */ (function () {
-    function HeatMapModule() {
-    }
-    HeatMapModule = __decorate([
-        NgModule({
-            imports: [ChartCommonModule],
-            declarations: [
-                HeatMapCellComponent,
-                HeatCellSeriesComponent,
-                HeatMapComponent
-            ],
-            exports: [
-                HeatMapCellComponent,
-                HeatCellSeriesComponent,
-                HeatMapComponent
-            ]
-        })
-    ], HeatMapModule);
-    return HeatMapModule;
-}());
-
 var LineComponent = /** @class */ (function () {
     function LineComponent(element) {
         this.element = element;
@@ -11792,655 +10484,6 @@ var LineChartModule = /** @class */ (function () {
         })
     ], LineChartModule);
     return LineChartModule;
-}());
-
-var twoPI = 2 * Math.PI;
-var PolarChartComponent = /** @class */ (function (_super) {
-    __extends(PolarChartComponent, _super);
-    function PolarChartComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.legendTitle = 'Legend';
-        _this.legendPosition = 'right';
-        _this.showGridLines = true;
-        _this.curve = curveCardinalClosed;
-        _this.activeEntries = [];
-        _this.rangeFillOpacity = 0.15;
-        _this.trimYAxisTicks = true;
-        _this.maxYAxisTickLength = 16;
-        _this.roundDomains = false;
-        _this.tooltipDisabled = false;
-        _this.showSeriesOnHover = true;
-        _this.gradient = false;
-        _this.yAxisMinScale = 0;
-        _this.labelTrim = true;
-        _this.labelTrimSize = 10;
-        _this.activate = new EventEmitter();
-        _this.deactivate = new EventEmitter();
-        _this.margin = [10, 20, 10, 20];
-        _this.xAxisHeight = 0;
-        _this.yAxisWidth = 0;
-        return _this;
-    }
-    PolarChartComponent.prototype.update = function () {
-        _super.prototype.update.call(this);
-        this.setDims();
-        this.setScales();
-        this.setColors();
-        this.legendOptions = this.getLegendOptions();
-        this.setTicks();
-    };
-    PolarChartComponent.prototype.setDims = function () {
-        this.dims = calculateViewDimensions({
-            width: this.width,
-            height: this.height,
-            margins: this.margin,
-            showXAxis: this.xAxis,
-            showYAxis: this.yAxis,
-            xAxisHeight: this.xAxisHeight,
-            yAxisWidth: this.yAxisWidth,
-            showXLabel: this.showXAxisLabel,
-            showYLabel: this.showYAxisLabel,
-            showLegend: this.legend,
-            legendType: this.schemeType,
-            legendPosition: this.legendPosition
-        });
-        var halfWidth = ~~(this.dims.width / 2);
-        var halfHeight = ~~(this.dims.height / 2);
-        var outerRadius = this.outerRadius = Math.min(halfHeight / 1.5, halfWidth / 1.5);
-        var yOffset = Math.max(0, halfHeight - outerRadius);
-        this.yAxisDims = __assign({}, this.dims, { width: halfWidth });
-        this.transform = "translate(" + this.dims.xOffset + ", " + this.margin[0] + ")";
-        this.transformYAxis = "translate(0, " + yOffset + ")";
-        this.labelOffset = this.dims.height + 40;
-        this.transformPlot = "translate(" + halfWidth + ", " + halfHeight + ")";
-    };
-    PolarChartComponent.prototype.setScales = function () {
-        var xValues = this.getXValues();
-        this.scaleType = getScaleType(xValues);
-        this.xDomain = this.filteredDomain || this.getXDomain(xValues);
-        this.yDomain = this.getYDomain();
-        this.seriesDomain = this.getSeriesDomain();
-        this.xScale = this.getXScale(this.xDomain, twoPI);
-        this.yScale = this.getYScale(this.yDomain, this.outerRadius);
-        this.yAxisScale = this.getYScale(this.yDomain.reverse(), this.outerRadius);
-    };
-    PolarChartComponent.prototype.setTicks = function () {
-        var _this = this;
-        var tickFormat;
-        if (this.xAxisTickFormatting) {
-            tickFormat = this.xAxisTickFormatting;
-        }
-        else if (this.xScale.tickFormat) {
-            tickFormat = this.xScale.tickFormat.apply(this.xScale, [5]);
-        }
-        else {
-            tickFormat = function (d) {
-                if (isDate(d)) {
-                    return d.toLocaleDateString();
-                }
-                return d.toLocaleString();
-            };
-        }
-        var outerRadius = this.outerRadius;
-        var s = 1.1;
-        this.thetaTicks = this.xDomain.map(function (d) {
-            var startAngle = _this.xScale(d);
-            var dd = s * outerRadius * (startAngle > Math.PI ? -1 : 1);
-            var label = tickFormat(d);
-            var startPos = [outerRadius * Math.sin(startAngle), -outerRadius * Math.cos(startAngle)];
-            var pos = [dd, s * startPos[1]];
-            return {
-                innerRadius: 0,
-                outerRadius: outerRadius,
-                startAngle: startAngle,
-                endAngle: startAngle,
-                value: outerRadius,
-                label: label,
-                startPos: startPos,
-                pos: pos
-            };
-        });
-        var minDistance = 10;
-        /* from pie chart, abstract out -*/
-        for (var i = 0; i < this.thetaTicks.length - 1; i++) {
-            var a = this.thetaTicks[i];
-            for (var j = i + 1; j < this.thetaTicks.length; j++) {
-                var b = this.thetaTicks[j];
-                // if they're on the same side
-                if (b.pos[0] * a.pos[0] > 0) {
-                    // if they're overlapping
-                    var o = minDistance - Math.abs(b.pos[1] - a.pos[1]);
-                    if (o > 0) {
-                        // push the second up or down
-                        b.pos[1] += Math.sign(b.pos[0]) * o;
-                    }
-                }
-            }
-        }
-        this.radiusTicks = this.yAxisScale
-            .ticks(~~(this.dims.height / 50))
-            .map(function (d) { return _this.yScale(d); });
-    };
-    PolarChartComponent.prototype.getXValues = function () {
-        var e_1, _a, e_2, _b;
-        var values = [];
-        try {
-            for (var _c = __values(this.results), _d = _c.next(); !_d.done; _d = _c.next()) {
-                var results = _d.value;
-                try {
-                    for (var _e = __values(results.series), _f = _e.next(); !_f.done; _f = _e.next()) {
-                        var d = _f.value;
-                        if (!values.includes(d.name)) {
-                            values.push(d.name);
-                        }
-                    }
-                }
-                catch (e_2_1) { e_2 = { error: e_2_1 }; }
-                finally {
-                    try {
-                        if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
-                    }
-                    finally { if (e_2) throw e_2.error; }
-                }
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
-            }
-            finally { if (e_1) throw e_1.error; }
-        }
-        return values;
-    };
-    PolarChartComponent.prototype.getXDomain = function (values) {
-        if (values === void 0) { values = this.getXValues(); }
-        if (this.scaleType === 'time') {
-            var min = Math.min.apply(Math, __spread(values));
-            var max = Math.max.apply(Math, __spread(values));
-            return [min, max];
-        }
-        else if (this.scaleType === 'linear') {
-            values = values.map(function (v) { return Number(v); });
-            var min = Math.min.apply(Math, __spread(values));
-            var max = Math.max.apply(Math, __spread(values));
-            return [min, max];
-        }
-        return values;
-    };
-    PolarChartComponent.prototype.getYValues = function () {
-        var e_3, _a, e_4, _b;
-        var domain = [];
-        try {
-            for (var _c = __values(this.results), _d = _c.next(); !_d.done; _d = _c.next()) {
-                var results = _d.value;
-                try {
-                    for (var _e = __values(results.series), _f = _e.next(); !_f.done; _f = _e.next()) {
-                        var d = _f.value;
-                        if (domain.indexOf(d.value) < 0) {
-                            domain.push(d.value);
-                        }
-                        if (d.min !== undefined) {
-                            if (domain.indexOf(d.min) < 0) {
-                                domain.push(d.min);
-                            }
-                        }
-                        if (d.max !== undefined) {
-                            if (domain.indexOf(d.max) < 0) {
-                                domain.push(d.max);
-                            }
-                        }
-                    }
-                }
-                catch (e_4_1) { e_4 = { error: e_4_1 }; }
-                finally {
-                    try {
-                        if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
-                    }
-                    finally { if (e_4) throw e_4.error; }
-                }
-            }
-        }
-        catch (e_3_1) { e_3 = { error: e_3_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
-            }
-            finally { if (e_3) throw e_3.error; }
-        }
-        return domain;
-    };
-    PolarChartComponent.prototype.getYDomain = function (domain) {
-        if (domain === void 0) { domain = this.getYValues(); }
-        var min = Math.min.apply(Math, __spread(domain));
-        var max = Math.max.apply(Math, __spread([this.yAxisMinScale], domain));
-        min = Math.max(0, min);
-        if (!this.autoScale) {
-            min = Math.min(0, min);
-        }
-        return [min, max];
-    };
-    PolarChartComponent.prototype.getSeriesDomain = function () {
-        return this.results.map(function (d) { return d.name; });
-    };
-    PolarChartComponent.prototype.getXScale = function (domain, width) {
-        switch (this.scaleType) {
-            case 'time':
-                return scaleTime()
-                    .range([0, width])
-                    .domain(domain);
-            case 'linear':
-                var scale = scaleLinear()
-                    .range([0, width])
-                    .domain(domain);
-                return this.roundDomains ? scale.nice() : scale;
-            default:
-                return scalePoint()
-                    .range([0, width - twoPI / domain.length])
-                    .padding(0)
-                    .domain(domain);
-        }
-    };
-    PolarChartComponent.prototype.getYScale = function (domain, height) {
-        var scale = scaleLinear()
-            .range([0, height])
-            .domain(domain);
-        return this.roundDomains ? scale.nice() : scale;
-    };
-    PolarChartComponent.prototype.onClick = function (data, series) {
-        if (series) {
-            data.series = series.name;
-        }
-        this.select.emit(data);
-    };
-    PolarChartComponent.prototype.setColors = function () {
-        var domain = (this.schemeType === 'ordinal') ?
-            this.seriesDomain :
-            this.yDomain.reverse();
-        this.colors = new ColorHelper(this.scheme, this.schemeType, domain, this.customColors);
-    };
-    PolarChartComponent.prototype.getLegendOptions = function () {
-        if (this.schemeType === 'ordinal') {
-            return {
-                scaleType: this.schemeType,
-                colors: this.colors,
-                domain: this.seriesDomain,
-                title: this.legendTitle,
-                position: this.legendPosition
-            };
-        }
-        return {
-            scaleType: this.schemeType,
-            colors: this.colors.scale,
-            domain: this.yDomain,
-            title: undefined,
-            position: this.legendPosition
-        };
-    };
-    PolarChartComponent.prototype.updateYAxisWidth = function (_a) {
-        var width = _a.width;
-        this.yAxisWidth = width;
-        this.update();
-    };
-    PolarChartComponent.prototype.updateXAxisHeight = function (_a) {
-        var height = _a.height;
-        this.xAxisHeight = height;
-        this.update();
-    };
-    PolarChartComponent.prototype.onActivate = function (item) {
-        var idx = this.activeEntries.findIndex(function (d) {
-            return d.name === item.name && d.value === item.value;
-        });
-        if (idx > -1) {
-            return;
-        }
-        this.activeEntries = this.showSeriesOnHover ? __spread([item], this.activeEntries) : this.activeEntries;
-        this.activate.emit({ value: item, entries: this.activeEntries });
-    };
-    PolarChartComponent.prototype.onDeactivate = function (item) {
-        var idx = this.activeEntries.findIndex(function (d) {
-            return d.name === item.name && d.value === item.value;
-        });
-        this.activeEntries.splice(idx, 1);
-        this.activeEntries = __spread(this.activeEntries);
-        this.deactivate.emit({ value: item, entries: this.activeEntries });
-    };
-    PolarChartComponent.prototype.deactivateAll = function () {
-        var e_5, _a;
-        this.activeEntries = __spread(this.activeEntries);
-        try {
-            for (var _b = __values(this.activeEntries), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var entry = _c.value;
-                this.deactivate.emit({ value: entry, entries: [] });
-            }
-        }
-        catch (e_5_1) { e_5 = { error: e_5_1 }; }
-        finally {
-            try {
-                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
-            }
-            finally { if (e_5) throw e_5.error; }
-        }
-        this.activeEntries = [];
-    };
-    PolarChartComponent.prototype.trackBy = function (index, item) {
-        return item.name;
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Boolean)
-    ], PolarChartComponent.prototype, "legend", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "legendTitle", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "legendPosition", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Boolean)
-    ], PolarChartComponent.prototype, "xAxis", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Boolean)
-    ], PolarChartComponent.prototype, "yAxis", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Boolean)
-    ], PolarChartComponent.prototype, "showXAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Boolean)
-    ], PolarChartComponent.prototype, "showYAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], PolarChartComponent.prototype, "xAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], PolarChartComponent.prototype, "yAxisLabel", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Boolean)
-    ], PolarChartComponent.prototype, "autoScale", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "showGridLines", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "curve", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Array)
-    ], PolarChartComponent.prototype, "activeEntries", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], PolarChartComponent.prototype, "schemeType", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "rangeFillOpacity", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "trimYAxisTicks", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "maxYAxisTickLength", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Function)
-    ], PolarChartComponent.prototype, "xAxisTickFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Function)
-    ], PolarChartComponent.prototype, "yAxisTickFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "roundDomains", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "tooltipDisabled", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "showSeriesOnHover", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "gradient", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "yAxisMinScale", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "labelTrim", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarChartComponent.prototype, "labelTrimSize", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", EventEmitter)
-    ], PolarChartComponent.prototype, "activate", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", EventEmitter)
-    ], PolarChartComponent.prototype, "deactivate", void 0);
-    __decorate([
-        ContentChild('tooltipTemplate'),
-        __metadata("design:type", TemplateRef)
-    ], PolarChartComponent.prototype, "tooltipTemplate", void 0);
-    PolarChartComponent = __decorate([
-        Component({
-            selector: 'ng-svg-charts-polar-chart',
-            template: "\n    <ng-svg-charts-chart\n      [view]=\"[width, height]\"\n      [showLegend]=\"legend\"\n      [legendOptions]=\"legendOptions\"\n      [activeEntries]=\"activeEntries\"\n      [animations]=\"animations\"\n      (legendLabelClick)=\"onClick($event)\"\n      (legendLabelActivate)=\"onActivate($event)\"\n      (legendLabelDeactivate)=\"onDeactivate($event)\">\n      <svg:g class=\"polar-chart chart\" [attr.transform]=\"transform\">\n        <svg:g [attr.transform]=\"transformPlot\">\n          <svg:circle\n            class=\"polar-chart-background\"\n            cx=\"0\" cy=\"0\"\n            [attr.r]=\"this.outerRadius\" />\n          <svg:g *ngIf=\"showGridLines\">\n            <svg:circle\n              *ngFor=\"let r of radiusTicks\"\n              class=\"gridline-path radial-gridline-path\"\n              cx=\"0\" cy=\"0\"\n              [attr.r]=\"r\" />\n          </svg:g>\n          <svg:g *ngIf=\"xAxis\">\n            <svg:g ng-svg-charts-pie-label\n              *ngFor=\"let tick of thetaTicks\"\n              [data]=\"tick\"\n              [radius]=\"outerRadius\"\n              [label]=\"tick.label\"\n              [max]=\"outerRadius\"\n              [value]=\"showGridLines ? 1 : outerRadius\"\n              [explodeSlices]=\"true\"\n              [animations]=\"animations\"\n              [labelTrim]=\"labelTrim\"\n              [labelTrimSize]=\"labelTrimSize\">\n            </svg:g>\n          </svg:g>\n        </svg:g>\n        <svg:g ng-svg-charts-y-axis\n          [attr.transform]=\"transformYAxis\"\n          *ngIf=\"yAxis\"\n          [yScale]=\"yAxisScale\"\n          [dims]=\"yAxisDims\"\n          [showGridLines]=\"showGridLines\"\n          [showLabel]=\"showYAxisLabel\"\n          [labelText]=\"yAxisLabel\"\n          [trimTicks]=\"trimYAxisTicks\"\n          [maxTickLength]=\"maxYAxisTickLength\"\n          [tickFormatting]=\"yAxisTickFormatting\"\n          (dimensionsChanged)=\"updateYAxisWidth($event)\">\n        </svg:g>\n        <svg:g ng-svg-charts-axis-label\n          *ngIf=\"xAxis && showXAxisLabel\"\n          [label]=\"xAxisLabel\"\n          [offset]=\"labelOffset\"\n          [orient]=\"'bottom'\"\n          [height]=\"dims.height\"\n          [width]=\"dims.width\">\n        </svg:g>\n        <svg:g [attr.transform]=\"transformPlot\">\n          <svg:g *ngFor=\"let series of results; trackBy:trackBy\" [@animationState]=\"'active'\">\n            <svg:g ng-svg-charts-polar-series\n              [gradient]=\"gradient\"\n              [xScale]=\"xScale\"\n              [yScale]=\"yScale\"\n              [colors]=\"colors\"\n              [data]=\"series\"\n              [activeEntries]=\"activeEntries\"\n              [scaleType]=\"scaleType\"\n              [curve]=\"curve\"\n              [rangeFillOpacity]=\"rangeFillOpacity\"\n              [animations]=\"animations\"\n              [tooltipDisabled]=\"tooltipDisabled\"\n              [tooltipTemplate]=\"tooltipTemplate\"\n            />\n          </svg:g>\n        </svg:g>\n      </svg:g>\n    </ng-svg-charts-chart>\n  ",
-            encapsulation: ViewEncapsulation.None,
-            changeDetection: ChangeDetectionStrategy.OnPush,
-            animations: [
-                trigger('animationState', [
-                    transition(':leave', [
-                        style({
-                            opacity: 1,
-                        }),
-                        animate(500, style({
-                            opacity: 0
-                        }))
-                    ])
-                ])
-            ],
-            styles: [".ng-svg-charts{float:left;overflow:visible}.ng-svg-charts .arc,.ng-svg-charts .bar,.ng-svg-charts .circle{pointer-events:fill;cursor:pointer}.ng-svg-charts .arc.active,.ng-svg-charts .arc:hover,.ng-svg-charts .bar.active,.ng-svg-charts .bar:hover,.ng-svg-charts .card.active,.ng-svg-charts .card:hover,.ng-svg-charts .cell.active,.ng-svg-charts .cell:hover{opacity:.8;-webkit-transition:opacity .1s ease-in-out;-o-transition:opacity .1s ease-in-out;transition:opacity .1s ease-in-out}.ng-svg-charts .arc:focus,.ng-svg-charts .bar:focus,.ng-svg-charts .card:focus,.ng-svg-charts .cell:focus,.ng-svg-charts g:focus{outline:0}.ng-svg-charts .area-series.inactive,.ng-svg-charts .line-series-range.inactive,.ng-svg-charts .line-series.inactive,.ng-svg-charts .polar-series-area.inactive,.ng-svg-charts .polar-series-path.inactive{-webkit-transition:opacity .1s ease-in-out;-o-transition:opacity .1s ease-in-out;transition:opacity .1s ease-in-out;opacity:.2}.ng-svg-charts .line-highlight{display:none}.ng-svg-charts .line-highlight.active{display:block}.ng-svg-charts .area{opacity:.6}.ng-svg-charts .circle:hover{cursor:pointer}.ng-svg-charts .label{font-size:12px;font-weight:400}.ng-svg-charts .tooltip-anchor{fill:#000}.ng-svg-charts .gridline-path{stroke:#ddd;stroke-width:1;fill:none}.ng-svg-charts .refline-path{stroke:#a8b2c7;stroke-width:1;stroke-dasharray:5;stroke-dashoffset:5}.ng-svg-charts .refline-label{font-size:9px}.ng-svg-charts .reference-area{fill-opacity:.05;fill:#000}.ng-svg-charts .gridline-path-dotted{stroke:#ddd;stroke-width:1;fill:none;stroke-dasharray:1,20;stroke-dashoffset:3}.ng-svg-charts .grid-panel rect{fill:none}.ng-svg-charts .grid-panel.odd rect{fill:rgba(0,0,0,.05)}", ".pie-label{font-size:11px}.pie-label.animation{-webkit-animation:750ms ease-in fadeIn;animation:750ms ease-in fadeIn}@-webkit-keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.pie-label-line{stroke-dasharray:100%}.pie-label-line.animation{-webkit-animation:3s linear drawOut;animation:3s linear drawOut;-webkit-transition:d 750ms;-o-transition:d 750ms;transition:d 750ms}@-webkit-keyframes drawOut{from{stroke-dashoffset:100%}to{stroke-dashoffset:0}}@keyframes drawOut{from{stroke-dashoffset:100%}to{stroke-dashoffset:0}}", ".polar-chart .polar-chart-background{fill:none}.polar-chart .radial-gridline-path{stroke-dasharray:10 10;fill:none}.polar-chart .pie-label-line{stroke:#2f3646}.polar-charts-series .polar-series-area,.polar-series-path{pointer-events:none}"]
-        })
-    ], PolarChartComponent);
-    return PolarChartComponent;
-}(BaseChartComponent));
-
-var PolarSeriesComponent = /** @class */ (function () {
-    function PolarSeriesComponent() {
-        this.tooltipDisabled = false;
-        this.gradient = false;
-        this.animations = true;
-        this.circleRadius = 3;
-    }
-    PolarSeriesComponent.prototype.ngOnChanges = function (changes) {
-        this.update();
-    };
-    PolarSeriesComponent.prototype.update = function () {
-        var _this = this;
-        this.updateGradients();
-        var line = this.getLineGenerator();
-        var data = this.sortData(this.data.series);
-        var seriesName = this.data.name;
-        var linearScaleType = this.colors.scaleType === 'linear';
-        var min = this.yScale.domain()[0];
-        this.seriesColor = this.colors.getColor(linearScaleType ? min : seriesName);
-        this.path = line(data) || '';
-        this.circles = data.map(function (d) {
-            var a = _this.getAngle(d);
-            var r = _this.getRadius(d);
-            var value = d.value;
-            var color = _this.colors.getColor(linearScaleType ? Math.abs(value) : seriesName);
-            var cData = {
-                series: seriesName,
-                value: value,
-                name: d.name
-            };
-            return {
-                data: cData,
-                cx: r * Math.sin(a),
-                cy: -r * Math.cos(a),
-                value: value,
-                color: color,
-                label: d.name
-            };
-        });
-        this.active = this.isActive(this.data);
-        this.inactive = this.isInactive(this.data);
-        this.tooltipText = this.tooltipText || (function (c) { return _this.defaultTooltipText(c); });
-    };
-    PolarSeriesComponent.prototype.getAngle = function (d) {
-        var label = d.name;
-        if (this.scaleType === 'time') {
-            return this.xScale(label);
-        }
-        else if (this.scaleType === 'linear') {
-            return this.xScale(Number(label));
-        }
-        return this.xScale(label);
-    };
-    PolarSeriesComponent.prototype.getRadius = function (d) {
-        return this.yScale(d.value);
-    };
-    PolarSeriesComponent.prototype.getLineGenerator = function () {
-        var _this = this;
-        return lineRadial()
-            .angle(function (d) { return _this.getAngle(d); })
-            .radius(function (d) { return _this.getRadius(d); })
-            .curve(this.curve);
-    };
-    PolarSeriesComponent.prototype.sortData = function (data) {
-        if (this.scaleType === 'linear') {
-            return sortLinear(data, 'name');
-        }
-        else if (this.scaleType === 'time') {
-            return sortByTime(data, 'name');
-        }
-        return sortByDomain(data, 'name', 'asc', this.xScale.domain());
-    };
-    PolarSeriesComponent.prototype.isActive = function (entry) {
-        if (!this.activeEntries) {
-            return false;
-        }
-        var item = this.activeEntries.find(function (d) {
-            return entry.name === d.name;
-        });
-        return item !== undefined;
-    };
-    PolarSeriesComponent.prototype.isInactive = function (entry) {
-        if (!this.activeEntries || this.activeEntries.length === 0) {
-            return false;
-        }
-        var item = this.activeEntries.find(function (d) {
-            return entry.name === d.name;
-        });
-        return item === undefined;
-    };
-    PolarSeriesComponent.prototype.defaultTooltipText = function (_a) {
-        var label = _a.label, value = _a.value;
-        return "\n      <span class=\"tooltip-label\">" + this.data.name + " \u2022 " + label + "</span>\n      <span class=\"tooltip-val\">" + value.toLocaleString() + "</span>\n    ";
-    };
-    PolarSeriesComponent.prototype.updateGradients = function () {
-        this.hasGradient = this.gradient || this.colors.scaleType === 'linear';
-        if (!this.hasGradient) {
-            return;
-        }
-        this.gradientId = 'grad' + id().toString();
-        this.gradientUrl = "url(#" + this.gradientId + ")";
-        if (this.colors.scaleType === 'linear') {
-            var values = this.data.series.map(function (d) { return d.value; });
-            var max = Math.max.apply(Math, __spread(values));
-            var min = Math.min.apply(Math, __spread(values));
-            this.gradientStops = this.colors.getLinearGradientStops(max, min);
-        }
-        else {
-            this.gradientStops = undefined;
-        }
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarSeriesComponent.prototype, "name", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarSeriesComponent.prototype, "data", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarSeriesComponent.prototype, "xScale", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarSeriesComponent.prototype, "yScale", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarSeriesComponent.prototype, "colors", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarSeriesComponent.prototype, "scaleType", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarSeriesComponent.prototype, "curve", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Array)
-    ], PolarSeriesComponent.prototype, "activeEntries", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Number)
-    ], PolarSeriesComponent.prototype, "rangeFillOpacity", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarSeriesComponent.prototype, "tooltipDisabled", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Function)
-    ], PolarSeriesComponent.prototype, "tooltipText", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarSeriesComponent.prototype, "gradient", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", TemplateRef)
-    ], PolarSeriesComponent.prototype, "tooltipTemplate", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], PolarSeriesComponent.prototype, "animations", void 0);
-    PolarSeriesComponent = __decorate([
-        Component({
-            selector: 'g[ng-svg-charts-polar-series]',
-            template: "\n    <svg:g class=\"polar-charts-series\">\n      <defs>\n        <svg:g ng-svg-charts-svg-radial-gradient *ngIf=\"hasGradient\"\n          orientation=\"vertical\"\n          [color]=\"seriesColor\"\n          [name]=\"gradientId\"\n          [startOpacity]=\"0.25\"\n          [endOpacity]=\"1\"\n          [stops]=\"gradientStops\"\n        />\n      </defs>\n      <svg:g ng-svg-charts-line\n        class=\"polar-series-path\"\n        [path]=\"path\"\n        [stroke]=\"hasGradient ? gradientUrl : seriesColor\"\n        [class.active]=\"active\"\n        [class.inactive]=\"inactive\"\n        [attr.fill-opacity]=\"rangeFillOpacity\"\n        [fill]=\"hasGradient ? gradientUrl : seriesColor\"\n        [animations]=\"animations\"\n      />\n      <svg:g ng-svg-charts-circle\n        *ngFor=\"let circle of circles\"\n        class=\"circle\"\n        [cx]=\"circle.cx\"\n        [cy]=\"circle.cy\"\n        [r]=\"circleRadius\"\n        [fill]=\"circle.color\"\n        [style.opacity]=\"inactive ? 0.2 : 1\"\n        ngx-tooltip\n        [tooltipDisabled]=\"tooltipDisabled\"\n        [tooltipPlacement]=\"'top'\"\n        tooltipType=\"tooltip\"\n        [tooltipTitle]=\"tooltipTemplate ? undefined : tooltipText(circle)\"\n        [tooltipTemplate]=\"tooltipTemplate\"\n        [tooltipContext]=\"circle.data\">\n      </svg:g>\n    </svg:g>\n  ",
-            changeDetection: ChangeDetectionStrategy.OnPush
-        })
-    ], PolarSeriesComponent);
-    return PolarSeriesComponent;
 }());
 
 var AdvancedPieChartComponent = /** @class */ (function (_super) {
@@ -13550,1506 +11593,8 @@ var PieChartModule = /** @class */ (function () {
     return PieChartModule;
 }());
 
-var PolarChartModule = /** @class */ (function () {
-    function PolarChartModule() {
-    }
-    PolarChartModule = __decorate([
-        NgModule({
-            imports: [ChartCommonModule, PieChartModule, LineChartModule],
-            declarations: [
-                PolarChartComponent,
-                PolarSeriesComponent
-            ],
-            exports: [
-                PolarChartComponent,
-                PolarSeriesComponent
-            ]
-        })
-    ], PolarChartModule);
-    return PolarChartModule;
-}());
-
-var CardComponent = /** @class */ (function () {
-    function CardComponent(element, cd, zone) {
-        this.cd = cd;
-        this.zone = zone;
-        this.animations = true;
-        this.select = new EventEmitter();
-        this.value = '';
-        this.textFontSize = 12;
-        this.textTransform = '';
-        this.initialized = false;
-        this.bandHeight = 10;
-        this.textPadding = [10, 20, 5, 20];
-        this.labelFontSize = 15;
-        this.element = element.nativeElement;
-    }
-    CardComponent.prototype.ngOnChanges = function (changes) {
-        this.update();
-    };
-    CardComponent.prototype.ngOnDestroy = function () {
-        cancelAnimationFrame(this.animationReq);
-    };
-    CardComponent.prototype.update = function () {
-        var _this = this;
-        this.zone.run(function () {
-            var hasValue = _this.data && typeof _this.data.value !== 'undefined';
-            var valueFormatting = _this.valueFormatting || (function (card) { return card.value.toLocaleString(); });
-            var labelFormatting = _this.labelFormatting || (function (card) { return trimLabel(card.label, 55); });
-            _this.transform = "translate(" + _this.x + " , " + _this.y + ")";
-            _this.textWidth = Math.max(0, _this.width) - _this.textPadding[1] - _this.textPadding[3];
-            _this.cardWidth = Math.max(0, _this.width);
-            _this.cardHeight = Math.max(0, _this.height);
-            _this.label = _this.data ? _this.data.name : '';
-            var cardData = {
-                label: _this.label,
-                data: _this.data,
-                value: _this.data.value
-            };
-            _this.formattedLabel = labelFormatting(cardData);
-            _this.transformBand = "translate(0 , " + (_this.cardHeight - _this.bandHeight) + ")";
-            var value = hasValue ? valueFormatting(cardData) : '';
-            _this.value = _this.paddedValue(value);
-            _this.setPadding();
-            _this.bandPath = roundedRect(0, 0, _this.cardWidth, _this.bandHeight, 3, [false, false, true, true]);
-            setTimeout(function () {
-                _this.scaleText();
-                _this.value = value;
-                if (hasValue && !_this.initialized) {
-                    setTimeout(function () { return _this.startCount(); }, 20);
-                }
-            }, 8);
-        });
-    };
-    CardComponent.prototype.paddedValue = function (value) {
-        if (this.medianSize && this.medianSize > value.length) {
-            value += '\u2007'.repeat(this.medianSize - value.length);
-        }
-        return value;
-    };
-    CardComponent.prototype.startCount = function () {
-        var _this = this;
-        if (!this.initialized && this.animations) {
-            cancelAnimationFrame(this.animationReq);
-            var val_1 = this.data.value;
-            var decs = decimalChecker(val_1);
-            var valueFormatting_1 = this.valueFormatting || (function (card) { return card.value.toLocaleString(); });
-            var callback = function (_a) {
-                var value = _a.value, finished = _a.finished;
-                _this.zone.run(function () {
-                    value = finished ? val_1 : value;
-                    _this.value = valueFormatting_1({ label: _this.label, data: _this.data, value: value });
-                    if (!finished) {
-                        _this.value = _this.paddedValue(_this.value);
-                    }
-                    _this.cd.markForCheck();
-                });
-            };
-            this.animationReq = count(0, val_1, decs, 1, callback);
-            this.initialized = true;
-        }
-    };
-    CardComponent.prototype.scaleText = function () {
-        var _this = this;
-        this.zone.run(function () {
-            var _a = _this.textEl.nativeElement.getBoundingClientRect(), width = _a.width, height = _a.height;
-            if (width === 0 || height === 0) {
-                return;
-            }
-            var textPadding = _this.textPadding[1] = _this.textPadding[3] = _this.cardWidth / 8;
-            var availableWidth = _this.cardWidth - 2 * textPadding;
-            var availableHeight = _this.cardHeight / 3;
-            var resizeScale = Math.min(availableWidth / width, availableHeight / height);
-            _this.textFontSize = Math.floor(_this.textFontSize * resizeScale);
-            _this.labelFontSize = Math.min(_this.textFontSize, 15);
-            _this.setPadding();
-            _this.cd.markForCheck();
-        });
-    };
-    CardComponent.prototype.setPadding = function () {
-        this.textPadding[1] = this.textPadding[3] = this.cardWidth / 8;
-        var padding = this.cardHeight / 2;
-        this.textPadding[0] = padding - this.textFontSize - this.labelFontSize / 2;
-        this.textPadding[2] = padding - this.labelFontSize;
-    };
-    CardComponent.prototype.onClick = function () {
-        this.select.emit({
-            name: this.data.name,
-            value: this.data.value
-        });
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "color", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "bandColor", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "textColor", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "x", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "y", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "width", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "height", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "label", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "data", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Number)
-    ], CardComponent.prototype, "medianSize", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "valueFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "labelFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "animations", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], CardComponent.prototype, "select", void 0);
-    __decorate([
-        ViewChild('textEl'),
-        __metadata("design:type", ElementRef)
-    ], CardComponent.prototype, "textEl", void 0);
-    CardComponent = __decorate([
-        Component({
-            selector: 'g[ng-svg-charts-card]',
-            template: "\n    <svg:g\n      [attr.transform]=\"transform\"\n      class=\"cell\"\n      (click)=\"onClick()\">\n      <svg:rect\n        class=\"card\"\n        [style.fill]=\"color\"\n        [attr.width]=\"cardWidth\"\n        [attr.height]=\"cardHeight\"\n        rx=\"3\"\n        ry=\"3\"\n      />\n      <svg:path\n        *ngIf=\"bandColor && bandColor !== color\"\n        class=\"card-band\"\n        [attr.fill]=\"bandColor\"\n        [attr.transform]=\"transformBand\"\n        stroke=\"none\"\n        [attr.d]=\"bandPath\"\n      />\n      <title>{{label}}</title>\n      <svg:foreignObject\n        class=\"trimmed-label\"\n        x=\"5\"\n        [attr.x]=\"textPadding[3]\"\n        [attr.y]=\"cardHeight - textPadding[2]\"\n        [attr.width]=\"textWidth\"\n        [attr.height]=\"labelFontSize + textPadding[2]\"\n        alignment-baseline=\"hanging\">\n        <xhtml:p\n          [style.color]=\"textColor\"\n          [style.fontSize.px]=\"labelFontSize\"\n          [style.lineHeight.px]=\"labelFontSize\"\n          [innerHTML]=\"formattedLabel\">\n        </xhtml:p>\n      </svg:foreignObject>\n      <svg:text #textEl\n        class=\"value-text\"\n        [attr.x]=\"textPadding[3]\"\n        [attr.y]=\"textPadding[0]\"\n        [style.fill]=\"textColor\"\n        text-anchor=\"start\"\n        alignment-baseline=\"hanging\"\n        [style.font-size.pt]=\"textFontSize\">\n        {{value}}\n      </svg:text>\n    </svg:g>\n  ",
-            changeDetection: ChangeDetectionStrategy.OnPush
-        }),
-        __metadata("design:paramtypes", [ElementRef, ChangeDetectorRef, NgZone])
-    ], CardComponent);
-    return CardComponent;
-}());
-
-var CardSeriesComponent = /** @class */ (function () {
-    function CardSeriesComponent() {
-        this.innerPadding = 15;
-        this.emptyColor = 'rgba(0, 0, 0, 0)';
-        this.animations = true;
-        this.select = new EventEmitter();
-    }
-    CardSeriesComponent.prototype.ngOnChanges = function (changes) {
-        this.update();
-    };
-    CardSeriesComponent.prototype.update = function () {
-        if (this.data.length > 2) {
-            var valueFormatting_1 = this.valueFormatting || (function (card) { return card.value.toLocaleString(); });
-            var sortedLengths = this.data
-                .map(function (d) {
-                var hasValue = d && d.data && typeof d.data.value !== 'undefined' && d.data.value !== null;
-                return hasValue ? valueFormatting_1({
-                    data: d.data,
-                    label: d ? d.data.name : '',
-                    value: (d && d.data) ? d.data.value : ''
-                }).length : 0;
-            })
-                .sort(function (a, b) { return b - a; });
-            var idx = Math.ceil(this.data.length / 2);
-            this.medianSize = sortedLengths[idx];
-        }
-        var cards = this.getCards();
-        this.cards = cards.filter(function (d) { return d.data.value !== null; });
-        this.emptySlots = cards.filter(function (d) { return d.data.value === null; });
-    };
-    CardSeriesComponent.prototype.getCards = function () {
-        var _this = this;
-        var yPadding = typeof this.innerPadding === 'number' ?
-            this.innerPadding :
-            this.innerPadding[0] + this.innerPadding[2];
-        var xPadding = typeof this.innerPadding === 'number' ?
-            this.innerPadding :
-            this.innerPadding[1] + this.innerPadding[3];
-        return this.data
-            .map(function (d, index) {
-            var label = d.data.name;
-            if (label && label.constructor.name === 'Date') {
-                label = label.toLocaleDateString();
-            }
-            else {
-                label = label ? label.toLocaleString() : label;
-            }
-            d.data.name = label;
-            var value = d.data.value;
-            var valueColor = label ? _this.colors.getColor(label) : _this.emptyColor;
-            var color = _this.cardColor || valueColor || '#000';
-            return {
-                x: d.x,
-                y: d.y,
-                width: d.width - xPadding,
-                height: d.height - yPadding,
-                color: color,
-                bandColor: _this.bandColor || valueColor,
-                textColor: _this.textColor || invertColor(color),
-                label: label,
-                data: d.data,
-                tooltipText: label + ": " + value
-            };
-        });
-    };
-    CardSeriesComponent.prototype.trackBy = function (index, card) {
-        return card.label;
-    };
-    CardSeriesComponent.prototype.onClick = function (data) {
-        this.select.emit(data);
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Array)
-    ], CardSeriesComponent.prototype, "data", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Array)
-    ], CardSeriesComponent.prototype, "slots", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardSeriesComponent.prototype, "dims", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardSeriesComponent.prototype, "colors", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardSeriesComponent.prototype, "innerPadding", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardSeriesComponent.prototype, "cardColor", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardSeriesComponent.prototype, "bandColor", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardSeriesComponent.prototype, "emptyColor", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardSeriesComponent.prototype, "textColor", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardSeriesComponent.prototype, "valueFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardSeriesComponent.prototype, "labelFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], CardSeriesComponent.prototype, "animations", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], CardSeriesComponent.prototype, "select", void 0);
-    CardSeriesComponent = __decorate([
-        Component({
-            selector: 'g[ng-svg-charts-card-series]',
-            template: "\n    <svg:rect\n      *ngFor=\"let c of emptySlots; trackBy:trackBy\"\n      class=\"card-empty\"\n      [attr.x]=\"c.x\"\n      [attr.y]=\"c.y\"\n      [style.fill]=\"emptyColor\"\n      [attr.width]=\"c.width\"\n      [attr.height]=\"c.height\"\n      rx=\"3\"\n      ry=\"3\"\n    />\n    <svg:g ng-svg-charts-card *ngFor=\"let c of cards; trackBy:trackBy\"\n      [x]=\"c.x\"\n      [y]=\"c.y\"\n      [width]=\"c.width\"\n      [height]=\"c.height\"\n      [color]=\"c.color\"\n      [bandColor]=\"c.bandColor\"\n      [textColor]=\"c.textColor\"\n      [data]=\"c.data\"\n      [medianSize]=\"medianSize\"\n      [valueFormatting]=\"valueFormatting\"\n      [labelFormatting]=\"labelFormatting\"\n      [animations]=\"animations\"\n      (select)=\"onClick($event)\"\n    />\n  ",
-            changeDetection: ChangeDetectionStrategy.OnPush
-        })
-    ], CardSeriesComponent);
-    return CardSeriesComponent;
-}());
-
-var NumberCardComponent = /** @class */ (function (_super) {
-    __extends(NumberCardComponent, _super);
-    function NumberCardComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.emptyColor = 'rgba(0, 0, 0, 0)';
-        _this.innerPadding = 15;
-        _this.margin = [10, 10, 10, 10];
-        return _this;
-    }
-    Object.defineProperty(NumberCardComponent.prototype, "clickable", {
-        get: function () {
-            return !!this.select.observers.length;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    NumberCardComponent.prototype.update = function () {
-        _super.prototype.update.call(this);
-        this.dims = calculateViewDimensions({
-            width: this.width,
-            height: this.height,
-            margins: this.margin
-        });
-        this.domain = this.getDomain();
-        this.setColors();
-        this.transform = "translate(" + this.dims.xOffset + " , " + this.margin[0] + ")";
-        var size = gridSize(this.dims, this.results.length, 150);
-        var N = size[0] * size[1];
-        var data = this.results.slice();
-        while (data.length < N) {
-            data.push({ value: null });
-        }
-        this.data = gridLayout(this.dims, data, 150, this.designatedTotal);
-    };
-    NumberCardComponent.prototype.getDomain = function () {
-        return this.results.map(function (d) { return d.name; });
-    };
-    NumberCardComponent.prototype.onClick = function (data) {
-        this.select.emit(data);
-    };
-    NumberCardComponent.prototype.setColors = function () {
-        this.colors = new ColorHelper(this.scheme, 'ordinal', this.domain, this.customColors);
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], NumberCardComponent.prototype, "cardColor", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], NumberCardComponent.prototype, "bandColor", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], NumberCardComponent.prototype, "emptyColor", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], NumberCardComponent.prototype, "innerPadding", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], NumberCardComponent.prototype, "textColor", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], NumberCardComponent.prototype, "valueFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], NumberCardComponent.prototype, "labelFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Number)
-    ], NumberCardComponent.prototype, "designatedTotal", void 0);
-    NumberCardComponent = __decorate([
-        Component({
-            selector: 'ng-svg-charts-number-card',
-            template: "<ng-svg-charts-chart\n  [view]=\"[width, height]\"\n  [showLegend]=\"false\"\n  [animations]=\"animations\">\n  <svg:g [attr.transform]=\"transform\" class=\"number-card chart\" [class.clickable]=\"clickable\">\n    <svg:g ng-svg-charts-card-series\n      [colors]=\"colors\"\n      [cardColor]=\"cardColor\"\n      [bandColor]=\"bandColor\"\n      [textColor]=\"textColor\"\n      [emptyColor]=\"emptyColor\"\n      [data]=\"data\"\n      [dims]=\"dims\"\n      [innerPadding]=\"innerPadding\"\n      [valueFormatting]=\"valueFormatting\"\n      [labelFormatting]=\"labelFormatting\"\n      [animations]=\"animations\"\n      (select)=\"onClick($event)\"\n    />\n  </svg:g>\n</ng-svg-charts-chart>",
-            encapsulation: ViewEncapsulation.None,
-            changeDetection: ChangeDetectionStrategy.OnPush,
-            styles: [".ng-svg-charts{float:left;overflow:visible}.ng-svg-charts .arc,.ng-svg-charts .bar,.ng-svg-charts .circle{pointer-events:fill;cursor:pointer}.ng-svg-charts .arc.active,.ng-svg-charts .arc:hover,.ng-svg-charts .bar.active,.ng-svg-charts .bar:hover,.ng-svg-charts .card.active,.ng-svg-charts .card:hover,.ng-svg-charts .cell.active,.ng-svg-charts .cell:hover{opacity:.8;-webkit-transition:opacity .1s ease-in-out;-o-transition:opacity .1s ease-in-out;transition:opacity .1s ease-in-out}.ng-svg-charts .arc:focus,.ng-svg-charts .bar:focus,.ng-svg-charts .card:focus,.ng-svg-charts .cell:focus,.ng-svg-charts g:focus{outline:0}.ng-svg-charts .area-series.inactive,.ng-svg-charts .line-series-range.inactive,.ng-svg-charts .line-series.inactive,.ng-svg-charts .polar-series-area.inactive,.ng-svg-charts .polar-series-path.inactive{-webkit-transition:opacity .1s ease-in-out;-o-transition:opacity .1s ease-in-out;transition:opacity .1s ease-in-out;opacity:.2}.ng-svg-charts .line-highlight{display:none}.ng-svg-charts .line-highlight.active{display:block}.ng-svg-charts .area{opacity:.6}.ng-svg-charts .circle:hover{cursor:pointer}.ng-svg-charts .label{font-size:12px;font-weight:400}.ng-svg-charts .tooltip-anchor{fill:#000}.ng-svg-charts .gridline-path{stroke:#ddd;stroke-width:1;fill:none}.ng-svg-charts .refline-path{stroke:#a8b2c7;stroke-width:1;stroke-dasharray:5;stroke-dashoffset:5}.ng-svg-charts .refline-label{font-size:9px}.ng-svg-charts .reference-area{fill-opacity:.05;fill:#000}.ng-svg-charts .gridline-path-dotted{stroke:#ddd;stroke-width:1;fill:none;stroke-dasharray:1,20;stroke-dashoffset:3}.ng-svg-charts .grid-panel rect{fill:none}.ng-svg-charts .grid-panel.odd rect{fill:rgba(0,0,0,.05)}", "ng-svg-charts-number-card .cell .trimmed-label{font-size:12px;pointer-events:none;overflow:hidden;text-align:left;line-height:1em}ng-svg-charts-number-card .cell .trimmed-label p{overflow:hidden;white-space:nowrap;-o-text-overflow:ellipsis;text-overflow:ellipsis;width:100%;padding:0;margin:0}ng-svg-charts-number-card .cell .value-text{pointer-events:none}ng-svg-charts-number-card .number-card.clickable .cell .card,ng-svg-charts-number-card .number-card.clickable .cell .card-band{cursor:pointer}"]
-        })
-    ], NumberCardComponent);
-    return NumberCardComponent;
-}(BaseChartComponent));
-
-var NumberCardModule = /** @class */ (function () {
-    function NumberCardModule() {
-    }
-    NumberCardModule = __decorate([
-        NgModule({
-            imports: [ChartCommonModule],
-            declarations: [
-                CardComponent,
-                CardSeriesComponent,
-                NumberCardComponent
-            ],
-            exports: [
-                CardComponent,
-                CardSeriesComponent,
-                NumberCardComponent
-            ]
-        })
-    ], NumberCardModule);
-    return NumberCardModule;
-}());
-
-var TreeMapCellComponent = /** @class */ (function () {
-    function TreeMapCellComponent(element) {
-        this.gradient = false;
-        this.animations = true;
-        this.select = new EventEmitter();
-        this.initialized = false;
-        this.element = element.nativeElement;
-    }
-    TreeMapCellComponent.prototype.ngOnChanges = function () {
-        this.update();
-        this.valueFormatting = this.valueFormatting || (function (value) { return value.toLocaleString(); });
-        var labelFormatting = this.labelFormatting || (function (cell) { return trimLabel(cell.label, 55); });
-        var cellData = {
-            data: this.data,
-            label: this.label,
-            value: this.value
-        };
-        this.formattedValue = this.valueFormatting(cellData.value);
-        this.formattedLabel = labelFormatting(cellData);
-        this.gradientId = 'grad' + id().toString();
-        this.gradientUrl = "url(#" + this.gradientId + ")";
-        this.gradientStops = this.getGradientStops();
-    };
-    TreeMapCellComponent.prototype.update = function () {
-        if (this.initialized) {
-            this.animateToCurrentForm();
-        }
-        else {
-            if (this.animations) {
-                this.loadAnimation();
-            }
-            this.initialized = true;
-        }
-    };
-    TreeMapCellComponent.prototype.loadAnimation = function () {
-        var node = select(this.element).select('.cell');
-        node
-            .attr('opacity', 0)
-            .attr('x', this.x)
-            .attr('y', this.y);
-        this.animateToCurrentForm();
-    };
-    TreeMapCellComponent.prototype.getTextColor = function () {
-        return invertColor(this.fill);
-    };
-    TreeMapCellComponent.prototype.animateToCurrentForm = function () {
-        var node = select(this.element).select('.cell');
-        if (this.animations) {
-            node
-                .transition()
-                .duration(750)
-                .attr('opacity', 1)
-                .attr('x', this.x)
-                .attr('y', this.y)
-                .attr('width', this.width)
-                .attr('height', this.height);
-        }
-        else {
-            node
-                .attr('opacity', 1)
-                .attr('x', this.x)
-                .attr('y', this.y)
-                .attr('width', this.width)
-                .attr('height', this.height);
-        }
-    };
-    TreeMapCellComponent.prototype.onClick = function () {
-        this.select.emit({
-            name: this.label,
-            value: this.value
-        });
-    };
-    TreeMapCellComponent.prototype.getGradientStops = function () {
-        return [
-            {
-                offset: 0,
-                color: this.fill,
-                opacity: 0.3
-            },
-            {
-                offset: 100,
-                color: this.fill,
-                opacity: 1
-            }
-        ];
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "data", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "fill", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "x", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "y", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "width", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "height", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "label", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "value", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "valueType", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "valueFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "labelFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "gradient", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "animations", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], TreeMapCellComponent.prototype, "select", void 0);
-    TreeMapCellComponent = __decorate([
-        Component({
-            selector: 'g[ng-svg-charts-tree-map-cell]',
-            template: "<svg:g>\n  <defs *ngIf=\"gradient\">\n    <svg:g ng-svg-charts-svg-linear-gradient\n      orientation=\"vertical\"\n      [name]=\"gradientId\"\n      [stops]=\"gradientStops\"\n    />\n  </defs>\n  <svg:rect\n    [attr.fill]=\"gradient ? gradientUrl : fill\"\n    [attr.width]=\"width\"\n    [attr.height]=\"height\"\n    [attr.x]=\"x\"\n    [attr.y]=\"y\"\n    [style.cursor]=\"'pointer'\"\n    class=\"cell\"\n    (click)=\"onClick()\"\n  />\n  <svg:foreignObject\n    *ngIf=\"width >= 70 && height >= 35\"\n    [attr.x]=\"x\"\n    [attr.y]=\"y\"\n    [attr.width]=\"width\"\n    [attr.height]=\"height\"\n    class=\"treemap-label\"\n    [style.pointer-events]=\"'none'\">\n    <xhtml:p\n      [style.color]=\"getTextColor()\"\n      [style.height]=\"height + 'px'\"\n      [style.width]=\"width + 'px'\">\n      <xhtml:span class=\"treemap-label\" [innerHTML]=\"formattedLabel\">\n      </xhtml:span>\n      <xhtml:br />\n      <xhtml:span *ngIf=\"animations\"\n        class=\"treemap-val\"\n        ng-svg-charts-count-up\n        [countTo]=\"value\"\n        [valueFormatting]=\"valueFormatting\">\n      </xhtml:span>\n      <xhtml:span *ngIf=\"!animations\"\n        class=\"treemap-val\">\n        {{formattedValue}}\n      </xhtml:span>\n    </xhtml:p>\n  </svg:foreignObject>\n</svg:g>",
-            changeDetection: ChangeDetectionStrategy.OnPush
-        }),
-        __metadata("design:paramtypes", [ElementRef])
-    ], TreeMapCellComponent);
-    return TreeMapCellComponent;
-}());
-
-var TreeMapCellSeriesComponent = /** @class */ (function () {
-    function TreeMapCellSeriesComponent() {
-        this.gradient = false;
-        this.tooltipDisabled = false;
-        this.animations = true;
-        this.select = new EventEmitter();
-    }
-    TreeMapCellSeriesComponent.prototype.ngOnChanges = function (changes) {
-        this.cells = this.getCells();
-    };
-    TreeMapCellSeriesComponent.prototype.getCells = function () {
-        var _this = this;
-        return this.data.children
-            .filter(function (d) {
-            return d.depth === 1;
-        })
-            .map(function (d, index) {
-            var label = d.id;
-            var data = {
-                name: label,
-                value: d.value
-            };
-            return {
-                data: data,
-                x: d.x0,
-                y: d.y0,
-                width: d.x1 - d.x0,
-                height: d.y1 - d.y0,
-                fill: _this.colors.getColor(label),
-                label: label,
-                value: d.value,
-                valueType: d.valueType
-            };
-        });
-    };
-    TreeMapCellSeriesComponent.prototype.getTooltipText = function (_a) {
-        var label = _a.label, value = _a.value;
-        return "\n      <span class=\"tooltip-label\">" + label + "</span>\n      <span class=\"tooltip-val\">" + value.toLocaleString() + "</span>\n    ";
-    };
-    TreeMapCellSeriesComponent.prototype.onClick = function (data) {
-        this.select.emit(data);
-    };
-    TreeMapCellSeriesComponent.prototype.trackBy = function (index, item) {
-        return item.label;
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellSeriesComponent.prototype, "data", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellSeriesComponent.prototype, "dims", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellSeriesComponent.prototype, "colors", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellSeriesComponent.prototype, "valueFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellSeriesComponent.prototype, "labelFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellSeriesComponent.prototype, "gradient", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellSeriesComponent.prototype, "tooltipDisabled", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", TemplateRef)
-    ], TreeMapCellSeriesComponent.prototype, "tooltipTemplate", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapCellSeriesComponent.prototype, "animations", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], TreeMapCellSeriesComponent.prototype, "select", void 0);
-    TreeMapCellSeriesComponent = __decorate([
-        Component({
-            selector: 'g[ng-svg-charts-tree-map-cell-series]',
-            template: "\n    <svg:g ng-svg-charts-tree-map-cell *ngFor=\"let c of cells; trackBy:trackBy\"\n      [data]=\"c\"\n      [x]=\"c.x\"\n      [y]=\"c.y\"\n      [width]=\"c.width\"\n      [height]=\"c.height\"\n      [fill]=\"c.fill\"\n      [label]=\"c.label\"\n      [value]=\"c.value\"\n      [valueType]=\"c.valueType\"\n      [valueFormatting]=\"valueFormatting\"\n      [labelFormatting]=\"labelFormatting\"\n      [gradient]=\"gradient\"\n      [animations]=\"animations\"\n      (select)=\"onClick($event)\"\n      ngx-tooltip\n      [tooltipDisabled]=\"tooltipDisabled\"\n      [tooltipPlacement]=\"'top'\"\n      [tooltipType]=\"'tooltip'\"\n      [tooltipTitle]=\"tooltipTemplate ? undefined : getTooltipText(c)\"\n      [tooltipTemplate]=\"tooltipTemplate\"\n      [tooltipContext]=\"c.data\">\n    </svg:g>\n  ",
-            changeDetection: ChangeDetectionStrategy.OnPush
-        })
-    ], TreeMapCellSeriesComponent);
-    return TreeMapCellSeriesComponent;
-}());
-
-var TreeMapComponent = /** @class */ (function (_super) {
-    __extends(TreeMapComponent, _super);
-    function TreeMapComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.tooltipDisabled = false;
-        _this.gradient = false;
-        _this.select = new EventEmitter();
-        _this.margin = [10, 10, 10, 10];
-        return _this;
-    }
-    TreeMapComponent.prototype.update = function () {
-        _super.prototype.update.call(this);
-        this.dims = calculateViewDimensions({
-            width: this.width,
-            height: this.height,
-            margins: this.margin
-        });
-        this.domain = this.getDomain();
-        this.treemap = treemap()
-            .size([this.dims.width, this.dims.height]);
-        var rootNode = {
-            name: 'root',
-            value: 0,
-            isRoot: true
-        };
-        var root = stratify()
-            .id(function (d) {
-            var label = d.name;
-            if (label.constructor.name === 'Date') {
-                label = label.toLocaleDateString();
-            }
-            else {
-                label = label.toLocaleString();
-            }
-            return label;
-        })
-            .parentId(function (d) { return d.isRoot ? null : 'root'; })(__spread([rootNode], this.results))
-            .sum(function (d) { return d.value; });
-        this.data = this.treemap(root);
-        this.setColors();
-        this.transform = "translate(" + this.dims.xOffset + " , " + this.margin[0] + ")";
-    };
-    TreeMapComponent.prototype.getDomain = function () {
-        return this.results.map(function (d) { return d.name; });
-    };
-    TreeMapComponent.prototype.onClick = function (data) {
-        this.select.emit(data);
-    };
-    TreeMapComponent.prototype.setColors = function () {
-        this.colors = new ColorHelper(this.scheme, 'ordinal', this.domain, this.customColors);
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapComponent.prototype, "results", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapComponent.prototype, "tooltipDisabled", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapComponent.prototype, "valueFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapComponent.prototype, "labelFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], TreeMapComponent.prototype, "gradient", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], TreeMapComponent.prototype, "select", void 0);
-    __decorate([
-        ContentChild('tooltipTemplate'),
-        __metadata("design:type", TemplateRef)
-    ], TreeMapComponent.prototype, "tooltipTemplate", void 0);
-    TreeMapComponent = __decorate([
-        Component({
-            selector: 'ng-svg-charts-tree-map',
-            template: "\n    <ng-svg-charts-chart\n      [view]=\"[width, height]\"\n      [showLegend]=\"false\"\n      [animations]=\"animations\">\n      <svg:g [attr.transform]=\"transform\" class=\"tree-map chart\">\n        <svg:g ng-svg-charts-tree-map-cell-series\n          [colors]=\"colors\"\n          [data]=\"data\"\n          [dims]=\"dims\"\n          [tooltipDisabled]=\"tooltipDisabled\"\n          [tooltipTemplate]=\"tooltipTemplate\"\n          [valueFormatting]=\"valueFormatting\"\n          [labelFormatting]=\"labelFormatting\"\n          [gradient]=\"gradient\"\n          [animations]=\"animations\"\n          (select)=\"onClick($event)\"\n        />\n      </svg:g>\n    </ng-svg-charts-chart>\n  ",
-            encapsulation: ViewEncapsulation.None,
-            changeDetection: ChangeDetectionStrategy.OnPush,
-            styles: [".tree-map .treemap-val{font-size:1.3em;padding-top:5px;display:inline-block}.tree-map .treemap-label p{display:table-cell;text-align:center;line-height:1.2em;vertical-align:middle}"]
-        })
-    ], TreeMapComponent);
-    return TreeMapComponent;
-}(BaseChartComponent));
-
-var TreeMapModule = /** @class */ (function () {
-    function TreeMapModule() {
-    }
-    TreeMapModule = __decorate([
-        NgModule({
-            imports: [ChartCommonModule],
-            declarations: [
-                TreeMapCellComponent,
-                TreeMapCellSeriesComponent,
-                TreeMapComponent
-            ],
-            exports: [
-                TreeMapCellComponent,
-                TreeMapCellSeriesComponent,
-                TreeMapComponent
-            ]
-        })
-    ], TreeMapModule);
-    return TreeMapModule;
-}());
-
-var LinearGaugeComponent = /** @class */ (function (_super) {
-    __extends(LinearGaugeComponent, _super);
-    function LinearGaugeComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.min = 0;
-        _this.max = 100;
-        _this.value = 0;
-        _this.margin = [10, 20, 10, 20];
-        _this.valueResizeScale = 1;
-        _this.unitsResizeScale = 1;
-        _this.valueTextTransform = '';
-        _this.valueTranslate = '';
-        _this.unitsTextTransform = '';
-        _this.unitsTranslate = '';
-        return _this;
-    }
-    LinearGaugeComponent.prototype.ngAfterViewInit = function () {
-        var _this = this;
-        _super.prototype.ngAfterViewInit.call(this);
-        setTimeout(function () {
-            _this.scaleText('value');
-            _this.scaleText('units');
-        });
-    };
-    LinearGaugeComponent.prototype.update = function () {
-        var _this = this;
-        _super.prototype.update.call(this);
-        this.hasPreviousValue = this.previousValue !== undefined;
-        this.max = Math.max(this.max, this.value);
-        this.min = Math.min(this.min, this.value);
-        if (this.hasPreviousValue) {
-            this.max = Math.max(this.max, this.previousValue);
-            this.min = Math.min(this.min, this.previousValue);
-        }
-        this.dims = calculateViewDimensions({
-            width: this.width,
-            height: this.height,
-            margins: this.margin
-        });
-        this.valueDomain = this.getValueDomain();
-        this.valueScale = this.getValueScale();
-        this.displayValue = this.getDisplayValue();
-        this.setColors();
-        var xOffset = this.margin[3] + this.dims.width / 2;
-        var yOffset = this.margin[0] + this.dims.height / 2;
-        this.transform = "translate(" + xOffset + ", " + yOffset + ")";
-        this.transformLine = "translate(" + (this.margin[3] + this.valueScale(this.previousValue)) + ", " + yOffset + ")";
-        this.valueTranslate = "translate(0, -15)";
-        this.unitsTranslate = "translate(0, 15)";
-        setTimeout(function () { return _this.scaleText('value'); }, 50);
-        setTimeout(function () { return _this.scaleText('units'); }, 50);
-    };
-    LinearGaugeComponent.prototype.getValueDomain = function () {
-        return [this.min, this.max];
-    };
-    LinearGaugeComponent.prototype.getValueScale = function () {
-        return scaleLinear()
-            .range([0, this.dims.width])
-            .domain(this.valueDomain);
-    };
-    LinearGaugeComponent.prototype.getDisplayValue = function () {
-        if (this.valueFormatting) {
-            return this.valueFormatting(this.value);
-        }
-        return this.value.toLocaleString();
-    };
-    LinearGaugeComponent.prototype.scaleText = function (element, repeat) {
-        var _this = this;
-        if (repeat === void 0) { repeat = true; }
-        var el;
-        var resizeScale;
-        if (element === 'value') {
-            el = this.valueTextEl;
-            resizeScale = this.valueResizeScale;
-        }
-        else {
-            el = this.unitsTextEl;
-            resizeScale = this.unitsResizeScale;
-        }
-        var _a = el.nativeElement.getBoundingClientRect(), width = _a.width, height = _a.height;
-        if (width === 0 || height === 0)
-            return;
-        var oldScale = resizeScale;
-        var availableWidth = this.dims.width;
-        var availableHeight = Math.max(this.dims.height / 2 - 15, 0);
-        var resizeScaleWidth = Math.floor((availableWidth / (width / resizeScale)) * 100) / 100;
-        var resizeScaleHeight = Math.floor((availableHeight / (height / resizeScale)) * 100) / 100;
-        resizeScale = Math.min(resizeScaleHeight, resizeScaleWidth);
-        if (resizeScale !== oldScale) {
-            if (element === 'value') {
-                this.valueResizeScale = resizeScale;
-                this.valueTextTransform = "scale(" + resizeScale + ", " + resizeScale + ")";
-            }
-            else {
-                this.unitsResizeScale = resizeScale;
-                this.unitsTextTransform = "scale(" + resizeScale + ", " + resizeScale + ")";
-            }
-            this.cd.markForCheck();
-            if (repeat) {
-                setTimeout(function () { _this.scaleText(element, false); }, 50);
-            }
-        }
-    };
-    LinearGaugeComponent.prototype.onClick = function () {
-        this.select.emit({
-            name: 'Value',
-            value: this.value
-        });
-    };
-    LinearGaugeComponent.prototype.setColors = function () {
-        this.colors = new ColorHelper(this.scheme, 'ordinal', [this.value], this.customColors);
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], LinearGaugeComponent.prototype, "min", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], LinearGaugeComponent.prototype, "max", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], LinearGaugeComponent.prototype, "value", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], LinearGaugeComponent.prototype, "units", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], LinearGaugeComponent.prototype, "previousValue", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], LinearGaugeComponent.prototype, "valueFormatting", void 0);
-    __decorate([
-        ViewChild('valueTextEl'),
-        __metadata("design:type", ElementRef)
-    ], LinearGaugeComponent.prototype, "valueTextEl", void 0);
-    __decorate([
-        ViewChild('unitsTextEl'),
-        __metadata("design:type", ElementRef)
-    ], LinearGaugeComponent.prototype, "unitsTextEl", void 0);
-    LinearGaugeComponent = __decorate([
-        Component({
-            selector: 'ng-svg-charts-linear-gauge',
-            template: "\n    <ng-svg-charts-chart\n      [view]=\"[width, height]\"\n      [showLegend]=\"false\"\n      [animations]=\"animations\"\n      (click)=\"onClick()\">\n      <svg:g class=\"linear-gauge chart\">\n        <svg:g ng-svg-charts-bar\n          class=\"background-bar\"\n          [width]=\"dims.width\"\n          [height]=\"3\"\n          [x]=\"margin[3]\"\n          [y]=\"dims.height / 2 + margin[0] - 2\"\n          [data]=\"{}\"\n          [orientation]=\"'horizontal'\"\n          [roundEdges]=\"true\"\n          [animations]=\"animations\">\n        </svg:g>\n        <svg:g ng-svg-charts-bar\n          [width]=\"valueScale(value)\"\n          [height]=\"3\"\n          [x]=\"margin[3]\"\n          [y]=\"dims.height / 2 + margin[0] - 2\"\n          [fill]=\"colors.getColor(units)\"\n          [data]=\"{}\"\n          [orientation]=\"'horizontal'\"\n          [roundEdges]=\"true\"\n          [animations]=\"animations\">\n        </svg:g>\n\n        <svg:line\n          *ngIf=\"hasPreviousValue\"\n          [attr.transform]=\"transformLine\"\n          x1=\"0\"\n          y1=\"5\"\n          x2=\"0\"\n          y2=\"15\"\n          [attr.stroke]=\"colors.getColor(units)\"\n        />\n\n        <svg:line\n          *ngIf=\"hasPreviousValue\"\n          [attr.transform]=\"transformLine\"\n          x1=\"0\"\n          y1=\"-5\"\n          x2=\"0\"\n          y2=\"-15\"\n          [attr.stroke]=\"colors.getColor(units)\"\n        />\n\n        <svg:g [attr.transform]=\"transform\">\n          <svg:g [attr.transform]=\"valueTranslate\">\n            <svg:text #valueTextEl\n              class=\"value\"\n              [style.textAnchor]=\"'middle'\"\n              [attr.transform]=\"valueTextTransform\"\n              alignment-baseline=\"after-edge\">\n              {{displayValue}}\n            </svg:text>\n          </svg:g>\n\n          <svg:g [attr.transform]=\"unitsTranslate\">\n            <svg:text #unitsTextEl\n              class=\"units\"\n              [style.textAnchor]=\"'middle'\"\n              [attr.transform]=\"unitsTextTransform\"\n              alignment-baseline=\"before-edge\">\n              {{units}}\n            </svg:text>\n          </svg:g>\n        </svg:g>\n      </svg:g>\n    </ng-svg-charts-chart>\n  ",
-            encapsulation: ViewEncapsulation.None,
-            changeDetection: ChangeDetectionStrategy.OnPush,
-            styles: [".ng-svg-charts{float:left;overflow:visible}.ng-svg-charts .arc,.ng-svg-charts .bar,.ng-svg-charts .circle{pointer-events:fill;cursor:pointer}.ng-svg-charts .arc.active,.ng-svg-charts .arc:hover,.ng-svg-charts .bar.active,.ng-svg-charts .bar:hover,.ng-svg-charts .card.active,.ng-svg-charts .card:hover,.ng-svg-charts .cell.active,.ng-svg-charts .cell:hover{opacity:.8;-webkit-transition:opacity .1s ease-in-out;-o-transition:opacity .1s ease-in-out;transition:opacity .1s ease-in-out}.ng-svg-charts .arc:focus,.ng-svg-charts .bar:focus,.ng-svg-charts .card:focus,.ng-svg-charts .cell:focus,.ng-svg-charts g:focus{outline:0}.ng-svg-charts .area-series.inactive,.ng-svg-charts .line-series-range.inactive,.ng-svg-charts .line-series.inactive,.ng-svg-charts .polar-series-area.inactive,.ng-svg-charts .polar-series-path.inactive{-webkit-transition:opacity .1s ease-in-out;-o-transition:opacity .1s ease-in-out;transition:opacity .1s ease-in-out;opacity:.2}.ng-svg-charts .line-highlight{display:none}.ng-svg-charts .line-highlight.active{display:block}.ng-svg-charts .area{opacity:.6}.ng-svg-charts .circle:hover{cursor:pointer}.ng-svg-charts .label{font-size:12px;font-weight:400}.ng-svg-charts .tooltip-anchor{fill:#000}.ng-svg-charts .gridline-path{stroke:#ddd;stroke-width:1;fill:none}.ng-svg-charts .refline-path{stroke:#a8b2c7;stroke-width:1;stroke-dasharray:5;stroke-dashoffset:5}.ng-svg-charts .refline-label{font-size:9px}.ng-svg-charts .reference-area{fill-opacity:.05;fill:#000}.ng-svg-charts .gridline-path-dotted{stroke:#ddd;stroke-width:1;fill:none;stroke-dasharray:1,20;stroke-dashoffset:3}.ng-svg-charts .grid-panel rect{fill:none}.ng-svg-charts .grid-panel.odd rect{fill:rgba(0,0,0,.05)}", ".linear-gauge{cursor:pointer}.linear-gauge .background-bar path{fill:rgba(0,0,0,.05)}.linear-gauge .units{fill:#666}"]
-        })
-    ], LinearGaugeComponent);
-    return LinearGaugeComponent;
-}(BaseChartComponent));
-
-var GaugeComponent = /** @class */ (function (_super) {
-    __extends(GaugeComponent, _super);
-    function GaugeComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.legend = false;
-        _this.legendTitle = 'Legend';
-        _this.legendPosition = 'right';
-        _this.min = 0;
-        _this.max = 100;
-        _this.bigSegments = 10;
-        _this.smallSegments = 5;
-        _this.showAxis = true;
-        _this.startAngle = -120;
-        _this.angleSpan = 240;
-        _this.activeEntries = [];
-        _this.tooltipDisabled = false;
-        _this.activate = new EventEmitter();
-        _this.deactivate = new EventEmitter();
-        _this.resizeScale = 1;
-        _this.rotation = '';
-        _this.textTransform = 'scale(1, 1)';
-        _this.cornerRadius = 10;
-        return _this;
-    }
-    GaugeComponent.prototype.ngAfterViewInit = function () {
-        var _this = this;
-        _super.prototype.ngAfterViewInit.call(this);
-        setTimeout(function () { return _this.scaleText(); });
-    };
-    GaugeComponent.prototype.update = function () {
-        var _this = this;
-        _super.prototype.update.call(this);
-        if (!this.showAxis) {
-            if (!this.margin) {
-                this.margin = [10, 20, 10, 20];
-            }
-        }
-        else {
-            if (!this.margin) {
-                this.margin = [60, 100, 60, 100];
-            }
-        }
-        // make the starting angle positive
-        if (this.startAngle < 0) {
-            this.startAngle = (this.startAngle % 360) + 360;
-        }
-        this.angleSpan = Math.min(this.angleSpan, 360);
-        this.dims = calculateViewDimensions({
-            width: this.width,
-            height: this.height,
-            margins: this.margin,
-            showLegend: this.legend,
-            legendPosition: this.legendPosition
-        });
-        this.domain = this.getDomain();
-        this.valueDomain = this.getValueDomain();
-        this.valueScale = this.getValueScale();
-        this.displayValue = this.getDisplayValue();
-        this.outerRadius = Math.min(this.dims.width, this.dims.height) / 2;
-        this.arcs = this.getArcs();
-        this.setColors();
-        this.legendOptions = this.getLegendOptions();
-        var xOffset = this.margin[3] + this.dims.width / 2;
-        var yOffset = this.margin[0] + this.dims.height / 2;
-        this.transform = "translate(" + xOffset + ", " + yOffset + ")";
-        this.rotation = "rotate(" + this.startAngle + ")";
-        setTimeout(function () { return _this.scaleText(); }, 50);
-    };
-    GaugeComponent.prototype.getArcs = function () {
-        var e_1, _a;
-        var arcs = [];
-        var availableRadius = this.outerRadius * 0.7;
-        var radiusPerArc = Math.min(availableRadius / this.results.length, 10);
-        var arcWidth = radiusPerArc * 0.7;
-        this.textRadius = this.outerRadius - this.results.length * radiusPerArc;
-        this.cornerRadius = Math.floor(arcWidth / 2);
-        var i = 0;
-        try {
-            for (var _b = __values(this.results), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var d = _c.value;
-                var outerRadius = this.outerRadius - (i * radiusPerArc);
-                var innerRadius = outerRadius - arcWidth;
-                var backgroundArc = {
-                    endAngle: this.angleSpan * Math.PI / 180,
-                    innerRadius: innerRadius,
-                    outerRadius: outerRadius,
-                    data: {
-                        value: this.max,
-                        name: d.name
-                    }
-                };
-                var valueArc = {
-                    endAngle: Math.min(this.valueScale(d.value), this.angleSpan) * Math.PI / 180,
-                    innerRadius: innerRadius,
-                    outerRadius: outerRadius,
-                    data: {
-                        value: d.value,
-                        name: d.name
-                    }
-                };
-                var arc = {
-                    backgroundArc: backgroundArc,
-                    valueArc: valueArc
-                };
-                arcs.push(arc);
-                i++;
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
-            }
-            finally { if (e_1) throw e_1.error; }
-        }
-        return arcs;
-    };
-    GaugeComponent.prototype.getDomain = function () {
-        return this.results.map(function (d) { return d.name; });
-    };
-    GaugeComponent.prototype.getValueDomain = function () {
-        var values = this.results.map(function (d) { return d.value; });
-        var dataMin = Math.min.apply(Math, __spread(values));
-        var dataMax = Math.max.apply(Math, __spread(values));
-        if (this.min !== undefined) {
-            this.min = Math.min(this.min, dataMin);
-        }
-        else {
-            this.min = dataMin;
-        }
-        if (this.max !== undefined) {
-            this.max = Math.max(this.max, dataMax);
-        }
-        else {
-            this.max = dataMax;
-        }
-        return [this.min, this.max];
-    };
-    GaugeComponent.prototype.getValueScale = function () {
-        return scaleLinear()
-            .range([0, this.angleSpan])
-            .nice()
-            .domain(this.valueDomain);
-    };
-    GaugeComponent.prototype.getDisplayValue = function () {
-        var value = this.results.map(function (d) { return d.value; }).reduce(function (a, b) { return a + b; }, 0);
-        if (this.textValue && 0 !== this.textValue.length) {
-            return this.textValue.toLocaleString();
-        }
-        if (this.valueFormatting) {
-            return this.valueFormatting(value);
-        }
-        return value.toLocaleString();
-    };
-    GaugeComponent.prototype.scaleText = function (repeat) {
-        var _this = this;
-        if (repeat === void 0) { repeat = true; }
-        var width = this.textEl.nativeElement.getBoundingClientRect().width;
-        var oldScale = this.resizeScale;
-        if (width === 0) {
-            this.resizeScale = 1;
-        }
-        else {
-            var availableSpace = this.textRadius;
-            this.resizeScale = Math.floor((availableSpace / (width / this.resizeScale)) * 100) / 100;
-        }
-        if (this.resizeScale !== oldScale) {
-            this.textTransform = "scale(" + this.resizeScale + ", " + this.resizeScale + ")";
-            this.cd.markForCheck();
-            if (repeat) {
-                setTimeout(function () { return _this.scaleText(false); }, 50);
-            }
-        }
-    };
-    GaugeComponent.prototype.onClick = function (data) {
-        this.select.emit(data);
-    };
-    GaugeComponent.prototype.getLegendOptions = function () {
-        return {
-            scaleType: 'ordinal',
-            colors: this.colors,
-            domain: this.domain,
-            title: this.legendTitle,
-            position: this.legendPosition
-        };
-    };
-    GaugeComponent.prototype.setColors = function () {
-        this.colors = new ColorHelper(this.scheme, 'ordinal', this.domain, this.customColors);
-    };
-    GaugeComponent.prototype.onActivate = function (item) {
-        var idx = this.activeEntries.findIndex(function (d) {
-            return d.name === item.name && d.value === item.value;
-        });
-        if (idx > -1) {
-            return;
-        }
-        this.activeEntries = __spread([item], this.activeEntries);
-        this.activate.emit({ value: item, entries: this.activeEntries });
-    };
-    GaugeComponent.prototype.onDeactivate = function (item) {
-        var idx = this.activeEntries.findIndex(function (d) {
-            return d.name === item.name && d.value === item.value;
-        });
-        this.activeEntries.splice(idx, 1);
-        this.activeEntries = __spread(this.activeEntries);
-        this.deactivate.emit({ value: item, entries: this.activeEntries });
-    };
-    GaugeComponent.prototype.isActive = function (entry) {
-        if (!this.activeEntries)
-            return false;
-        var item = this.activeEntries.find(function (d) {
-            return entry.name === d.name && entry.series === d.series;
-        });
-        return item !== undefined;
-    };
-    GaugeComponent.prototype.trackBy = function (index, item) {
-        return item.valueArc.data.name;
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeComponent.prototype, "legend", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeComponent.prototype, "legendTitle", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeComponent.prototype, "legendPosition", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeComponent.prototype, "min", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeComponent.prototype, "max", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], GaugeComponent.prototype, "textValue", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", String)
-    ], GaugeComponent.prototype, "units", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeComponent.prototype, "bigSegments", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeComponent.prototype, "smallSegments", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Array)
-    ], GaugeComponent.prototype, "results", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeComponent.prototype, "showAxis", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeComponent.prototype, "startAngle", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeComponent.prototype, "angleSpan", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Array)
-    ], GaugeComponent.prototype, "activeEntries", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeComponent.prototype, "axisTickFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeComponent.prototype, "tooltipDisabled", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Function)
-    ], GaugeComponent.prototype, "valueFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Array)
-    ], GaugeComponent.prototype, "margin", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", EventEmitter)
-    ], GaugeComponent.prototype, "activate", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", EventEmitter)
-    ], GaugeComponent.prototype, "deactivate", void 0);
-    __decorate([
-        ContentChild('tooltipTemplate'),
-        __metadata("design:type", TemplateRef)
-    ], GaugeComponent.prototype, "tooltipTemplate", void 0);
-    __decorate([
-        ViewChild('textEl'),
-        __metadata("design:type", ElementRef)
-    ], GaugeComponent.prototype, "textEl", void 0);
-    GaugeComponent = __decorate([
-        Component({
-            selector: 'ng-svg-charts-gauge',
-            template: "\n    <ng-svg-charts-chart\n      [view]=\"[width, height]\"\n      [showLegend]=\"legend\"\n      [legendOptions]=\"legendOptions\"\n      [activeEntries]=\"activeEntries\"\n      [animations]=\"animations\"\n      (legendLabelClick)=\"onClick($event)\"\n      (legendLabelActivate)=\"onActivate($event)\"\n      (legendLabelDeactivate)=\"onDeactivate($event)\">\n      <svg:g [attr.transform]=\"transform\" class=\"gauge chart\">\n        <svg:g *ngFor=\"let arc of arcs; trackBy:trackBy\" [attr.transform]=\"rotation\">\n          <svg:g ng-svg-charts-gauge-arc\n            [backgroundArc]=\"arc.backgroundArc\"\n            [valueArc]=\"arc.valueArc\"\n            [cornerRadius]=\"cornerRadius\"\n            [colors]=\"colors\"\n            [isActive]=\"isActive(arc.valueArc.data)\"\n            [tooltipDisabled]=\"tooltipDisabled\"\n            [tooltipTemplate]=\"tooltipTemplate\"\n            [valueFormatting]=\"valueFormatting\"\n            [animations]=\"animations\"\n            (select)=\"onClick($event)\"\n            (activate)=\"onActivate($event)\"\n            (deactivate)=\"onDeactivate($event)\">\n          </svg:g>\n        </svg:g>\n\n        <svg:g ng-svg-charts-gauge-axis\n          *ngIf=\"showAxis\"\n          [bigSegments]=\"bigSegments\"\n          [smallSegments]=\"smallSegments\"\n          [min]=\"min\"\n          [max]=\"max\"\n          [radius]=\"outerRadius\"\n          [angleSpan]=\"angleSpan\"\n          [valueScale]=\"valueScale\"\n          [startAngle]=\"startAngle\"\n          [tickFormatting]=\"axisTickFormatting\">\n        </svg:g>\n\n        <svg:text #textEl\n            [style.textAnchor]=\"'middle'\"\n            [attr.transform]=\"textTransform\"\n            alignment-baseline=\"central\">\n          <tspan x=\"0\" dy=\"0\">{{displayValue}}</tspan>\n          <tspan x=\"0\" dy=\"1.2em\">{{units}}</tspan>\n        </svg:text>\n\n      </svg:g>\n    </ng-svg-charts-chart>\n  ",
-            encapsulation: ViewEncapsulation.None,
-            changeDetection: ChangeDetectionStrategy.OnPush,
-            styles: [".ng-svg-charts{float:left;overflow:visible}.ng-svg-charts .arc,.ng-svg-charts .bar,.ng-svg-charts .circle{pointer-events:fill;cursor:pointer}.ng-svg-charts .arc.active,.ng-svg-charts .arc:hover,.ng-svg-charts .bar.active,.ng-svg-charts .bar:hover,.ng-svg-charts .card.active,.ng-svg-charts .card:hover,.ng-svg-charts .cell.active,.ng-svg-charts .cell:hover{opacity:.8;-webkit-transition:opacity .1s ease-in-out;-o-transition:opacity .1s ease-in-out;transition:opacity .1s ease-in-out}.ng-svg-charts .arc:focus,.ng-svg-charts .bar:focus,.ng-svg-charts .card:focus,.ng-svg-charts .cell:focus,.ng-svg-charts g:focus{outline:0}.ng-svg-charts .area-series.inactive,.ng-svg-charts .line-series-range.inactive,.ng-svg-charts .line-series.inactive,.ng-svg-charts .polar-series-area.inactive,.ng-svg-charts .polar-series-path.inactive{-webkit-transition:opacity .1s ease-in-out;-o-transition:opacity .1s ease-in-out;transition:opacity .1s ease-in-out;opacity:.2}.ng-svg-charts .line-highlight{display:none}.ng-svg-charts .line-highlight.active{display:block}.ng-svg-charts .area{opacity:.6}.ng-svg-charts .circle:hover{cursor:pointer}.ng-svg-charts .label{font-size:12px;font-weight:400}.ng-svg-charts .tooltip-anchor{fill:#000}.ng-svg-charts .gridline-path{stroke:#ddd;stroke-width:1;fill:none}.ng-svg-charts .refline-path{stroke:#a8b2c7;stroke-width:1;stroke-dasharray:5;stroke-dashoffset:5}.ng-svg-charts .refline-label{font-size:9px}.ng-svg-charts .reference-area{fill-opacity:.05;fill:#000}.ng-svg-charts .gridline-path-dotted{stroke:#ddd;stroke-width:1;fill:none;stroke-dasharray:1,20;stroke-dashoffset:3}.ng-svg-charts .grid-panel rect{fill:none}.ng-svg-charts .grid-panel.odd rect{fill:rgba(0,0,0,.05)}", ".gauge .background-arc path{fill:rgba(0,0,0,.05)}.gauge .gauge-tick path{stroke:#666}.gauge .gauge-tick text{font-size:12px;fill:#666;font-weight:700}.gauge .gauge-tick-large path{stroke-width:2px}.gauge .gauge-tick-small path{stroke-width:1px}"]
-        })
-    ], GaugeComponent);
-    return GaugeComponent;
-}(BaseChartComponent));
-
-var GaugeArcComponent = /** @class */ (function () {
-    function GaugeArcComponent() {
-        this.isActive = false;
-        this.tooltipDisabled = false;
-        this.animations = true;
-        this.select = new EventEmitter();
-        this.activate = new EventEmitter();
-        this.deactivate = new EventEmitter();
-    }
-    GaugeArcComponent.prototype.tooltipText = function (arc) {
-        var label = formatLabel(arc.data.name);
-        var val;
-        if (this.valueFormatting) {
-            val = this.valueFormatting(arc.data.value);
-        }
-        else {
-            val = formatLabel(arc.data.value);
-        }
-        return "\n      <span class=\"tooltip-label\">" + label + "</span>\n      <span class=\"tooltip-val\">" + val + "</span>\n    ";
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeArcComponent.prototype, "backgroundArc", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeArcComponent.prototype, "valueArc", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeArcComponent.prototype, "cornerRadius", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", ColorHelper)
-    ], GaugeArcComponent.prototype, "colors", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeArcComponent.prototype, "isActive", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeArcComponent.prototype, "tooltipDisabled", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Function)
-    ], GaugeArcComponent.prototype, "valueFormatting", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", TemplateRef)
-    ], GaugeArcComponent.prototype, "tooltipTemplate", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeArcComponent.prototype, "animations", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], GaugeArcComponent.prototype, "select", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], GaugeArcComponent.prototype, "activate", void 0);
-    __decorate([
-        Output(),
-        __metadata("design:type", Object)
-    ], GaugeArcComponent.prototype, "deactivate", void 0);
-    GaugeArcComponent = __decorate([
-        Component({
-            selector: 'g[ng-svg-charts-gauge-arc]',
-            template: "\n    <svg:g ng-svg-charts-pie-arc\n      class=\"background-arc\"\n      [startAngle]=\"0\"\n      [endAngle]=\"backgroundArc.endAngle\"\n      [innerRadius]=\"backgroundArc.innerRadius\"\n      [outerRadius]=\"backgroundArc.outerRadius\"\n      [cornerRadius]=\"cornerRadius\"\n      [data]=\"backgroundArc.data\"\n      [animate]=\"false\"\n      [pointerEvents]=\"false\">\n    </svg:g>\n    <svg:g ng-svg-charts-pie-arc\n      [startAngle]=\"0\"\n      [endAngle]=\"valueArc.endAngle\"\n      [innerRadius]=\"valueArc.innerRadius\"\n      [outerRadius]=\"valueArc.outerRadius\"\n      [cornerRadius]=\"cornerRadius\"\n      [fill]=\"colors.getColor(valueArc.data.name)\"\n      [data]=\"valueArc.data\"\n      [animate]=\"animations\"\n      [isActive]=\"isActive\"\n      (select)=\"select.emit($event)\"\n      (activate)=\"activate.emit($event)\"\n      (deactivate)=\"deactivate.emit($event)\"\n      ngx-tooltip\n      [tooltipDisabled]=\"tooltipDisabled\"\n      [tooltipPlacement]=\"'top'\"\n      [tooltipType]=\"'tooltip'\"\n      [tooltipTitle]=\"tooltipTemplate ? undefined : tooltipText(valueArc)\"\n      [tooltipTemplate]=\"tooltipTemplate\"\n      [tooltipContext]=\"valueArc.data\">\n    </svg:g>\n  ",
-            changeDetection: ChangeDetectionStrategy.OnPush
-        })
-    ], GaugeArcComponent);
-    return GaugeArcComponent;
-}());
-
-var GaugeAxisComponent = /** @class */ (function () {
-    function GaugeAxisComponent() {
-        this.rotate = '';
-    }
-    GaugeAxisComponent.prototype.ngOnChanges = function (changes) {
-        this.update();
-    };
-    GaugeAxisComponent.prototype.update = function () {
-        this.rotationAngle = -90 + this.startAngle;
-        this.rotate = "rotate(" + this.rotationAngle + ")";
-        this.ticks = this.getTicks();
-    };
-    GaugeAxisComponent.prototype.getTicks = function () {
-        var bigTickSegment = this.angleSpan / this.bigSegments;
-        var smallTickSegment = bigTickSegment / (this.smallSegments);
-        var tickLength = 20;
-        var ticks = {
-            big: [],
-            small: []
-        };
-        var startDistance = this.radius + 10;
-        var textDist = startDistance + tickLength + 10;
-        for (var i = 0; i <= this.bigSegments; i++) {
-            var angleDeg = i * bigTickSegment;
-            var angle = angleDeg * Math.PI / 180;
-            var textAnchor = this.getTextAnchor(angleDeg);
-            var skip = false;
-            if (i === 0 && this.angleSpan === 360) {
-                skip = true;
-            }
-            if (!skip) {
-                var text = Number.parseFloat(this.valueScale.invert(angleDeg).toString()).toLocaleString();
-                if (this.tickFormatting) {
-                    text = this.tickFormatting(text);
-                }
-                ticks.big.push({
-                    line: this.getTickPath(startDistance, tickLength, angle),
-                    textAnchor: textAnchor,
-                    text: text,
-                    textTransform: "\n            translate(" + textDist * Math.cos(angle) + ", " + textDist * Math.sin(angle) + ") rotate(" + -this.rotationAngle + ")\n          "
-                });
-            }
-            if (i === this.bigSegments) {
-                continue;
-            }
-            for (var j = 1; j <= this.smallSegments; j++) {
-                var smallAngleDeg = angleDeg + j * smallTickSegment;
-                var smallAngle = smallAngleDeg * Math.PI / 180;
-                ticks.small.push({
-                    line: this.getTickPath(startDistance, tickLength / 2, smallAngle)
-                });
-            }
-        }
-        return ticks;
-    };
-    GaugeAxisComponent.prototype.getTextAnchor = function (angle) {
-        // [0, 45] = 'middle';
-        // [46, 135] = 'start';
-        // [136, 225] = 'middle';
-        // [226, 315] = 'end';
-        angle = (this.startAngle + angle) % 360;
-        var textAnchor = 'middle';
-        if (angle > 45 && angle <= 135) {
-            textAnchor = 'start';
-        }
-        else if (angle > 225 && angle <= 315) {
-            textAnchor = 'end';
-        }
-        return textAnchor;
-    };
-    GaugeAxisComponent.prototype.getTickPath = function (startDistance, tickLength, angle) {
-        var y1 = startDistance * Math.sin(angle);
-        var y2 = (startDistance + tickLength) * Math.sin(angle);
-        var x1 = startDistance * Math.cos(angle);
-        var x2 = (startDistance + tickLength) * Math.cos(angle);
-        var points = [{ x: x1, y: y1 }, { x: x2, y: y2 }];
-        var lineGenerator = line().x(function (d) { return d.x; }).y(function (d) { return d.y; });
-        return lineGenerator(points);
-    };
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeAxisComponent.prototype, "bigSegments", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeAxisComponent.prototype, "smallSegments", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeAxisComponent.prototype, "min", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeAxisComponent.prototype, "max", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Number)
-    ], GaugeAxisComponent.prototype, "angleSpan", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Number)
-    ], GaugeAxisComponent.prototype, "startAngle", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeAxisComponent.prototype, "radius", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeAxisComponent.prototype, "valueScale", void 0);
-    __decorate([
-        Input(),
-        __metadata("design:type", Object)
-    ], GaugeAxisComponent.prototype, "tickFormatting", void 0);
-    GaugeAxisComponent = __decorate([
-        Component({
-            selector: 'g[ng-svg-charts-gauge-axis]',
-            template: "\n    <svg:g [attr.transform]=\"rotate\">\n        <svg:g *ngFor=\"let tick of ticks.big\"\n            class=\"gauge-tick gauge-tick-large\">\n            <svg:path [attr.d]=\"tick.line\" />\n        </svg:g>\n        <svg:g *ngFor=\"let tick of ticks.big\"\n            class=\"gauge-tick gauge-tick-large\">\n            <svg:text\n                [style.textAnchor]=\"tick.textAnchor\"\n                [attr.transform]=\"tick.textTransform\"\n                alignment-baseline=\"central\">\n                {{tick.text}}\n            </svg:text>\n        </svg:g>\n        <svg:g *ngFor=\"let tick of ticks.small\"\n            class=\"gauge-tick gauge-tick-small\">\n            <svg:path [attr.d]=\"tick.line\" />\n        </svg:g>\n    </svg:g>\n  ",
-            changeDetection: ChangeDetectionStrategy.OnPush
-        })
-    ], GaugeAxisComponent);
-    return GaugeAxisComponent;
-}());
-
-var GaugeModule = /** @class */ (function () {
-    function GaugeModule() {
-    }
-    GaugeModule = __decorate([
-        NgModule({
-            imports: [ChartCommonModule, PieChartModule, BarChartModule],
-            declarations: [
-                LinearGaugeComponent,
-                GaugeComponent,
-                GaugeArcComponent,
-                GaugeAxisComponent
-            ],
-            exports: [
-                LinearGaugeComponent,
-                GaugeComponent,
-                GaugeArcComponent,
-                GaugeAxisComponent
-            ]
-        })
-    ], GaugeModule);
-    return GaugeModule;
-}());
-
+// import { TreeMapModule } from './tree-map/tree-map.module';
+// import { GaugeModule } from './gauge/gauge.module';
 var SvgChartsModule = /** @class */ (function () {
     function SvgChartsModule() {
     }
@@ -15059,27 +11604,31 @@ var SvgChartsModule = /** @class */ (function () {
                 ChartCommonModule,
                 AreaChartModule,
                 BarChartModule,
-                BubbleChartModule,
-                HeatMapModule,
+                // BubbleChartModule,
+                // HeatMapModule,
                 LineChartModule,
-                PolarChartModule,
-                NumberCardModule,
+                // PolarChartModule,
+                // NumberCardModule,
                 PieChartModule,
-                TreeMapModule,
-                GaugeModule
             ]
         })
     ], SvgChartsModule);
     return SvgChartsModule;
 }());
 
-// export * from './lib/bar-chart/index';
-// export * from './lib/bubble-chart/index';
-// export * from './lib/heat-map/index';
-// export * from './lib/line-chart/index';
-// export * from './lib/polar-chart/index';
-// export * from './lib/number-card/index';
-// export * from './lib/pie-chart/index';
+function tickFormat(fieldType, groupByType) {
+    return function (label) {
+        if (label === 'No Value' || label === 'Other') {
+            return label;
+        }
+        if (fieldType === 'date' && groupByType === 'groupBy') {
+            var formatter = timeFormat('MM/DD/YYYY');
+            return formatter(label);
+        }
+        return label.toString();
+    };
+}
+
 // export * from './lib/tree-map/index';
 // export * from './lib/gauge/index';
 
@@ -15087,5 +11636,5 @@ var SvgChartsModule = /** @class */ (function () {
  * Generated bundle index. Do not edit.
  */
 
-export { AreaChartModule, ChartCommonModule, SvgChartsModule, AxesModule as ɵa, AxisLabelComponent as ɵb, SvgLinearGradientComponent as ɵba, SvgRadialGradientComponent as ɵbb, TimelineComponent as ɵbc, AdvancedLegendComponent as ɵbd, AreaChartComponent as ɵbe, AreaChartNormalizedComponent as ɵbf, AreaChartStackedComponent as ɵbg, AreaSeriesComponent as ɵbh, BarChartModule as ɵbi, BarComponent as ɵbj, BarHorizontalComponent as ɵbk, BarHorizontal2DComponent as ɵbl, BarHorizontalNormalizedComponent as ɵbm, BarHorizontalStackedComponent as ɵbn, BarVerticalComponent as ɵbo, BarVertical2DComponent as ɵbp, BarVerticalNormalizedComponent as ɵbq, BarVerticalStackedComponent as ɵbr, BarLabelComponent as ɵbs, SeriesHorizontalComponent as ɵbt, SeriesVerticalComponent as ɵbu, BubbleChartModule as ɵbv, BubbleChartComponent as ɵbw, BubbleSeriesComponent as ɵbx, HeatMapModule as ɵby, HeatMapCellComponent as ɵbz, XAxisComponent as ɵc, HeatCellSeriesComponent as ɵca, HeatMapComponent as ɵcb, LineChartModule as ɵcc, LineComponent as ɵcd, LineChartComponent as ɵce, LineSeriesComponent as ɵcf, PolarChartModule as ɵcg, PieChartModule as ɵch, LineChartModule as ɵci, PolarChartComponent as ɵcj, PolarSeriesComponent as ɵck, NumberCardModule as ɵcl, CardComponent as ɵcm, CardSeriesComponent as ɵcn, NumberCardComponent as ɵco, PieChartModule as ɵcp, AdvancedPieChartComponent as ɵcq, PieLabelComponent as ɵcr, PieArcComponent as ɵcs, PieChartComponent as ɵct, PieGridComponent as ɵcu, PieGridSeriesComponent as ɵcv, PieSeriesComponent as ɵcw, TreeMapModule as ɵcx, TreeMapCellComponent as ɵcy, TreeMapCellSeriesComponent as ɵcz, XAxisTicksComponent as ɵd, TreeMapComponent as ɵda, GaugeModule as ɵdb, LinearGaugeComponent as ɵdc, GaugeComponent as ɵdd, GaugeArcComponent as ɵde, GaugeAxisComponent as ɵdf, YAxisComponent as ɵe, YAxisTicksComponent as ɵf, TooltipModule as ɵg, TooltipContentComponent as ɵh, throttleable as ɵi, TooltipDirective as ɵj, TooltipService as ɵk, InjectionRegistery as ɵl, InjectionService as ɵm, AreaComponent as ɵn, BaseChartComponent as ɵo, CountUpDirective as ɵp, TooltipAreaComponent as ɵq, ChartComponent as ɵr, TooltipService as ɵs, LegendComponent as ɵt, LegendEntryComponent as ɵu, ScaleLegendComponent as ɵv, CircleComponent as ɵw, CircleSeriesComponent as ɵx, GridPanelComponent as ɵy, GridPanelSeriesComponent as ɵz };
+export { AdvancedLegendComponent, AdvancedPieChartComponent, AlignmentTypes, AreaChartComponent, AreaChartModule, AreaChartNormalizedComponent, AreaChartStackedComponent, AreaComponent, AreaSeriesComponent, AxesModule, AxisLabelComponent, BarChartModule, BarComponent, BarHorizontal2DComponent, BarHorizontalComponent, BarHorizontalNormalizedComponent, BarHorizontalStackedComponent, BarLabelComponent, BarVertical2DComponent, BarVerticalComponent, BarVerticalNormalizedComponent, BarVerticalStackedComponent, BaseChartComponent, ChartCommonModule, ChartComponent, CircleComponent, CircleSeriesComponent, ColorHelper, CountUpDirective, D0Types, GridPanelComponent, GridPanelSeriesComponent, LegendComponent, LegendEntryComponent, LineChartComponent, LineChartModule, LineComponent, LineSeriesComponent, PieArcComponent, PieChartComponent, PieChartModule, PieGridComponent, PieLabelComponent, PieSeriesComponent, ScaleLegendComponent, SeriesHorizontalComponent, SeriesVerticalComponent, ShowTypes, StyleTypes, SvgChartsModule, SvgLinearGradientComponent, SvgRadialGradientComponent, TimelineComponent, TooltipAreaComponent, TooltipContentComponent, TooltipDirective, TooltipModule, TooltipService, XAxisComponent, XAxisTicksComponent, YAxisComponent, YAxisTicksComponent, calculateViewDimensions, count, decimalChecker, formatLabel, getScaleType, getUniqueXDomainValues, gridLayout, gridSize, reduceTicks, tickFormat, trimLabel, throttleable as ɵa, InjectionRegistery as ɵb, InjectionService as ɵc, PieGridSeriesComponent as ɵd };
 //# sourceMappingURL=try-svg-chart.js.map

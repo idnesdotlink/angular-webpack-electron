@@ -1,41 +1,15 @@
 <ng-template [ngIf]="mode === 'horizontal'">
-  <ng-svg-charts-bar-horizontal-2d
-  [animations]="true"
-  [view]="view"
-  [scheme]="colorScheme"
-  [results]="results"
-  [gradient]="false"
-  [xAxis]="true"
-  [yAxis]="true"
-  [legend]="false"
-  [showXAxisLabel]="true"
-  [showGridLines]="true"
-  [showYAxisLabel]="false"
-  [roundEdges]="false"
-  [showDataLabel]="true"
-  [barPadding]="15"
-  [groupPadding]="30"
-  (select)="onSelect($event)">
+  <ng-svg-charts-bar-horizontal-2d [animations]="true" [view]="view" [scheme]="colorScheme" [results]="results"
+    [gradient]="false" [xAxis]="true" [yAxis]="true" [legend]="false" [showXAxisLabel]="true" [showGridLines]="true"
+    [showYAxisLabel]="false" [roundEdges]="false" [showDataLabel]="true" [barPadding]="15" [groupPadding]="30"
+    (select)="onSelect($event)">
   </ng-svg-charts-bar-horizontal-2d>
 </ng-template>
 
 <ng-template [ngIf]="mode === 'vertical'">
-  <ng-svg-charts-bar-vertical-2d
-  [animations]="true"
-  [view]="view"
-  [scheme]="colorScheme"
-  [results]="results"
-  [gradient]="false"
-  [xAxis]="true"
-  [yAxis]="true"
-  [legend]="false"
-  [showXAxisLabel]="true"
-  [showGridLines]="true"
-  [showYAxisLabel]="true"
-  [roundEdges]="false"
-  [showDataLabel]="true"
-  [barPadding]="15"
-  [groupPadding]="20"
-  (select)="onSelect($event)">
+  <ng-svg-charts-bar-vertical-2d [animations]="true" [view]="view" [scheme]="colorScheme" [results]="results"
+    [gradient]="false" [xAxis]="true" [yAxis]="true" [legend]="false" [showXAxisLabel]="true" [showGridLines]="true"
+    [showYAxisLabel]="true" [roundEdges]="false" [showDataLabel]="true" [barPadding]="15" [groupPadding]="20"
+    (select)="onSelect($event)">
   </ng-svg-charts-bar-vertical-2d>
 </ng-template>

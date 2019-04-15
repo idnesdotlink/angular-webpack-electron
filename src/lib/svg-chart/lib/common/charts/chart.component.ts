@@ -8,7 +8,7 @@ import {
   animate,
   transition
 } from '@angular/animations';
-import { TooltipService } from '../tooltip';
+import { TooltipService } from '../tooltip/tooltip.service';
 
 @Component({
   providers: [TooltipService],

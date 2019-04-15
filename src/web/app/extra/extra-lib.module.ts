@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SvgChartsModule } from '@lib/svg-chart';
+import { SvgChartsModule } from '@try/svg-chart';
 import { MarkdownModule } from '@try/mark-down';
 import { ColorPickerModule } from '@lib/color-picker';
 import { ScrollToModule } from '@lib/scroll-to';

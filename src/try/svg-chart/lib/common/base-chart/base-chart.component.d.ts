@@ -1,5 +1,5 @@
 import { ElementRef, NgZone, ChangeDetectorRef, EventEmitter, AfterViewInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
-import { VisibilityObserver } from '../../utils';
+import { VisibilityObserver } from '../../utils/visibility-observer';
 export declare class BaseChartComponent implements OnChanges, AfterViewInit, OnDestroy {
     protected chartElement: ElementRef;
     protected zone: NgZone;

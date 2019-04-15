@@ -6,7 +6,7 @@ import {
 import { fromEvent as observableFromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import { VisibilityObserver } from '../../utils';
+import { VisibilityObserver } from '../../utils/visibility-observer';
 
 @Component({
   selector: 'base-chart',
@@ -58,7 +58,7 @@ export class BaseChartComponent implements OnChanges, AfterViewInit, OnDestroy {
     if (this.results) {
       this.results = this.cloneData(this.results);
     } else {
-      this.results =  [];
+      this.results = [];
     }
 
     if (this.view) {

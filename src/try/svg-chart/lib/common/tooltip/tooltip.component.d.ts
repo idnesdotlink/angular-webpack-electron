@@ -1,5 +1,5 @@
 import { ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
-import { PlacementTypes } from './position';
+import { PlacementTypes } from './position/placement.type';
 import { StyleTypes } from './style.type';
 import { AlignmentTypes } from './alignment.type';
 export declare class TooltipContentComponent implements AfterViewInit {

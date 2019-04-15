@@ -7,7 +7,7 @@ import { brushX } from 'd3-brush';
 import { scaleLinear, scaleTime, scalePoint } from 'd3-scale';
 import { select, event as d3event } from 'd3-selection';
 
-import { id } from '../../utils';
+import { id } from '../../utils/id';
 
 @Component({
   selector: 'g[ng-svg-charts-timeline]',
@@ -65,7 +65,7 @@ export class TimelineComponent implements OnChanges {
   constructor(
     element: ElementRef,
     private cd: ChangeDetectorRef) {
-      this.element = element.nativeElement;
+    this.element = element.nativeElement;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -89,7 +89,7 @@ export class TimelineComponent implements OnChanges {
       this.updateBrush();
     }
 
-    this.transform = `translate(0 , ${ offsetY })`;
+    this.transform = `translate(0 , ${offsetY})`;
 
     this.filterId = 'filter' + id().toString();
     this.filter = `url(#${this.filterId})`;

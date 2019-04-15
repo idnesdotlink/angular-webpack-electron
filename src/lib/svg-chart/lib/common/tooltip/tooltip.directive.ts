@@ -4,7 +4,7 @@ import {
   Renderer2, OnDestroy
 } from '@angular/core';
 
-import { PlacementTypes } from './position';
+import { PlacementTypes } from './position/placement.type';
 import { StyleTypes } from './style.type';
 import { AlignmentTypes } from './alignment.type';
 import { ShowTypes } from './show.type';
@@ -37,12 +37,12 @@ export class TooltipDirective implements OnDestroy {
 
   private get listensForFocus(): boolean {
     return this.tooltipShowEvent === ShowTypes.all ||
-           this.tooltipShowEvent === ShowTypes.focus;
+      this.tooltipShowEvent === ShowTypes.focus;
   }
 
   private get listensForHover(): boolean {
     return this.tooltipShowEvent === ShowTypes.all ||
-           this.tooltipShowEvent === ShowTypes.mouseover;
+      this.tooltipShowEvent === ShowTypes.mouseover;
   }
 
   private component: any;
@@ -64,8 +64,8 @@ export class TooltipDirective implements OnDestroy {
   @HostListener('focusin')
   onFocus(): void {
     if (this.listensForFocus) {
-       this.showTooltip();
-     }
+      this.showTooltip();
+    }
   }
 
   @HostListener('blur')
@@ -78,8 +78,8 @@ export class TooltipDirective implements OnDestroy {
   @HostListener('mouseenter')
   onMouseEnter(): void {
     if (this.listensForHover) {
-       this.showTooltip();
-     }
+      this.showTooltip();
+    }
   }
 
   @HostListener('mouseleave', ['$event.target'])

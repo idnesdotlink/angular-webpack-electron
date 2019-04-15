@@ -1,5 +1,5 @@
 import { OnChanges, ViewContainerRef, EventEmitter, SimpleChanges } from '@angular/core';
-import { TooltipService } from '../tooltip';
+import { TooltipService } from '../tooltip/tooltip.service';
 export declare class ChartComponent implements OnChanges {
     private vcr;
     private tooltipService;

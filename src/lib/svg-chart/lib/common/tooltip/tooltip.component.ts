@@ -4,7 +4,8 @@ import {
 } from '@angular/core';
 
 import { throttleable } from '../../utils/throttle';
-import { PositionHelper, PlacementTypes } from './position';
+import { PositionHelper } from './position/position';
+import { PlacementTypes } from './position/placement.type';
 
 import { StyleTypes } from './style.type';
 import { AlignmentTypes } from './alignment.type';
