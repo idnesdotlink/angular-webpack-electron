@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { SvgChartsModule } from '@try/svg-chart';
 import { MarkdownModule } from '@try/mark-down';
-import { ColorPickerModule } from '@lib/color-picker';
+import { ColorPickerModule } from '@try/color-picker';
 import { ScrollToModule } from '@lib/scroll-to';
 import { MaskModule } from '@try/input-mask';
 // import { ContextMenuModule as Ctx2 } from '@lib/context-menu2';

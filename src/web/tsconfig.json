@@ -25,6 +25,8 @@
   "exclude": [
     "../lib/coba",
     "../lib/mark-down",
+    "../lib/color-picker",
+    "../lib/svg-chart",
     "../lib/digit-only",
     "../lib/scrollbar",
     "../lib/color-picker2",

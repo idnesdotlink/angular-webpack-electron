@@ -1,0 +1,24 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+  "name": "@try/color-picker",
+  "version": "1.0.0",
+  "main": "bundles/try-color-picker.umd.js",
+  "module": "fesm5/try-color-picker.js",
+  "es2015": "fesm2015/try-color-picker.js",
+  "esm5": "esm5/try-color-picker.js",
+  "esm2015": "esm2015/try-color-picker.js",
+  "fesm5": "fesm5/try-color-picker.js",
+  "fesm2015": "fesm2015/try-color-picker.js",
+  "typings": "try-color-picker.d.ts",
+  "metadata": "try-color-picker.metadata.json",
+  "license": "MIT",
+  "private": true,
+  "peerDependencies": {
+    "@angular/common": "^7.2.13",
+    "@angular/core": "^7.2.13"
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
+}

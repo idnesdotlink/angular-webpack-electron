@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+  "name": "@try/color-picker",
+  "version": "1.0.0",
+  "main": "dist/bundles/color-picker.umd.js",
+  "module": "dist/fesm5/color-picker.js",
+  "es2015": "dist/fesm2015/color-picker.js",
+  "esm5": "dist/esm5/color-picker.js",
+  "esm2015": "dist/esm2015/color-picker.js",
+  "fesm5": "dist/fesm5/color-picker.js",
+  "fesm2015": "dist/fesm2015/color-picker.js",
+  "typings": "dist/color-picker.d.ts",
+  "metadata": "dist/color-picker.metadata.json",
+  "license": "MIT",
+  "private": true,
+  "ngPackage": {
+    "lib": {
+      "entryFile": "index.ts",
+      "umdModuleIds": {}
+    },
+    "dest": "../../try/color-picker"
+  },
+  "peerDependencies": {
+    "@angular/common": "^7.2.13",
+    "@angular/core": "^7.2.13"
+  }
+}
