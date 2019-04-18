@@ -1,0 +1,26 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+  "name": "@try/tcommon",
+  "version": "1.0.0",
+  "main": "dist/bundles/tcommon.umd.js",
+  "module": "dist/fesm5/tcommon.js",
+  "es2015": "dist/fesm2015/tcommon.js",
+  "esm5": "dist/esm5/tcommon.js",
+  "esm2015": "dist/esm2015/tcommon.js",
+  "fesm5": "dist/fesm5/tcommon.js",
+  "fesm2015": "dist/fesm2015/tcommon.js",
+  "typings": "dist/tcommon.d.ts",
+  "metadata": "dist/tcommon.metadata.json",
+  "licenses": "MIT",
+  "private": true,
+  "ngPackage": {
+    "lib": {
+      "entryFile": "index.ts"
+    },
+    "dest": "../../try/tcommon"
+  },
+  "peerDependencies": {
+    "@angular/common": "^7.2.13",
+    "@angular/core": "^7.2.13"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+  "name": "@try/tsearch",
+  "version": "1.0.0",
+  "main": "dist/bundles/tsearch.umd.js",
+  "module": "dist/fesm5/tsearch.js",
+  "es2015": "dist/fesm2015/tsearch.js",
+  "esm5": "dist/esm5/tsearch.js",
+  "esm2015": "dist/esm2015/tsearch.js",
+  "fesm5": "dist/fesm5/tsearch.js",
+  "fesm2015": "dist/fesm2015/tsearch.js",
+  "typings": "dist/tsearch.d.ts",
+  "metadata": "dist/tsearch.metadata.json",
+  "licenses": "MIT",
+  "private": true,
+  "ngPackage": {
+    "lib": {
+      "entryFile": "index.ts"
+    },
+    "dest": "../../try/tsearch"
+  },
+  "peerDependencies": {
+    "@angular/common": "^7.2.13",
+    "@angular/core": "^7.2.13"
+  }
+}

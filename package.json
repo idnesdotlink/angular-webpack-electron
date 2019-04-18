@@ -27,6 +27,10 @@
     "lib:split-pane": "./node_modules/.bin/ng-packagr -p ./src/lib/split-pane/package.json",
     "lib:input-mask": "./node_modules/.bin/ng-packagr -p ./src/lib/input-mask/package.json",
     "lib:color-picker": "./node_modules/.bin/ng-packagr -p ./src/lib/color-picker/package.json",
+    "lib:tcommon": "./node_modules/.bin/ng-packagr -p ./src/lib/tcommon/package.json",
+    "lib:tfile": "./node_modules/.bin/ng-packagr -p ./src/lib/tfile/package.json",
+    "lib:tbreadcrumbs": "./node_modules/.bin/ng-packagr -p ./src/lib/tbreadcrumbs/package.json",
+    "lib:tsearch": "./node_modules/.bin/ng-packagr -p ./src/lib/tsearch/package.json",
     "libpack": "node -r @babel/register .webpack/scripts/pack.js",
     "eol": "node -r @babel/register .webpack/scripts/eol.js"
   },

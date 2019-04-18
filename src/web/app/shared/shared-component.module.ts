@@ -26,7 +26,7 @@ import {
   CovalentSearchModule,
   CovalentFileModule,
   CovalentBreadcrumbsModule
-} from '@lib/tera-data';
+} from '@try/tera-data';
 import { ContextMenuModule as ContextMenuModule2 } from '@lib/context-menu2';
 // import { PhonePipeModule } from '@lib/phone-pipe/lib/phonepipe.module';
 import { MaskModule } from '@try/input-mask';

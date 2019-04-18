@@ -1,0 +1,24 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+  "name": "@try/tbreadcrumb",
+  "version": "1.0.0",
+  "main": "bundles/try-tbreadcrumb.umd.js",
+  "module": "fesm5/try-tbreadcrumb.js",
+  "es2015": "fesm2015/try-tbreadcrumb.js",
+  "esm5": "esm5/try-tbreadcrumb.js",
+  "esm2015": "esm2015/try-tbreadcrumb.js",
+  "fesm5": "fesm5/try-tbreadcrumb.js",
+  "fesm2015": "fesm2015/try-tbreadcrumb.js",
+  "typings": "try-tbreadcrumb.d.ts",
+  "metadata": "try-tbreadcrumb.metadata.json",
+  "licenses": "MIT",
+  "private": true,
+  "peerDependencies": {
+    "@angular/common": "^7.2.13",
+    "@angular/core": "^7.2.13"
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
+}
