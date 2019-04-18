@@ -12,7 +12,7 @@ import {
   NgMathPipesModule,
   NgBooleanPipesModule,
   NgObjectPipesModule,
-} from '@lib/pipes';
+} from '@try/pipes';
 
 @NgModule({
   providers: [ResizeListenerService]
@@ -43,8 +43,8 @@ const modules = [
 ];
 
 @NgModule({
-  imports: [... modules],
-  exports: [... modules],
+  imports: [...modules],
+  exports: [...modules],
   providers: []
 })
 export class SharedLibModule { }

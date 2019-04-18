@@ -1,0 +1,25 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+  "name": "@try/context-menu",
+  "version": "1.0.0",
+  "main": "bundles/try-context-menu.umd.js",
+  "module": "fesm5/try-context-menu.js",
+  "es2015": "fesm2015/try-context-menu.js",
+  "esm5": "esm5/try-context-menu.js",
+  "esm2015": "esm2015/try-context-menu.js",
+  "fesm5": "fesm5/try-context-menu.js",
+  "fesm2015": "fesm2015/try-context-menu.js",
+  "typings": "try-context-menu.d.ts",
+  "metadata": "try-context-menu.metadata.json",
+  "license": "MIT",
+  "private": true,
+  "peerDependencies": {
+    "@angular/common": "^7.2.13",
+    "@angular/core": "^7.2.13",
+    "@angular/cdk": "^7.3.7"
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
+}

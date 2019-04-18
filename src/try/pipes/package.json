@@ -1,0 +1,24 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+  "name": "@try/pipes",
+  "version": "1.0.0",
+  "main": "bundles/try-pipes.umd.js",
+  "module": "fesm5/try-pipes.js",
+  "es2015": "fesm2015/try-pipes.js",
+  "esm5": "esm5/try-pipes.js",
+  "esm2015": "esm2015/try-pipes.js",
+  "fesm5": "fesm5/try-pipes.js",
+  "fesm2015": "fesm2015/try-pipes.js",
+  "typings": "try-pipes.d.ts",
+  "metadata": "try-pipes.metadata.json",
+  "license": "MIT",
+  "private": true,
+  "peerDependencies": {
+    "@angular/common": "^7.2.13",
+    "@angular/core": "^7.2.13"
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
+}

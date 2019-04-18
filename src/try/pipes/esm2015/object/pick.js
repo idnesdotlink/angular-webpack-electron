@@ -1,0 +1,19 @@
+import * as tslib_1 from "tslib";
+import { Pipe } from '@angular/core';
+import { isObject } from '../helpers/helpers';
+let PickPipe = class PickPipe {
+    // tslint:disable-next-line: ban-types
+    transform(obj, ...args) {
+        if (Array.isArray(obj) || !isObject(obj)) {
+            return obj;
+        }
+        return args.reduce((o, k) => {
+            return Object.assign(o, { [k]: obj[k] });
+        }, {});
+    }
+};
+PickPipe = tslib_1.__decorate([
+    Pipe({ name: 'pick' })
+], PickPipe);
+export { PickPipe };
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicGljay5qcyIsInNvdXJjZVJvb3QiOiJuZzovL0B0cnkvcGlwZXMvIiwic291cmNlcyI6WyJvYmplY3QvcGljay50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUEsT0FBTyxFQUFFLElBQUksRUFBaUIsTUFBTSxlQUFlLENBQUM7QUFDcEQsT0FBTyxFQUFFLFFBQVEsRUFBRSxNQUFNLG9CQUFvQixDQUFDO0FBRzlDLElBQWEsUUFBUSxHQUFyQixNQUFhLFFBQVE7SUFDbkIsc0NBQXNDO0lBQ3RDLFNBQVMsQ0FBQyxHQUFRLEVBQUUsR0FBRyxJQUFtQjtRQUN4QyxJQUFJLEtBQUssQ0FBQyxPQUFPLENBQUMsR0FBRyxDQUFDLElBQUksQ0FBQyxRQUFRLENBQUMsR0FBRyxDQUFDLEVBQUU7WUFDeEMsT0FBTyxHQUFHLENBQUM7U0FDWjtRQUVELE9BQU8sSUFBSSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUMsRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUMxQixPQUFPLE1BQU0sQ0FBQyxNQUFNLENBQUMsQ0FBQyxFQUFFLEVBQUUsQ0FBQyxDQUFDLENBQUMsRUFBRSxHQUFHLENBQUMsQ0FBQyxDQUFDLEVBQUUsQ0FBQyxDQUFDO1FBQzNDLENBQUMsRUFBRSxFQUFFLENBQUMsQ0FBQztJQUNULENBQUM7Q0FDRixDQUFBO0FBWFksUUFBUTtJQURwQixJQUFJLENBQUMsRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFLENBQUM7R0FDVixRQUFRLENBV3BCO1NBWFksUUFBUSIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IFBpcGUsIFBpcGVUcmFuc2Zvcm0gfSBmcm9tICdAYW5ndWxhci9jb3JlJztcbmltcG9ydCB7IGlzT2JqZWN0IH0gZnJvbSAnLi4vaGVscGVycy9oZWxwZXJzJztcblxuQFBpcGUoeyBuYW1lOiAncGljaycgfSlcbmV4cG9ydCBjbGFzcyBQaWNrUGlwZSBpbXBsZW1lbnRzIFBpcGVUcmFuc2Zvcm0ge1xuICAvLyB0c2xpbnQ6ZGlzYWJsZS1uZXh0LWxpbmU6IGJhbi10eXBlc1xuICB0cmFuc2Zvcm0ob2JqOiBhbnksIC4uLmFyZ3M6IEFycmF5PHN0cmluZz4pOiBPYmplY3Qge1xuICAgIGlmIChBcnJheS5pc0FycmF5KG9iaikgfHwgIWlzT2JqZWN0KG9iaikpIHtcbiAgICAgIHJldHVybiBvYmo7XG4gICAgfVxuXG4gICAgcmV0dXJuIGFyZ3MucmVkdWNlKChvLCBrKSA9PiB7XG4gICAgICByZXR1cm4gT2JqZWN0LmFzc2lnbihvLCB7IFtrXTogb2JqW2tdIH0pO1xuICAgIH0sIHt9KTtcbiAgfVxufVxuIl19

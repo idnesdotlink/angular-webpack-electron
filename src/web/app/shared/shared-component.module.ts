@@ -28,7 +28,7 @@ import {
   CovalentBreadcrumbsModule
 } from '@lib/tera-data';
 import { ContextMenuModule as ContextMenuModule2 } from '@lib/context-menu2';
-import { PhonePipeModule } from '@lib/phone-pipe/lib/phonepipe.module';
+// import { PhonePipeModule } from '@lib/phone-pipe/lib/phonepipe.module';
 import { MaskModule } from '@try/input-mask';
 import { MatPasswordStrengthModule } from '@lib/password-strength';
 import { MatCalendarModule } from '@lib/calendar';
@@ -62,7 +62,7 @@ const modules = [
   AngularResizedEventModule,
   ContextMenuModule2,
   ClickOutsideModule,
-  PhonePipeModule,
+  // PhonePipeModule,
   CobaModule
   // SharedLibModule
 ];
