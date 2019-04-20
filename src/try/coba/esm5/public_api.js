@@ -1,3 +1,0 @@
-export * from './lib/coba.component';
-export * from './lib/coba.module';
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljX2FwaS5qcyIsInNvdXJjZVJvb3QiOiJuZzovL0B0cnkvY29iYS8iLCJzb3VyY2VzIjpbInB1YmxpY19hcGkudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsY0FBYyxzQkFBc0IsQ0FBQztBQUNyQyxjQUFjLG1CQUFtQixDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0ICogZnJvbSAnLi9saWIvY29iYS5jb21wb25lbnQnO1xuZXhwb3J0ICogZnJvbSAnLi9saWIvY29iYS5tb2R1bGUnOyJdfQ==

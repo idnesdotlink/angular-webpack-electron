@@ -20,6 +20,7 @@
     "ngsw:config": "node_modules/.bin/ngsw-config dist/www ./src/web/ngsw-config.json",
     "wrt": "node -r @babel/register .webpack/scripts/travis.js",
     "lib:coba": "./node_modules/.bin/ng-packagr -p ./src/lib/coba/package.json",
+    "lib:coba-dep": "./node_modules/.bin/ng-packagr -p ./src/lib/coba-dep/package.json",
     "lib:digit-only": "./node_modules/.bin/ng-packagr -p ./src/lib/digit-only/package.json",
     "lib:password-strength": "./node_modules/.bin/ng-packagr -p ./src/lib/password-strength/package.json",
     "lib:chart": "./node_modules/.bin/ng-packagr -p ./src/lib/svg-chart/package.json",
@@ -32,6 +33,7 @@
     "lib:tbreadcrumbs": "./node_modules/.bin/ng-packagr -p ./src/lib/tbreadcrumbs/package.json",
     "lib:tsearch": "./node_modules/.bin/ng-packagr -p ./src/lib/tsearch/package.json",
     "libpack": "node -r @babel/register .webpack/scripts/pack.js",
+    "libpack2": "node -r @babel/register .webpack/scripts/coba.js",
     "eol": "node -r @babel/register .webpack/scripts/eol.js"
   },
   "author": {

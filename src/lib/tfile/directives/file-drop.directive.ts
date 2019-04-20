@@ -4,7 +4,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { ICanDisable, mixinDisabled } from '@try/tcommon';
 
-export class TdFileDropBase {}
+export class TdFileDropBase { }
 
 /* tslint:disable-next-line */
 export const _TdFileDropMixinBase = mixinDisabled(TdFileDropBase);
@@ -125,7 +125,7 @@ export class TdFileDropDirective extends _TdFileDropMixinBase implements ICanDis
     let dropEffect: string = 'none';
     if (types) {
       if (((<any>types).contains && (<any>types).contains('Files'))
-      || ((<any>types).indexOf && (<any>types).indexOf('Files') !== -1)) {
+        || ((<any>types).indexOf && (<any>types).indexOf('Files') !== -1)) {
         dropEffect = 'copy';
       }
     }

@@ -13,6 +13,7 @@ import { TdFileDropDirective } from './directives/file-drop.directive';
 import { TdFileUploadComponent } from './file-upload/file-upload.component';
 import { TdFileInputComponent, TdFileInputLabelDirective } from './file-input/file-input.component';
 import { TdFileService } from './services/file.service';
+import { CovalentCommonModule } from '@try/tcommon'
 
 const TD_FILE: Type<any>[] = [
   TdFileSelectDirective,
@@ -29,6 +30,7 @@ const TD_FILE: Type<any>[] = [
     MatIconModule,
     MatButtonModule,
     PortalModule,
+    CovalentCommonModule
   ],
   declarations: [
     TD_FILE,
