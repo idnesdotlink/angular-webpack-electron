@@ -17,13 +17,15 @@ each(files, (o) => {
     const json = statSync(package_json);
     if (dir.isDirectory() && json.isFile()) {
 
-      f.push(() => ngPackage
-        .ngPackagr()
-        .forProject(package_json)
+      f.push(() => {
+        let pack = ngPackage
+          .ngPackagr()
+          .forProject(package_json);
         // .withTsConfig('tsconfig.lib.json')
-        .build()
-        .then(() => ('ok'))
-      )
+
+        return pack.build()
+          .then(() => ('ok'));
+      })
     }
 
   } catch { }
