@@ -12,23 +12,27 @@ const f = [];
 each(files, (o) => {
   const path_to_dir = join(lib_path, o);
   const package_json = join(path_to_dir, 'package.json');
+  const config_json = join(path_to_dir, 'tsconfig.lib.json');
   try {
-    const dir = statSync(path_to_dir);
-    const json = statSync(package_json);
-    if (dir.isDirectory() && json.isFile()) {
-
-      f.push(() => {
-        let pack = ngPackage
-          .ngPackagr()
-          .forProject(package_json);
-        // .withTsConfig('tsconfig.lib.json')
-
-        return pack.build()
-          .then(() => ('ok'));
-      })
+    // const dir = statSync(path_to_dir);
+    // const json = statSync(package_json);
+    // const tsconf = statSync(config_json);
+    if (statSync(path_to_dir).isDirectory()) {
+      if (statSync(package_json).isFile()) {
+        f.push(() => {
+          let pack = ngPackage
+            .ngPackagr()
+            .forProject(package_json);
+          try {
+            if (statSync(config_json).isFile()) pack.withTsConfig('tsconfig.lib.json');
+          } catch (e) { }
+          return pack.build()
+            .then(() => ('ok'));
+        })
+      }
     }
 
-  } catch { }
+  } catch (e) { }
 });
 
 const promiseSerial = funcs => funcs.reduce((promise, func) => promise.then(result => func().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
