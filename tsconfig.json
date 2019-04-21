@@ -80,7 +80,8 @@
   "exclude": [
     "./node_modules",
     "./dist",
-    "./src/lib/scrollbar"
+    "./src/lib/scrollbar",
+    "./src/lib/exclude"
   ],
   "angularCompilerOptions": {
     "enableIvy": false,

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": "../../../",
+    "declaration": true,
+    "types": [],
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "enableIvy": false,
+    "fullTemplateTypeCheck": true,
+    "preserveWhitespaces": false,
+    "strictInjectionParameters": true
+  },
+  "paths": {
+    "@try/coba-dep/*": [
+      "../coba-dep/*"
+    ]
+  }
+}

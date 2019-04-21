@@ -1,82 +1,37 @@
-import * as ngPackage from 'ng-packagr';
 import { join } from 'path';
+import { readdirSync, statSync } from 'fs';
 import { src_path } from '../constants/paths';
+import { each, reduce } from 'lodash';
+import * as ngPackage from 'ng-packagr';
+import { rep } from './eol';
 
-const lib_path = join(src_path, 'lib', 'color-picker', 'package.json');
-const lib_path2 = join(src_path, 'lib', 'svg-chart', 'package.json');
-const lib_path3 = join(src_path, 'lib', 'pipes', 'package.json');
-const lib_path4 = join(src_path, 'lib', 'context-menu', 'package.json');
-const lib_path5 = join(src_path, 'lib', 'tcommon', 'package.json');
-const lib_path6 = join(src_path, 'lib', 'tfile', 'package.json');
-const lib_path7 = join(src_path, 'lib', 'tsearch', 'package.json');
-const lib_path8 = join(src_path, 'lib', 'tbreadcrumbs', 'package.json');
+const lib_path = join(src_path, 'lib');
 
-ngPackage
-  .ngPackagr()
-  .forProject(lib_path)
-  // .withTsConfig('tsconfig.lib.json')
-  .build()
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
+const files = readdirSync(lib_path);
+const f = [];
+each(files, (o) => {
+  const path_to_dir = join(lib_path, o);
+  const package_json = join(path_to_dir, 'package.json');
+  try {
+    const dir = statSync(path_to_dir);
+    const json = statSync(package_json);
+    if (dir.isDirectory() && json.isFile()) {
 
-ngPackage
-  .ngPackagr()
-  .forProject(lib_path2)
-  // .withTsConfig('tsconfig.lib.json')
-  .build()
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
+      f.push(() => ngPackage
+        .ngPackagr()
+        .forProject(package_json)
+        // .withTsConfig('tsconfig.lib.json')
+        .build()
+        .then(() => ('ok'))
+      )
+    }
 
-ngPackage
-  .ngPackagr()
-  .forProject(lib_path4)
-  // .withTsConfig('tsconfig.lib.json')
-  .build()
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
+  } catch { }
+});
 
-// ngPackage
-//   .ngPackagr()
-//   .forProject(lib_path5)
-//   // .withTsConfig('tsconfig.lib.json')
-//   .build()
-//   .catch(error => {
-//     console.error(error);
-//     process.exit(1);
-//   });
+const promiseSerial = funcs => funcs.reduce((promise, func) => promise.then(result => func().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
 
-ngPackage
-  .ngPackagr()
-  .forProject(lib_path6)
-  // .withTsConfig('tsconfig.lib.json')
-  .build()
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
-
-ngPackage
-  .ngPackagr()
-  .forProject(lib_path7)
-  // .withTsConfig('tsconfig.lib.json')
-  .build()
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
-
-ngPackage
-  .ngPackagr()
-  .forProject(lib_path8)
-  // .withTsConfig('tsconfig.lib.json')
-  .build()
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
+promiseSerial(f)
+  .then(console.log.bind(console))
+  .then(() => rep())
+  .catch(console.error.bind(console));
