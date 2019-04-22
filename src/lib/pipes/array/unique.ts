@@ -13,17 +13,17 @@ export class UniquePipe implements PipeTransform {
       ? isUndefined(propertyName)
         ? input.filter((e, i) => input.indexOf(e) === i)
         : input.filter((e, i) => {
-            let value = extractDeepPropertyByMapKey(e, propertyName);
-            value = isObject(value) ? JSON.stringify(value) : value;
+          let value = extractDeepPropertyByMapKey(e, propertyName);
+          value = isObject(value) ? JSON.stringify(value) : value;
 
-            if (isUndefined(value) || uniques[value]) {
-              return false;
-            }
+          if (isUndefined(value) || uniques[value]) {
+            return false;
+          }
 
-            uniques[value] = true;
+          uniques[value] = true;
 
-            return true;
-          })
+          return true;
+        })
       : input;
   }
 }
