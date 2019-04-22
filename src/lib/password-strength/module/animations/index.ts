@@ -42,8 +42,8 @@ export function flipIn(timing: number, rotateX: number, rotateY: number): Animat
   );
 }
 
-export const flipInX = flipIn(1, 1, 0);
-export const flipInY = flipIn(1, 0, 1);
+// export const flipInX = flipIn(1, 1, 0);
+// export const flipInY = flipIn(1, 0, 1);
 
 export const shake = animation(
   animate(

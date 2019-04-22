@@ -44,9 +44,10 @@ export class GridPanelSeriesComponent implements OnChanges {
       let x;
       let y;
       let className = 'odd';
+      let position;
 
       if (this.orient === 'vertical') {
-        const position = this.xScale(d.name);
+        position = this.xScale(d.name);
         const positionIndex = Number.parseInt((position / this.xScale.step()).toString(), 10);
 
         if (positionIndex % 2 === 1) {
@@ -58,7 +59,7 @@ export class GridPanelSeriesComponent implements OnChanges {
         x = this.xScale(d.name) - offset / 2;
         y = 0;
       } else if (this.orient === 'horizontal') {
-        const position = this.yScale(d.name);
+        position = this.yScale(d.name);
         const positionIndex = Number.parseInt((position / this.yScale.step()).toString(), 10);
 
         if (positionIndex % 2 === 1) {

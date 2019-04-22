@@ -3480,8 +3480,9 @@ let GridPanelSeriesComponent = class GridPanelSeriesComponent {
             let x;
             let y;
             let className = 'odd';
+            let position;
             if (this.orient === 'vertical') {
-                const position = this.xScale(d.name);
+                position = this.xScale(d.name);
                 const positionIndex = Number.parseInt((position / this.xScale.step()).toString(), 10);
                 if (positionIndex % 2 === 1) {
                     className = 'even';
@@ -3493,7 +3494,7 @@ let GridPanelSeriesComponent = class GridPanelSeriesComponent {
                 y = 0;
             }
             else if (this.orient === 'horizontal') {
-                const position = this.yScale(d.name);
+                position = this.yScale(d.name);
                 const positionIndex = Number.parseInt((position / this.yScale.step()).toString(), 10);
                 if (positionIndex % 2 === 1) {
                     className = 'even';
@@ -3722,15 +3723,17 @@ let TimelineComponent = class TimelineComponent {
             }
         }
         let domain = [];
+        let max;
+        let min;
         if (this.scaleType === 'time') {
-            const min = Math.min(...values);
-            const max = Math.max(...values);
+            min = Math.min(...values);
+            max = Math.max(...values);
             domain = [min, max];
         }
         else if (this.scaleType === 'linear') {
             values = values.map(v => Number(v));
-            const min = Math.min(...values);
-            const max = Math.max(...values);
+            min = Math.min(...values);
+            max = Math.max(...values);
             domain = [min, max];
         }
         else {
@@ -4451,6 +4454,7 @@ function calculateViewDimensions({ width, height, margins, showXAxis = false, sh
     let xOffset = margins[3];
     let chartWidth = width;
     let chartHeight = height - margins[0] - margins[2];
+    let offset;
     if (showLegend && legendPosition === 'right') {
         if (legendType === 'ordinal') {
             columns -= 2;
@@ -4466,7 +4470,7 @@ function calculateViewDimensions({ width, height, margins, showXAxis = false, sh
         chartHeight -= xAxisHeight;
         if (showXLabel) {
             // text height + spacing between axis label and tick labels
-            const offset = 25 + 5;
+            offset = 25 + 5;
             chartHeight -= offset;
         }
     }
@@ -4477,7 +4481,7 @@ function calculateViewDimensions({ width, height, margins, showXAxis = false, sh
         xOffset += 10;
         if (showYLabel) {
             // text height + spacing between axis label and tick labels
-            const offset = 25 + 5;
+            offset = 25 + 5;
             chartWidth -= offset;
             xOffset += offset;
         }
@@ -5010,9 +5014,10 @@ let AreaChartNormalizedComponent = class AreaChartNormalizedComponent extends Ba
         for (let i = 0; i < this.xSet.length; i++) {
             const val = this.xSet[i];
             let d0 = 0;
+            let d;
             let total = 0;
             for (const group of this.results) {
-                const d = group.series.find(item => {
+                d = group.series.find(item => {
                     let a = item.name;
                     let b = val;
                     if (this.scaleType === 'time') {
@@ -5026,7 +5031,7 @@ let AreaChartNormalizedComponent = class AreaChartNormalizedComponent extends Ba
                 }
             }
             for (const group of this.results) {
-                let d = group.series.find(item => {
+                d = group.series.find(item => {
                     let a = item.name;
                     let b = val;
                     if (this.scaleType === 'time') {
@@ -5079,9 +5084,11 @@ let AreaChartNormalizedComponent = class AreaChartNormalizedComponent extends Ba
         let values = getUniqueXDomainValues(this.results);
         this.scaleType = getScaleType(values);
         let domain = [];
+        let min;
+        let max;
         if (this.scaleType === 'time') {
-            const min = Math.min(...values);
-            const max = Math.max(...values);
+            min = Math.min(...values);
+            max = Math.max(...values);
             domain = [new Date(min), new Date(max)];
             this.xSet = [...values].sort((a, b) => {
                 const aDate = a.getTime();
@@ -5097,8 +5104,8 @@ let AreaChartNormalizedComponent = class AreaChartNormalizedComponent extends Ba
         }
         else if (this.scaleType === 'linear') {
             values = values.map(v => Number(v));
-            const min = Math.min(...values);
-            const max = Math.max(...values);
+            min = Math.min(...values);
+            max = Math.max(...values);
             domain = [min, max];
             // Use compare function to sort numbers numerically
             this.xSet = [...values].sort((a, b) => (a - b));
@@ -5883,18 +5890,20 @@ let AreaSeriesComponent = class AreaSeriesComponent {
         this.startingPath = startingArea(data);
     }
     updateGradient() {
+        let max;
+        let min;
         if (this.colors.scaleType === 'linear') {
             this.hasGradient = true;
             if (this.stacked || this.normalized) {
                 const d0values = this.data.series.map(d => d.d0);
                 const d1values = this.data.series.map(d => d.d1);
-                const max = Math.max(...d1values);
-                const min = Math.min(...d0values);
+                max = Math.max(...d1values);
+                min = Math.min(...d0values);
                 this.gradientStops = this.colors.getLinearGradientStops(max, min);
             }
             else {
                 const values = this.data.series.map(d => d.value);
-                const max = Math.max(...values);
+                max = Math.max(...values);
                 this.gradientStops = this.colors.getLinearGradientStops(max);
             }
         }
@@ -8844,6 +8853,8 @@ let SeriesVerticalComponent = class SeriesVerticalComponent {
                 x: 0,
                 y: 0,
             };
+            let offset0;
+            let offset1;
             if (this.type === 'standard') {
                 bar.height = Math.abs(this.yScale(value) - this.yScale(yScaleMin));
                 bar.x = this.xScale(label);
@@ -8855,8 +8866,8 @@ let SeriesVerticalComponent = class SeriesVerticalComponent {
                 }
             }
             else if (this.type === 'stacked') {
-                const offset0 = d0[d0Type];
-                const offset1 = offset0 + value;
+                offset0 = d0[d0Type];
+                offset1 = offset0 + value;
                 d0[d0Type] += value;
                 bar.height = this.yScale(offset0) - this.yScale(offset1);
                 bar.x = 0;
@@ -8865,8 +8876,8 @@ let SeriesVerticalComponent = class SeriesVerticalComponent {
                 bar.offset1 = offset1;
             }
             else if (this.type === 'normalized') {
-                let offset0 = d0[d0Type];
-                let offset1 = offset0 + value;
+                offset0 = d0[d0Type];
+                offset1 = offset0 + value;
                 d0[d0Type] += value;
                 if (total > 0) {
                     offset0 = (offset0 * 100) / total;
@@ -9143,6 +9154,8 @@ let SeriesHorizontalComponent = class SeriesHorizontalComponent {
                 formattedLabel
             };
             bar.height = this.yScale.bandwidth();
+            let offset0;
+            let offset1;
             if (this.type === 'standard') {
                 bar.width = Math.abs(this.xScale(value) - this.xScale(xScaleMin));
                 if (value < 0) {
@@ -9154,8 +9167,8 @@ let SeriesHorizontalComponent = class SeriesHorizontalComponent {
                 bar.y = this.yScale(label);
             }
             else if (this.type === 'stacked') {
-                const offset0 = d0[d0Type];
-                const offset1 = offset0 + value;
+                offset0 = d0[d0Type];
+                offset1 = offset0 + value;
                 d0[d0Type] += value;
                 bar.width = this.xScale(offset1) - this.xScale(offset0);
                 bar.x = this.xScale(offset0);
@@ -9164,8 +9177,8 @@ let SeriesHorizontalComponent = class SeriesHorizontalComponent {
                 bar.offset1 = offset1;
             }
             else if (this.type === 'normalized') {
-                let offset0 = d0[d0Type];
-                let offset1 = offset0 + value;
+                offset0 = d0[d0Type];
+                offset1 = offset0 + value;
                 d0[d0Type] += value;
                 if (total > 0) {
                     offset0 = (offset0 * 100) / total;
@@ -10913,11 +10926,11 @@ function gridLayout(dims, data, minWidth, designatedTotal) {
     const [columns, rows] = gridSize(dims, data.length, minWidth);
     const xDomain = [];
     const yDomain = [];
-    for (let i = 0; i < rows; i++) {
-        yDomain.push(i);
+    for (let iy = 0; iy < rows; iy++) {
+        yDomain.push(iy);
     }
-    for (let i = 0; i < columns; i++) {
-        xDomain.push(i);
+    for (let ix = 0; ix < columns; ix++) {
+        xDomain.push(ix);
     }
     xScale.domain(xDomain);
     yScale.domain(yDomain);

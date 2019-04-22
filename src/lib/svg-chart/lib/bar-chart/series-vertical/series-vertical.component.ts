@@ -105,8 +105,10 @@ export class SeriesVerticalComponent implements OnChanges {
   bars: any;
   x: any;
   y: any;
-  barsForDataLabels: Array<{x: number, y: number, width: number, height: number,
-                            total: number, series: string}> = [];
+  barsForDataLabels: Array<{
+    x: number, y: number, width: number, height: number,
+    total: number, series: string
+  }> = [];
 
   ngOnChanges(changes): void {
     this.update();
@@ -150,6 +152,9 @@ export class SeriesVerticalComponent implements OnChanges {
         y: 0,
       };
 
+      let offset0: number;
+      let offset1: number;
+
       if (this.type === 'standard') {
         bar.height = Math.abs(this.yScale(value) - this.yScale(yScaleMin));
         bar.x = this.xScale(label);
@@ -160,8 +165,8 @@ export class SeriesVerticalComponent implements OnChanges {
           bar.y = this.yScale(value);
         }
       } else if (this.type === 'stacked') {
-        const offset0 = d0[d0Type];
-        const offset1 = offset0 + value;
+        offset0 = d0[d0Type];
+        offset1 = offset0 + value;
         d0[d0Type] += value;
 
         bar.height = this.yScale(offset0) - this.yScale(offset1);
@@ -170,8 +175,8 @@ export class SeriesVerticalComponent implements OnChanges {
         bar.offset0 = offset0;
         bar.offset1 = offset1;
       } else if (this.type === 'normalized') {
-        let offset0 = d0[d0Type];
-        let offset1 = offset0 + value;
+        offset0 = d0[d0Type];
+        offset1 = offset0 + value;
         d0[d0Type] += value;
 
         if (total > 0) {
@@ -208,7 +213,7 @@ export class SeriesVerticalComponent implements OnChanges {
       if (this.seriesName) {
         tooltipLabel = `${this.seriesName} • ${formattedLabel}`;
         bar.data.series = this.seriesName;
-        bar.ariaLabel = this.seriesName + ' ' +  bar.ariaLabel;
+        bar.ariaLabel = this.seriesName + ' ' + bar.ariaLabel;
       }
 
       bar.tooltipText = this.tooltipDisabled ? undefined : `
@@ -225,25 +230,25 @@ export class SeriesVerticalComponent implements OnChanges {
 
   updateDataLabels() {
     if (this.type === 'stacked') {
-        this.barsForDataLabels = [];
-        const section: any = {};
-        section.series =  this.seriesName;
-        const totalPositive = this.series.map(d => d.value).reduce((sum, d) => d > 0 ? sum + d : sum, 0);
-        const totalNegative = this.series.map(d => d.value).reduce((sum, d) => d < 0 ? sum + d : sum, 0);
-        section.total = totalPositive + totalNegative;
-        section.x = 0;
-        section.y = 0;
-        if (section.total > 0)   {
-          section.height = this.yScale(totalPositive);
-        } else {
-          section.height = this.yScale(totalNegative);
-        }
-        section.width = this.xScale.bandwidth();
-        this.barsForDataLabels.push(section);
+      this.barsForDataLabels = [];
+      const section: any = {};
+      section.series = this.seriesName;
+      const totalPositive = this.series.map(d => d.value).reduce((sum, d) => d > 0 ? sum + d : sum, 0);
+      const totalNegative = this.series.map(d => d.value).reduce((sum, d) => d < 0 ? sum + d : sum, 0);
+      section.total = totalPositive + totalNegative;
+      section.x = 0;
+      section.y = 0;
+      if (section.total > 0) {
+        section.height = this.yScale(totalPositive);
+      } else {
+        section.height = this.yScale(totalNegative);
+      }
+      section.width = this.xScale.bandwidth();
+      this.barsForDataLabels.push(section);
     } else {
       this.barsForDataLabels = this.series.map(d => {
         const section: any = {};
-        section.series =  this.seriesName ? this.seriesName : d.name;
+        section.series = this.seriesName ? this.seriesName : d.name;
         section.total = d.value;
         section.x = this.xScale(d.name);
         section.y = this.yScale(0);

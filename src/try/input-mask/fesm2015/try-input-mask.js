@@ -121,6 +121,7 @@ let MaskApplierService = class MaskApplierService {
         let cursor = 0;
         let result = ``;
         let multi = false;
+        let shiftStep;
         if (inputValue.slice(0, this.prefix.length) === this.prefix) {
             inputValue = inputValue.slice(this.prefix.length, inputValue.length);
         }
@@ -171,7 +172,7 @@ let MaskApplierService = class MaskApplierService {
             }
             position = result.length + 1;
             cursor = position;
-            const shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
+            shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
                 ? inputArray.length
                 : cursor;
             this._shift.add(shiftStep + this.prefix.length || 0);
@@ -208,7 +209,7 @@ let MaskApplierService = class MaskApplierService {
                         if (Number(inputSymbol) > 2) {
                             result += 0;
                             cursor += 1;
-                            const shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
+                            shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
                                 ? inputArray.length
                                 : cursor;
                             this._shift.add(shiftStep + this.prefix.length || 0);
@@ -225,7 +226,7 @@ let MaskApplierService = class MaskApplierService {
                         if (Number(inputSymbol) > 5) {
                             result += 0;
                             cursor += 1;
-                            const shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
+                            shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
                                 ? inputArray.length
                                 : cursor;
                             this._shift.add(shiftStep + this.prefix.length || 0);
@@ -237,7 +238,7 @@ let MaskApplierService = class MaskApplierService {
                         if (Number(inputSymbol) > 5) {
                             result += 0;
                             cursor += 1;
-                            const shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
+                            shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
                                 ? inputArray.length
                                 : cursor;
                             this._shift.add(shiftStep + this.prefix.length || 0);
@@ -249,7 +250,7 @@ let MaskApplierService = class MaskApplierService {
                         if (Number(inputSymbol) > 3) {
                             result += 0;
                             cursor += 1;
-                            const shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
+                            shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
                                 ? inputArray.length
                                 : cursor;
                             this._shift.add(shiftStep + this.prefix.length || 0);
@@ -266,7 +267,7 @@ let MaskApplierService = class MaskApplierService {
                         if (Number(inputSymbol) > 1) {
                             result += 0;
                             cursor += 1;
-                            const shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
+                            shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
                                 ? inputArray.length
                                 : cursor;
                             this._shift.add(shiftStep + this.prefix.length || 0);
@@ -285,7 +286,7 @@ let MaskApplierService = class MaskApplierService {
                 else if (this.maskSpecialCharacters.indexOf(maskExpression[cursor]) !== -1) {
                     result += maskExpression[cursor];
                     cursor++;
-                    const shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
+                    shiftStep = /\*|\?/g.test(maskExpression.slice(0, cursor))
                         ? inputArray.length
                         : cursor;
                     this._shift.add(shiftStep + this.prefix.length || 0);

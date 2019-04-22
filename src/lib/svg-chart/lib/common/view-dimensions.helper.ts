@@ -12,6 +12,7 @@ export function calculateViewDimensions({
   let xOffset = margins[3];
   let chartWidth = width;
   let chartHeight = height - margins[0] - margins[2];
+  let offset: number;
 
   if (showLegend && legendPosition === 'right') {
     if (legendType === 'ordinal') {
@@ -31,7 +32,7 @@ export function calculateViewDimensions({
 
     if (showXLabel) {
       // text height + spacing between axis label and tick labels
-      const offset = 25 + 5;
+      offset = 25 + 5;
       chartHeight -= offset;
     }
   }
@@ -44,7 +45,7 @@ export function calculateViewDimensions({
 
     if (showYLabel) {
       // text height + spacing between axis label and tick labels
-      const offset = 25 + 5;
+      offset = 25 + 5;
       chartWidth -= offset;
       xOffset += offset;
     }

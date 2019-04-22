@@ -220,13 +220,14 @@ var SplitComponent = /** @class */ (function () {
         }
     };
     SplitComponent.prototype.removeArea = function (component) {
+        var area;
         if (this.displayedAreas.some(function (a) { return a.component === component; })) {
-            var area = this.displayedAreas.find(function (a) { return a.component === component; });
+            area = this.displayedAreas.find(function (a) { return a.component === component; });
             this.displayedAreas.splice(this.displayedAreas.indexOf(area), 1);
             this.build(true, true);
         }
         else if (this.hidedAreas.some(function (a) { return a.component === component; })) {
-            var area = this.hidedAreas.find(function (a) { return a.component === component; });
+            area = this.hidedAreas.find(function (a) { return a.component === component; });
             this.hidedAreas.splice(this.hidedAreas.indexOf(area), 1);
         }
     };

@@ -224,7 +224,7 @@ export class PolarChartComponent extends BaseChartComponent {
       width: halfWidth
     };
 
-    this.transform = `translate(${ this.dims.xOffset }, ${ this.margin[0] })`;
+    this.transform = `translate(${this.dims.xOffset}, ${this.margin[0]})`;
     this.transformYAxis = `translate(0, ${yOffset})`;
     this.labelOffset = this.dims.height + 40;
     this.transformPlot = `translate(${halfWidth}, ${halfHeight})`;
@@ -318,14 +318,16 @@ export class PolarChartComponent extends BaseChartComponent {
   }
 
   getXDomain(values = this.getXValues()): any[] {
+    let max: number;
+    let min: number;
     if (this.scaleType === 'time') {
-      const min = Math.min(...values);
-      const max = Math.max(...values);
+      min = Math.min(...values);
+      max = Math.max(...values);
       return [min, max];
     } else if (this.scaleType === 'linear') {
       values = values.map(v => Number(v));
-      const min = Math.min(...values);
-      const max = Math.max(...values);
+      min = Math.min(...values);
+      max = Math.max(...values);
       return [min, max];
     }
     return values;
@@ -448,7 +450,7 @@ export class PolarChartComponent extends BaseChartComponent {
     if (idx > -1) {
       return;
     }
-    this.activeEntries = this.showSeriesOnHover ? [ item, ...this.activeEntries ] : this.activeEntries;
+    this.activeEntries = this.showSeriesOnHover ? [item, ...this.activeEntries] : this.activeEntries;
     this.activate.emit({ value: item, entries: this.activeEntries });
   }
 

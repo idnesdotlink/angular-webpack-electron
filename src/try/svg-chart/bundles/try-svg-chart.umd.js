@@ -3399,8 +3399,9 @@
                 var x;
                 var y;
                 var className = 'odd';
+                var position;
                 if (_this.orient === 'vertical') {
-                    var position = _this.xScale(d.name);
+                    position = _this.xScale(d.name);
                     var positionIndex = Number.parseInt((position / _this.xScale.step()).toString(), 10);
                     if (positionIndex % 2 === 1) {
                         className = 'even';
@@ -3412,7 +3413,7 @@
                     y = 0;
                 }
                 else if (_this.orient === 'horizontal') {
-                    var position = _this.yScale(d.name);
+                    position = _this.yScale(d.name);
                     var positionIndex = Number.parseInt((position / _this.yScale.step()).toString(), 10);
                     if (positionIndex % 2 === 1) {
                         className = 'even';
@@ -3633,15 +3634,17 @@
                 finally { if (e_1) throw e_1.error; }
             }
             var domain = [];
+            var max;
+            var min;
             if (this.scaleType === 'time') {
-                var min = Math.min.apply(Math, __spread(values));
-                var max = Math.max.apply(Math, __spread(values));
+                min = Math.min.apply(Math, __spread(values));
+                max = Math.max.apply(Math, __spread(values));
                 domain = [min, max];
             }
             else if (this.scaleType === 'linear') {
                 values = values.map(function (v) { return Number(v); });
-                var min = Math.min.apply(Math, __spread(values));
-                var max = Math.max.apply(Math, __spread(values));
+                min = Math.min.apply(Math, __spread(values));
+                max = Math.max.apply(Math, __spread(values));
                 domain = [min, max];
             }
             else {
@@ -4373,6 +4376,7 @@
         var xOffset = margins[3];
         var chartWidth = width;
         var chartHeight = height - margins[0] - margins[2];
+        var offset;
         if (showLegend && legendPosition === 'right') {
             if (legendType === 'ordinal') {
                 columns -= 2;
@@ -4388,7 +4392,7 @@
             chartHeight -= xAxisHeight;
             if (showXLabel) {
                 // text height + spacing between axis label and tick labels
-                var offset = 25 + 5;
+                offset = 25 + 5;
                 chartHeight -= offset;
             }
         }
@@ -4399,7 +4403,7 @@
             xOffset += 10;
             if (showYLabel) {
                 // text height + spacing between axis label and tick labels
-                var offset = 25 + 5;
+                offset = 25 + 5;
                 chartWidth -= offset;
                 xOffset += offset;
             }
@@ -5005,11 +5009,12 @@
                 var e_1, _a, e_2, _b;
                 var val = this_1.xSet[i];
                 var d0 = 0;
+                var d = void 0;
                 var total = 0;
                 try {
                     for (var _c = __values(this_1.results), _d = _c.next(); !_d.done; _d = _c.next()) {
                         var group = _d.value;
-                        var d = group.series.find(function (item) {
+                        d = group.series.find(function (item) {
                             var a = item.name;
                             var b = val;
                             if (_this.scaleType === 'time') {
@@ -5033,7 +5038,7 @@
                 try {
                     for (var _e = __values(this_1.results), _f = _e.next(); !_f.done; _f = _e.next()) {
                         var group = _f.value;
-                        var d = group.series.find(function (item) {
+                        d = group.series.find(function (item) {
                             var a = item.name;
                             var b = val;
                             if (_this.scaleType === 'time') {
@@ -5099,9 +5104,11 @@
             var values = getUniqueXDomainValues(this.results);
             this.scaleType = getScaleType(values);
             var domain = [];
+            var min;
+            var max;
             if (this.scaleType === 'time') {
-                var min = Math.min.apply(Math, __spread(values));
-                var max = Math.max.apply(Math, __spread(values));
+                min = Math.min.apply(Math, __spread(values));
+                max = Math.max.apply(Math, __spread(values));
                 domain = [new Date(min), new Date(max)];
                 this.xSet = __spread(values).sort(function (a, b) {
                     var aDate = a.getTime();
@@ -5117,8 +5124,8 @@
             }
             else if (this.scaleType === 'linear') {
                 values = values.map(function (v) { return Number(v); });
-                var min = Math.min.apply(Math, __spread(values));
-                var max = Math.max.apply(Math, __spread(values));
+                min = Math.min.apply(Math, __spread(values));
+                max = Math.max.apply(Math, __spread(values));
                 domain = [min, max];
                 // Use compare function to sort numbers numerically
                 this.xSet = __spread(values).sort(function (a, b) { return (a - b); });
@@ -5969,18 +5976,20 @@
             this.startingPath = startingArea(data);
         };
         AreaSeriesComponent.prototype.updateGradient = function () {
+            var max;
+            var min;
             if (this.colors.scaleType === 'linear') {
                 this.hasGradient = true;
                 if (this.stacked || this.normalized) {
                     var d0values = this.data.series.map(function (d) { return d.d0; });
                     var d1values = this.data.series.map(function (d) { return d.d1; });
-                    var max = Math.max.apply(Math, __spread(d1values));
-                    var min = Math.min.apply(Math, __spread(d0values));
+                    max = Math.max.apply(Math, __spread(d1values));
+                    min = Math.min.apply(Math, __spread(d0values));
                     this.gradientStops = this.colors.getLinearGradientStops(max, min);
                 }
                 else {
                     var values = this.data.series.map(function (d) { return d.value; });
-                    var max = Math.max.apply(Math, __spread(values));
+                    max = Math.max.apply(Math, __spread(values));
                     this.gradientStops = this.colors.getLinearGradientStops(max);
                 }
             }
@@ -9255,6 +9264,8 @@
                     x: 0,
                     y: 0,
                 };
+                var offset0;
+                var offset1;
                 if (_this.type === 'standard') {
                     bar.height = Math.abs(_this.yScale(value) - _this.yScale(yScaleMin));
                     bar.x = _this.xScale(label);
@@ -9266,8 +9277,8 @@
                     }
                 }
                 else if (_this.type === 'stacked') {
-                    var offset0 = d0[d0Type];
-                    var offset1 = offset0 + value;
+                    offset0 = d0[d0Type];
+                    offset1 = offset0 + value;
                     d0[d0Type] += value;
                     bar.height = _this.yScale(offset0) - _this.yScale(offset1);
                     bar.x = 0;
@@ -9276,8 +9287,8 @@
                     bar.offset1 = offset1;
                 }
                 else if (_this.type === 'normalized') {
-                    var offset0 = d0[d0Type];
-                    var offset1 = offset0 + value;
+                    offset0 = d0[d0Type];
+                    offset1 = offset0 + value;
                     d0[d0Type] += value;
                     if (total > 0) {
                         offset0 = (offset0 * 100) / total;
@@ -9514,6 +9525,8 @@
                     formattedLabel: formattedLabel
                 };
                 bar.height = _this.yScale.bandwidth();
+                var offset0;
+                var offset1;
                 if (_this.type === 'standard') {
                     bar.width = Math.abs(_this.xScale(value) - _this.xScale(xScaleMin));
                     if (value < 0) {
@@ -9525,8 +9538,8 @@
                     bar.y = _this.yScale(label);
                 }
                 else if (_this.type === 'stacked') {
-                    var offset0 = d0[d0Type];
-                    var offset1 = offset0 + value;
+                    offset0 = d0[d0Type];
+                    offset1 = offset0 + value;
                     d0[d0Type] += value;
                     bar.width = _this.xScale(offset1) - _this.xScale(offset0);
                     bar.x = _this.xScale(offset0);
@@ -9535,8 +9548,8 @@
                     bar.offset1 = offset1;
                 }
                 else if (_this.type === 'normalized') {
-                    var offset0 = d0[d0Type];
-                    var offset1 = offset0 + value;
+                    offset0 = d0[d0Type];
+                    offset1 = offset0 + value;
                     d0[d0Type] += value;
                     if (total > 0) {
                         offset0 = (offset0 * 100) / total;
@@ -11259,11 +11272,11 @@
         var _a = __read(gridSize(dims, data.length, minWidth), 2), columns = _a[0], rows = _a[1];
         var xDomain = [];
         var yDomain = [];
-        for (var i = 0; i < rows; i++) {
-            yDomain.push(i);
+        for (var iy = 0; iy < rows; iy++) {
+            yDomain.push(iy);
         }
-        for (var i = 0; i < columns; i++) {
-            xDomain.push(i);
+        for (var ix = 0; ix < columns; ix++) {
+            xDomain.push(ix);
         }
         xScale.domain(xDomain);
         yScale.domain(yDomain);

@@ -179,13 +179,14 @@ let SplitComponent = class SplitComponent {
         }
     }
     removeArea(component) {
+        let area;
         if (this.displayedAreas.some(a => a.component === component)) {
-            const area = this.displayedAreas.find(a => a.component === component);
+            area = this.displayedAreas.find(a => a.component === component);
             this.displayedAreas.splice(this.displayedAreas.indexOf(area), 1);
             this.build(true, true);
         }
         else if (this.hidedAreas.some(a => a.component === component)) {
-            const area = this.hidedAreas.find(a => a.component === component);
+            area = this.hidedAreas.find(a => a.component === component);
             this.hidedAreas.splice(this.hidedAreas.indexOf(area), 1);
         }
     }

@@ -25,11 +25,11 @@ export function gridLayout(dims, data, minWidth, designatedTotal) {
 
   const xDomain = [];
   const yDomain = [];
-  for (let i = 0; i < rows; i++) {
-    yDomain.push(i);
+  for (let iy = 0; iy < rows; iy++) {
+    yDomain.push(iy);
   }
-  for (let i = 0; i < columns; i++) {
-    xDomain.push(i);
+  for (let ix = 0; ix < columns; ix++) {
+    xDomain.push(ix);
   }
   xScale.domain(xDomain);
   yScale.domain(yDomain);

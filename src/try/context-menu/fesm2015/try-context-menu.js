@@ -342,6 +342,7 @@ let ContextMenuService = class ContextMenuService {
     }
     openContextMenu(context) {
         const { anchorElement, event, parentContextMenu } = context;
+        let positionStrategy;
         if (!parentContextMenu) {
             const mouseEvent = event;
             this.fakeElement.getBoundingClientRect = () => ({
@@ -354,7 +355,7 @@ let ContextMenuService = class ContextMenuService {
             });
             this.closeAllContextMenus({ eventType: 'cancel', event });
             // tslint:disable-next-line: deprecation
-            const positionStrategy = this.overlay.position().connectedTo(new ElementRef(anchorElement || this.fakeElement), { originX: 'start', originY: 'bottom' }, { overlayX: 'start', overlayY: 'top' })
+            positionStrategy = this.overlay.position().connectedTo(new ElementRef(anchorElement || this.fakeElement), { originX: 'start', originY: 'bottom' }, { overlayX: 'start', overlayY: 'top' })
                 .withFallbackPosition({ originX: 'start', originY: 'top' }, { overlayX: 'start', overlayY: 'bottom' })
                 .withFallbackPosition({ originX: 'end', originY: 'top' }, { overlayX: 'start', overlayY: 'top' })
                 .withFallbackPosition({ originX: 'start', originY: 'top' }, { overlayX: 'end', overlayY: 'top' })
@@ -369,7 +370,7 @@ let ContextMenuService = class ContextMenuService {
         }
         else {
             // tslint:disable-next-line: deprecation
-            const positionStrategy = this.overlay.position().connectedTo(new ElementRef(event ? event.target : anchorElement), { originX: 'end', originY: 'top' }, { overlayX: 'start', overlayY: 'top' })
+            positionStrategy = this.overlay.position().connectedTo(new ElementRef(event ? event.target : anchorElement), { originX: 'end', originY: 'top' }, { overlayX: 'start', overlayY: 'top' })
                 .withFallbackPosition({ originX: 'start', originY: 'top' }, { overlayX: 'end', overlayY: 'top' })
                 .withFallbackPosition({ originX: 'end', originY: 'bottom' }, { overlayX: 'start', overlayY: 'bottom' })
                 .withFallbackPosition({ originX: 'start', originY: 'bottom' }, { overlayX: 'end', overlayY: 'bottom' });

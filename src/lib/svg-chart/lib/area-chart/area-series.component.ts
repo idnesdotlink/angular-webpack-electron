@@ -96,17 +96,19 @@ export class AreaSeriesComponent implements OnChanges {
   }
 
   updateGradient() {
+    let max: number;
+    let min: number;
     if (this.colors.scaleType === 'linear') {
       this.hasGradient = true;
       if (this.stacked || this.normalized) {
         const d0values = this.data.series.map(d => d.d0);
         const d1values = this.data.series.map(d => d.d1);
-        const max = Math.max(...d1values);
-        const min = Math.min(...d0values);
+        max = Math.max(...d1values);
+        min = Math.min(...d0values);
         this.gradientStops = this.colors.getLinearGradientStops(max, min);
       } else {
         const values = this.data.series.map(d => d.value);
-        const max = Math.max(...values);
+        max = Math.max(...values);
         this.gradientStops = this.colors.getLinearGradientStops(max);
       }
     } else {

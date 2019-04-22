@@ -124,10 +124,11 @@ export class AreaChartNormalizedComponent extends BaseChartComponent {
     for (let i = 0; i < this.xSet.length; i++) {
       const val = this.xSet[i];
       let d0 = 0;
+      let d: any;
 
       let total = 0;
       for (const group of this.results) {
-        const d = group.series.find(item => {
+        d = group.series.find(item => {
           let a = item.name;
           let b = val;
           if (this.scaleType === 'time') {
@@ -142,7 +143,7 @@ export class AreaChartNormalizedComponent extends BaseChartComponent {
       }
 
       for (const group of this.results) {
-        let d = group.series.find(item => {
+        d = group.series.find(item => {
           let a = item.name;
           let b = val;
           if (this.scaleType === 'time') {
@@ -181,7 +182,7 @@ export class AreaChartNormalizedComponent extends BaseChartComponent {
     this.setColors();
     this.legendOptions = this.getLegendOptions();
 
-    this.transform = `translate(${ this.dims.xOffset } , ${ this.margin[0] })`;
+    this.transform = `translate(${this.dims.xOffset} , ${this.margin[0]})`;
 
     this.clipPathId = 'clip' + id().toString();
     this.clipPath = `url(#${this.clipPathId})`;
@@ -193,7 +194,7 @@ export class AreaChartNormalizedComponent extends BaseChartComponent {
       this.timelineXDomain = this.getXDomain();
       this.timelineXScale = this.getXScale(this.timelineXDomain, this.timelineWidth);
       this.timelineYScale = this.getYScale(this.yDomain, this.timelineHeight);
-      this.timelineTransform = `translate(${ this.dims.xOffset }, ${ -this.margin[2] })`;
+      this.timelineTransform = `translate(${this.dims.xOffset}, ${-this.margin[2]})`;
     }
   }
 
@@ -202,10 +203,12 @@ export class AreaChartNormalizedComponent extends BaseChartComponent {
 
     this.scaleType = getScaleType(values);
     let domain = [];
+    let min: number;
+    let max: number;
 
     if (this.scaleType === 'time') {
-      const min = Math.min(...values);
-      const max = Math.max(...values);
+      min = Math.min(...values);
+      max = Math.max(...values);
       domain = [new Date(min), new Date(max)];
       this.xSet = [...values].sort((a, b) => {
         const aDate = a.getTime();
@@ -216,8 +219,8 @@ export class AreaChartNormalizedComponent extends BaseChartComponent {
       });
     } else if (this.scaleType === 'linear') {
       values = values.map(v => Number(v));
-      const min = Math.min(...values);
-      const max = Math.max(...values);
+      min = Math.min(...values);
+      max = Math.max(...values);
       domain = [min, max];
       // Use compare function to sort numbers numerically
       this.xSet = [...values].sort((a, b) => (a - b));
@@ -340,7 +343,7 @@ export class AreaChartNormalizedComponent extends BaseChartComponent {
       return;
     }
 
-    this.activeEntries = [ item, ...this.activeEntries ];
+    this.activeEntries = [item, ...this.activeEntries];
     this.activate.emit({ value: item, entries: this.activeEntries });
   }
 

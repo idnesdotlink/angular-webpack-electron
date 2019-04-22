@@ -255,38 +255,8 @@
         return MatPasswordStrengthComponent;
     }());
 
-    function flipIn(timing, rotateX, rotateY) {
-        var params = { timing: timing, delay: 0, rotateX: rotateX, rotateY: rotateY };
-        return animations.animation([
-            animations.style({ 'backface-visibility': 'visible' }),
-            animations.animate('{{ timing }}s {{ delay }}s ease-in', animations.keyframes([
-                animations.style({
-                    opacity: 0,
-                    transform: 'perspective(400px) rotate3d({{ rotateX }}, {{ rotateY }}, 0, 90deg)',
-                    offset: 0,
-                }),
-                animations.style({
-                    opacity: 1,
-                    transform: 'perspective(400px) rotate3d({{ rotateX }}, {{ rotateY }}, 0, -20deg)',
-                    offset: 0.4,
-                }),
-                animations.style({
-                    transform: 'perspective(400px) rotate3d({{ rotateX }}, {{ rotateY }}, 0, 10deg)',
-                    offset: 0.6,
-                }),
-                animations.style({
-                    transform: 'perspective(400px) rotate3d({{ rotateX }}, {{ rotateY }}, 0, -5deg)',
-                    offset: 0.8,
-                }),
-                animations.style({
-                    transform: 'perspective(400px) rotate3d(0, 0, 0, 0)',
-                    offset: 1,
-                }),
-            ])),
-        ], { params: params });
-    }
-    var flipInX = flipIn(1, 1, 0);
-    var flipInY = flipIn(1, 0, 1);
+    // export const flipInX = flipIn(1, 1, 0);
+    // export const flipInY = flipIn(1, 0, 1);
     var shake = animations.animation(animations.animate('{{ timing }}s {{ delay }}s', animations.keyframes([
         animations.style({ transform: 'translate3d(0, 0, 0)', offset: 0 }),
         animations.style({ transform: 'translate3d(-10px, 0, 0)', offset: 0.1 }),

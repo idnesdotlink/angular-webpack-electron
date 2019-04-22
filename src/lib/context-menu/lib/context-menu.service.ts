@@ -1,4 +1,4 @@
-import { Overlay, OverlayRef, ScrollStrategyOptions } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef, ScrollStrategyOptions, ConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef, Injectable, ElementRef } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
@@ -67,6 +67,7 @@ export class ContextMenuService {
 
   public openContextMenu(context: IContextMenuContext) {
     const { anchorElement, event, parentContextMenu } = context;
+    let positionStrategy: ConnectedPositionStrategy;
 
     if (!parentContextMenu) {
       const mouseEvent = event as MouseEvent;
@@ -80,25 +81,25 @@ export class ContextMenuService {
       });
       this.closeAllContextMenus({ eventType: 'cancel', event });
       // tslint:disable-next-line: deprecation
-      const positionStrategy = this.overlay.position().connectedTo(
+      positionStrategy = this.overlay.position().connectedTo(
         new ElementRef(anchorElement || this.fakeElement),
         { originX: 'start', originY: 'bottom' },
         { overlayX: 'start', overlayY: 'top' })
         .withFallbackPosition(
-        { originX: 'start', originY: 'top' },
-        { overlayX: 'start', overlayY: 'bottom' })
+          { originX: 'start', originY: 'top' },
+          { overlayX: 'start', overlayY: 'bottom' })
         .withFallbackPosition(
-        { originX: 'end', originY: 'top' },
-        { overlayX: 'start', overlayY: 'top' })
+          { originX: 'end', originY: 'top' },
+          { overlayX: 'start', overlayY: 'top' })
         .withFallbackPosition(
-        { originX: 'start', originY: 'top' },
-        { overlayX: 'end', overlayY: 'top' })
+          { originX: 'start', originY: 'top' },
+          { overlayX: 'end', overlayY: 'top' })
         .withFallbackPosition(
-        { originX: 'end', originY: 'center' },
-        { overlayX: 'start', overlayY: 'center' })
+          { originX: 'end', originY: 'center' },
+          { overlayX: 'start', overlayY: 'center' })
         .withFallbackPosition(
-        { originX: 'start', originY: 'center' },
-        { overlayX: 'end', overlayY: 'center' })
+          { originX: 'start', originY: 'center' },
+          { overlayX: 'end', overlayY: 'center' })
         ;
       this.overlays = [this.overlay.create({
         positionStrategy,
@@ -108,19 +109,19 @@ export class ContextMenuService {
       this.attachContextMenu(this.overlays[0], context);
     } else {
       // tslint:disable-next-line: deprecation
-      const positionStrategy = this.overlay.position().connectedTo(
+      positionStrategy = this.overlay.position().connectedTo(
         new ElementRef(event ? event.target : anchorElement),
         { originX: 'end', originY: 'top' },
         { overlayX: 'start', overlayY: 'top' })
         .withFallbackPosition(
-        { originX: 'start', originY: 'top' },
-        { overlayX: 'end', overlayY: 'top' })
+          { originX: 'start', originY: 'top' },
+          { overlayX: 'end', overlayY: 'top' })
         .withFallbackPosition(
-        { originX: 'end', originY: 'bottom' },
-        { overlayX: 'start', overlayY: 'bottom' })
+          { originX: 'end', originY: 'bottom' },
+          { overlayX: 'start', overlayY: 'bottom' })
         .withFallbackPosition(
-        { originX: 'start', originY: 'bottom' },
-        { overlayX: 'end', overlayY: 'bottom' })
+          { originX: 'start', originY: 'bottom' },
+          { overlayX: 'end', overlayY: 'bottom' })
         ;
       const newOverlay = this.overlay.create({
         positionStrategy,
@@ -144,7 +145,7 @@ export class ContextMenuService {
     contextMenuContent.instance.isLeaf = true;
     contextMenuContent.instance.menuClass = menuClass;
     // tslint:disable-next-line: no-angle-bracket-type-assertion
-    (<OverlayRefWithContextMenu> overlay).contextMenu = contextMenuContent.instance;
+    (<OverlayRefWithContextMenu>overlay).contextMenu = contextMenuContent.instance;
 
     const subscriptions: Subscription = new Subscription();
     subscriptions.add(contextMenuContent.instance.execute.asObservable()
