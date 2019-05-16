@@ -2,6 +2,7 @@ import { join } from 'path';
 import { readdirSync, statSync } from 'fs';
 import { src_path } from '../constants/paths';
 import { each, reduce } from 'lodash';
+import { promiseSerial } from './promiseSerial';
 import * as ngPackage from 'ng-packagr';
 import { rep } from './eol';
 
@@ -9,10 +10,13 @@ const lib_path = join(src_path, 'lib');
 
 const files = readdirSync(lib_path);
 const f = [];
-each(files, (o) => {
-  const path_to_dir = join(lib_path, o);
+each(files, (file) => {
+  const path_to_dir = join(lib_path, file);
   const package_json = join(path_to_dir, 'package.json');
   const config_json = join(path_to_dir, 'tsconfig.lib.json');
+  if (!path_to_dir.includes('digit-only')) {
+    return;
+  }
   try {
     // const dir = statSync(path_to_dir);
     // const json = statSync(package_json);
@@ -24,7 +28,9 @@ each(files, (o) => {
             .ngPackagr()
             .forProject(package_json);
           try {
-            if (statSync(config_json).isFile()) pack.withTsConfig('tsconfig.lib.json');
+            if (statSync(config_json).isFile()) {
+              pack.withTsConfig('tsconfig.lib.json');
+            }
           } catch (e) { }
           return pack.build()
             .then(() => ('ok'));
@@ -34,8 +40,6 @@ each(files, (o) => {
 
   } catch (e) { }
 });
-
-const promiseSerial = funcs => funcs.reduce((promise, func) => promise.then(result => func().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
 
 promiseSerial(f)
   .then(console.log.bind(console))

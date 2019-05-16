@@ -43,6 +43,9 @@ let DigitOnlyDirective = class DigitOnlyDirective {
     }
     onPaste(event) {
         event.preventDefault();
+        if (event.clipboardData === null) {
+            return;
+        }
         const pastedInput = event.clipboardData
             .getData('text/plain')
             .replace(/\D/g, ''); // get a digit-only string
@@ -50,6 +53,9 @@ let DigitOnlyDirective = class DigitOnlyDirective {
     }
     onDrop(event) {
         event.preventDefault();
+        if (event.dataTransfer === null) {
+            return;
+        }
         const textData = event.dataTransfer.getData('text').replace(/\D/g, '');
         this.inputElement.focus();
         document.execCommand('insertText', false, textData);
