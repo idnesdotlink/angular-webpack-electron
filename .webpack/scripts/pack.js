@@ -14,7 +14,7 @@ each(files, (file) => {
   const path_to_dir = join(lib_path, file);
   const package_json = join(path_to_dir, 'package.json');
   const config_json = join(path_to_dir, 'tsconfig.lib.json');
-  if (!path_to_dir.includes('digit-only')) {
+  if (!path_to_dir.includes('mask2')) {
     return;
   }
   try {

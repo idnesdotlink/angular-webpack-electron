@@ -1,0 +1,28 @@
+{
+    "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+    "name": "@try/input-mask",
+    "version": "1.0.0",
+    "main": "dist/bundles/input-mask.umd.js",
+    "module": "dist/fesm5/input-mask.js",
+    "es2015": "dist/fesm2015/input-mask.js",
+    "esm5": "dist/esm5/input-mask.js",
+    "esm2015": "dist/esm2015/input-mask.js",
+    "fesm5": "dist/fesm5/input-mask.js",
+    "fesm2015": "dist/fesm2015/input-mask.js",
+    "typings": "dist/input-mask.d.ts",
+    "metadata": "dist/input-mask.metadata.json",
+    "licenses": "MIT",
+    "private": true,
+    "ngPackage": {
+        "lib": {
+            "entryFile": "index.ts"
+        },
+        "dest": "../../try/input-mask"
+    },
+    "peerDependencies": {
+        "@angular/common": "^7.2.13",
+        "@angular/core": "^7.2.13",
+        "@angular/forms": "^7.2.13"
+    },
+    "dependencies": false
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+  "name": "@try/mark-down",
+  "version": "1.0.0",
+  "main": "bundles/try-mark-down.umd.js",
+  "module": "fesm5/try-mark-down.js",
+  "es2015": "fesm2015/try-mark-down.js",
+  "esm5": "esm5/try-mark-down.js",
+  "esm2015": "esm2015/try-mark-down.js",
+  "fesm5": "fesm5/try-mark-down.js",
+  "fesm2015": "fesm2015/try-mark-down.js",
+  "typings": "try-mark-down.d.ts",
+  "metadata": "try-mark-down.metadata.json",
+  "license": "MIT",
+  "private": true,
+  "peerDependencies": {
+    "@angular/common": "^7.2.13",
+    "@angular/core": "^7.2.13",
+    "marked": "0.6.2",
+    "prismjs": "^1.16.0"
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
+}
