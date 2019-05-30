@@ -14,7 +14,7 @@ export declare class MarkdownService {
     constructor(platform: Object, http: HttpClient, domSanitizer: DomSanitizer, options: MarkedOptions);
     compile(markdown: string, decodeHtml?: boolean, markedOptions?: MarkedOptions): string;
     getSource(src: string): Observable<string>;
-    highlight(element?: Element): void;
+    highlight(element?: Element | Document): void;
     private decodeHtml;
     private handleExtension;
     private precompile;

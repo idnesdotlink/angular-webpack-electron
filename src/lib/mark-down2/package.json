@@ -1,0 +1,32 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+  "name": "@try/mark-down",
+  "version": "1.0.0",
+  "main": "dist/bundles/mark-down.umd.js",
+  "module": "dist/fesm5/mark-down.js",
+  "es2015": "dist/fesm2015/mark-down.js",
+  "esm5": "dist/esm5/mark-down.js",
+  "esm2015": "dist/esm2015/mark-down.js",
+  "fesm5": "dist/fesm5/mark-down.js",
+  "fesm2015": "dist/fesm2015/mark-down.js",
+  "typings": "dist/mark-down.d.ts",
+  "metadata": "dist/mark-down.metadata.json",
+  "license": "MIT",
+  "private": true,
+  "ngPackage": {
+    "lib": {
+      "entryFile": "index.ts",
+      "umdModuleIds": {
+        "marked": "marked",
+        "prismjs": "prismjs"
+      }
+    },
+    "dest": "../../try/mark-down"
+  },
+  "peerDependencies": {
+    "@angular/common": "^7.2.13",
+    "@angular/core": "^7.2.13",
+    "marked": "0.6.2",
+    "prismjs": "^1.16.0"
+  }
+}

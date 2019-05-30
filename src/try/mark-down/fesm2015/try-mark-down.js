@@ -34,9 +34,7 @@ class MarkedRenderer extends Renderer {
 // tslint:disable-next-line:max-line-length
 const errorSrcWithoutHttpClient = '[ngx-markdown] When using the [src] attribute you *have to* pass the `HttpClient` as a parameter of the `forRoot` method. See README for more information';
 let MarkdownService = class MarkdownService {
-    constructor(
-    // tslint:disable-next-line: ban-types
-    platform, http, domSanitizer, options) {
+    constructor(platform, http, domSanitizer, options) {
         this.platform = platform;
         this.http = http;
         this.domSanitizer = domSanitizer;
@@ -67,12 +65,13 @@ let MarkdownService = class MarkdownService {
     }
     highlight(element) {
         if (isPlatformBrowser(this.platform) && typeof Prism !== 'undefined') {
-            if (element) {
-                Prism.highlightAllUnder(element);
+            if (!element) {
+                element = document;
             }
-            else {
-                Prism.highlightAll(false);
-            }
+            element
+                .querySelectorAll('pre code:not([class*="language-"])')
+                .forEach(x => x.classList.add('language-none'));
+            Prism.highlightAllUnder(element);
         }
     }
     decodeHtml(html) {
@@ -311,17 +310,18 @@ MarkdownPipe = __decorate([
 ], MarkdownPipe);
 
 var MarkdownModule_1;
+const ɵ0 = {
+    gfm: true,
+    tables: true,
+    breaks: false,
+    pedantic: false,
+    sanitize: false,
+    smartLists: true,
+    smartypants: false,
+};
 const initialMarkedOptions = {
     provide: MarkedOptions,
-    useValue: {
-        gfm: true,
-        tables: true,
-        breaks: false,
-        pedantic: false,
-        sanitize: false,
-        smartLists: true,
-        smartypants: false,
-    },
+    useValue: ɵ0,
 };
 const sharedDeclarations = [
     LanguagePipe,
@@ -364,5 +364,5 @@ MarkdownModule = MarkdownModule_1 = __decorate([
  * Generated bundle index. Do not edit.
  */
 
-export { LanguagePipe, MarkdownComponent, MarkdownModule, MarkdownPipe, MarkdownService, MarkedOptions, MarkedRenderer, PrismPlugin, errorSrcWithoutHttpClient, initialMarkedOptions };
+export { LanguagePipe, MarkdownComponent, MarkdownModule, MarkdownPipe, MarkdownService, MarkedOptions, MarkedRenderer, PrismPlugin, errorSrcWithoutHttpClient, initialMarkedOptions, ɵ0 };
 //# sourceMappingURL=try-mark-down.js.map

@@ -45,9 +45,7 @@ var MarkedRenderer = /** @class */ (function (_super) {
 // tslint:disable-next-line:max-line-length
 var errorSrcWithoutHttpClient = '[ngx-markdown] When using the [src] attribute you *have to* pass the `HttpClient` as a parameter of the `forRoot` method. See README for more information';
 var MarkdownService = /** @class */ (function () {
-    function MarkdownService(
-    // tslint:disable-next-line: ban-types
-    platform, http, domSanitizer, options) {
+    function MarkdownService(platform, http, domSanitizer, options) {
         this.platform = platform;
         this.http = http;
         this.domSanitizer = domSanitizer;
@@ -89,12 +87,13 @@ var MarkdownService = /** @class */ (function () {
     };
     MarkdownService.prototype.highlight = function (element) {
         if (isPlatformBrowser(this.platform) && typeof Prism !== 'undefined') {
-            if (element) {
-                Prism.highlightAllUnder(element);
+            if (!element) {
+                element = document;
             }
-            else {
-                Prism.highlightAll(false);
-            }
+            element
+                .querySelectorAll('pre code:not([class*="language-"])')
+                .forEach(function (x) { return x.classList.add('language-none'); });
+            Prism.highlightAllUnder(element);
         }
     };
     MarkdownService.prototype.decodeHtml = function (html) {
@@ -351,17 +350,18 @@ var MarkdownPipe = /** @class */ (function () {
     return MarkdownPipe;
 }());
 
+var ɵ0 = {
+    gfm: true,
+    tables: true,
+    breaks: false,
+    pedantic: false,
+    sanitize: false,
+    smartLists: true,
+    smartypants: false,
+};
 var initialMarkedOptions = {
     provide: MarkedOptions,
-    useValue: {
-        gfm: true,
-        tables: true,
-        breaks: false,
-        pedantic: false,
-        sanitize: false,
-        smartLists: true,
-        smartypants: false,
-    },
+    useValue: ɵ0,
 };
 var sharedDeclarations = [
     LanguagePipe,
@@ -404,5 +404,5 @@ var MarkdownModule = /** @class */ (function () {
  * Generated bundle index. Do not edit.
  */
 
-export { LanguagePipe, MarkdownComponent, MarkdownModule, MarkdownPipe, MarkdownService, MarkedOptions, MarkedRenderer, PrismPlugin, errorSrcWithoutHttpClient, initialMarkedOptions };
+export { LanguagePipe, MarkdownComponent, MarkdownModule, MarkdownPipe, MarkdownService, MarkedOptions, MarkedRenderer, PrismPlugin, errorSrcWithoutHttpClient, initialMarkedOptions, ɵ0 };
 //# sourceMappingURL=try-mark-down.js.map

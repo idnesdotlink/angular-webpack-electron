@@ -4,7 +4,6 @@
     "outDir": "../../dist/out-tsc/app",
     "types": [],
     "resolveJsonModule": true,
-    "allowJs": true,
     "lib": [
       "es2018",
       "dom"

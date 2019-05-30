@@ -175,9 +175,7 @@
     // tslint:disable-next-line:max-line-length
     var errorSrcWithoutHttpClient = '[ngx-markdown] When using the [src] attribute you *have to* pass the `HttpClient` as a parameter of the `forRoot` method. See README for more information';
     var MarkdownService = /** @class */ (function () {
-        function MarkdownService(
-        // tslint:disable-next-line: ban-types
-        platform, http, domSanitizer, options) {
+        function MarkdownService(platform, http, domSanitizer, options) {
             this.platform = platform;
             this.http = http;
             this.domSanitizer = domSanitizer;
@@ -219,12 +217,13 @@
         };
         MarkdownService.prototype.highlight = function (element) {
             if (common.isPlatformBrowser(this.platform) && typeof Prism !== 'undefined') {
-                if (element) {
-                    Prism.highlightAllUnder(element);
+                if (!element) {
+                    element = document;
                 }
-                else {
-                    Prism.highlightAll(false);
-                }
+                element
+                    .querySelectorAll('pre code:not([class*="language-"])')
+                    .forEach(function (x) { return x.classList.add('language-none'); });
+                Prism.highlightAllUnder(element);
             }
         };
         MarkdownService.prototype.decodeHtml = function (html) {
@@ -481,17 +480,18 @@
         return MarkdownPipe;
     }());
 
+    var ɵ0 = {
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false,
+    };
     var initialMarkedOptions = {
         provide: MarkedOptions,
-        useValue: {
-            gfm: true,
-            tables: true,
-            breaks: false,
-            pedantic: false,
-            sanitize: false,
-            smartLists: true,
-            smartypants: false,
-        },
+        useValue: ɵ0,
     };
     var sharedDeclarations = [
         LanguagePipe,
@@ -539,6 +539,7 @@
     exports.MarkedRenderer = MarkedRenderer;
     exports.errorSrcWithoutHttpClient = errorSrcWithoutHttpClient;
     exports.initialMarkedOptions = initialMarkedOptions;
+    exports.ɵ0 = ɵ0;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
