@@ -176,7 +176,7 @@
     "jest-preset-angular": "^7.1.1",
     "jsbarcode": "^3.11.0",
     "jwt-decode": "^2.2.0",
-    "marked": "0.6.2",
+    "marked": "0.7.0",
     "material-design-icons": "^3.0.1",
     "mini-css-extract-plugin": "0.7.0",
     "moment": "^2.24.0",
